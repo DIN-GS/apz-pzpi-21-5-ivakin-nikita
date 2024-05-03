@@ -1,13 +1,12 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 
 @Entity
-@Table(name = "plat_group")
+@Table(name = "plat_group", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,9 +16,17 @@ import lombok.*;
 
 public class PlatGroup extends MilitaryGroup {
 
-    @Column(name = "company_group_id")
-    private Integer companyId;
 
-    @Column(name = "plat_commander_id")
-    private Integer platCommanderId;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "plat_commander_id", unique = true)
+    private PlatCommander platCommanderId;
+
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_group_id", unique = true)
+    private CompanyGroup companyGroup;
+
 }

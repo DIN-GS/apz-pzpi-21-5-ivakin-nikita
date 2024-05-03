@@ -1,13 +1,13 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
+
+import java.util.List;
 
 @Entity
-@Table(name = "battalion_group")
+@Table(name = "battalion_group", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -16,9 +16,24 @@ import lombok.*;
 @AttributeOverride(name = "id", column = @Column(name = "battalion_group_id"))
 public class BattalionGroup extends MilitaryGroup {
 
-    @Column(name = "regiment_group_id")
-    private Integer regimentGroupId;
 
-    @Column(name = "battalion_commander_id")
-    private Integer battalionCommanderId;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "battalion_commander_id", unique = true)
+    private BattalionCommander battalionCommanderId;
+
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "regiment_group_id", unique = true)
+    private RegimentGroup regimentGroup;
+
+    @OneToMany(mappedBy = "battalionGroup",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private List<CompanyGroup> companyGroups;
+
 }

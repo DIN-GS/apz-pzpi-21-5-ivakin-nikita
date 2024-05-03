@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: 001-create-tables-for-battle-groups-and-commanders.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 002-add-constraints-for-foreign-keys.sql
+      relativeToChangelogFile: true

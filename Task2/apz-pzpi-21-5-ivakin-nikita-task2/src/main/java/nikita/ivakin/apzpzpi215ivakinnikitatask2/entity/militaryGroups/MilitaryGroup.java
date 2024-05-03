@@ -23,4 +23,8 @@ public abstract class MilitaryGroup {
     private int helmetsCount;
     private int riflesCount;
     private int machineGunsCount;
+    private int dryRationsCount;
+    private int foodCount;
+    private int tankCount;
+    private int apcCount;
 }
