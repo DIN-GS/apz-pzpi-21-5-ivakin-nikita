@@ -5,13 +5,14 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.POST;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
 
 @MappedSuperclass
+
 public abstract class Commander {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    /*@Column(name = "first_name")
+    @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
@@ -29,8 +30,11 @@ public abstract class Commander {
     @Column(name = "age")
     private Integer age;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "passport_number")
-    private Integer passportNumber;*/
+    private String passportNumber;
 
     /*@Column(name = "last_name")
     private Long idOfGroup;*/

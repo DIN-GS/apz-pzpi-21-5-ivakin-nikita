@@ -8,6 +8,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.RegimentG
 import java.util.List;
 
 @Entity
+
 @Table(name = "brigade_commander", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
