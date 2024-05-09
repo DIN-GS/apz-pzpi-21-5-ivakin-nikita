@@ -13,10 +13,13 @@ public abstract class MilitaryGroup {
     private Integer id;
 
     private int personnelCount;
-    private int ammo556x45Count;
-    private int ammo545x39Count;
-    private int ammo762x39Count;
-    private int ammo127x107Count;
+    private int ammo556x45ArCount;
+    private int ammo545x39AkRpkCount;
+    private int ammo762x39AkCount;
+    private int ammo145KpvtCount;
+    private int ammo40mmRpgCount;
+    private int ammo40mmGpCount;
+    private int ammo762PktCount;
     private int defensiveGrenadesCount;
     private int offensiveGrenadesCount;
     private int bodyArmorCount;

@@ -16,7 +16,8 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.user.User;
 public class Token {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "token_seq_generator")
+    @SequenceGenerator(name = "token_seq_generator", sequenceName = "project.token_id_seq", allocationSize = 1, initialValue = 1)
     public Integer id;
 
     @Column(unique = true)

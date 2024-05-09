@@ -14,7 +14,8 @@ import static nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Permission.*;
 @RequiredArgsConstructor
 public enum Role {
 
-    USER(Collections.emptySet());
+    USER(Collections.emptySet()),
+    ADMIN(Collections.emptySet());
 
     @Getter
     private final Set<Permission> permissions;

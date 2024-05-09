@@ -1,11 +1,18 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.POST;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 
 @MappedSuperclass
-
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 public abstract class Commander {
 
     @Id
@@ -27,8 +34,14 @@ public abstract class Commander {
     @Column(name = "post")
     private POST post;
 
+    @Column(name = "role")
+    private Role role;
+
     @Column(name = "age")
     private Integer age;
+
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "password")
     private String password;

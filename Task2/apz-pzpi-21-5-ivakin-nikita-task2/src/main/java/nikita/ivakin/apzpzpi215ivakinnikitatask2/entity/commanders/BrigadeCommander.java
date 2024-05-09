@@ -2,8 +2,12 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.RegimentGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.POST;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 
 import java.util.List;
 
@@ -12,12 +16,16 @@ import java.util.List;
 @Table(name = "brigade_commander", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
 @AttributeOverride(name = "id", column = @Column(name = "brigade_commander_id"))
+@SuperBuilder
 public class BrigadeCommander extends Commander{
 
+    public BrigadeCommander(Integer id, String firstName, String lastName, String secondName, RANK rank, POST post, Role role, Integer age, String email, String password, String passportNumber, BrigadeGroup brigadeGroupId) {
+        super(id, firstName, lastName, secondName, rank, post, role, age, email, password, passportNumber);
+        this.brigadeGroupId = brigadeGroupId;
+    }
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
             fetch = FetchType.LAZY)

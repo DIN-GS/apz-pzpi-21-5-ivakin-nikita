@@ -34,4 +34,6 @@ public class RegisterRequest {
     private String passportNumber;
 
     private String password;
+
+
 }
