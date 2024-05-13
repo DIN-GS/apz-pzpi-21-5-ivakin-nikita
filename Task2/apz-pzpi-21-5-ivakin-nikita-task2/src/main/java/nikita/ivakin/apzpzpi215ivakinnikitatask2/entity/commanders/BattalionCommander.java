@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.RegimentGroup;
 
 import java.util.List;
 
@@ -26,19 +24,18 @@ public class BattalionCommander extends Commander{
     @JoinColumn(name = "battalion_group_id", unique = true)
     private BattalionGroup battalionGroup;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "brigade_commander_id", unique = true)
+    private BrigadeCommander brigadeCommander;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
-    @JoinColumn(name = "regiment_commander", unique = true)
-    private RegimentCommander regimentCommander;
+    @JoinColumn(name = "brigade_group_id", unique = true)
+    private BrigadeGroup brigadeGroup;
 
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH},
-            fetch = FetchType.LAZY)
-    @JoinColumn(name = "regiment_group_id", unique = true)
-    private RegimentGroup regimentGroup;
 
     @OneToMany(mappedBy = "battalionCommander",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,

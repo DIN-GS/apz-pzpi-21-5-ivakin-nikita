@@ -26,8 +26,8 @@ public class BattalionGroup extends MilitaryGroup {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
-    @JoinColumn(name = "regiment_group_id", unique = true)
-    private RegimentGroup regimentGroup;
+    @JoinColumn(name = "brigade_group_id", unique = true)
+    private BrigadeGroup brigadeGroup;
 
     @OneToMany(mappedBy = "battalionGroup",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,

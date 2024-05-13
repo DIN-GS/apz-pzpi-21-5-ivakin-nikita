@@ -28,17 +28,17 @@ ALTER TABLE project.battalion_commander
     ADD CONSTRAINT fk_battalion_commander_group FOREIGN KEY (battalion_group_id) REFERENCES project.battalion_group(battalion_group_id);
 
 ALTER TABLE project.battalion_commander
-    ADD CONSTRAINT fk_battalion_commander_regiment FOREIGN KEY (regiment_commander_id) REFERENCES project.regiment_commander(regiment_commander_id);
+    ADD CONSTRAINT fk_battalion_commander_brigade FOREIGN KEY (brigade_commander_id) REFERENCES project.brigade_commander(brigade_commander_id);
 
 ALTER TABLE project.battalion_commander
-    ADD CONSTRAINT fk_battalion_commander_regiment_group FOREIGN KEY (regiment_group_id) REFERENCES project.regiment_group(regiment_group_id);
+    ADD CONSTRAINT fk_battalion_commander_brigade_group FOREIGN KEY (brigade_group_id) REFERENCES project.brigade_group(brigade_group_id);
 
 -- Додавання зовнішнього ключа до таблиці project.battalion_group
 ALTER TABLE project.battalion_group
     ADD CONSTRAINT fk_battalion_group_commander FOREIGN KEY (battalion_commander_id) REFERENCES project.battalion_commander(battalion_commander_id);
 
 ALTER TABLE project.battalion_group
-    ADD CONSTRAINT fk_battalion_group_regiment FOREIGN KEY (regiment_group_id) REFERENCES project.regiment_group(regiment_group_id);
+    ADD CONSTRAINT fk_battalion_group_brigade FOREIGN KEY (brigade_group_id) REFERENCES project.brigade_group(brigade_group_id);
 
 -- Додавання зовнішнього ключа до таблиці project.company_commander
 ALTER TABLE project.company_commander
@@ -78,10 +78,10 @@ ALTER TABLE project.plat_group
 ALTER TABLE project.logistic_commander
     ADD CONSTRAINT fk_logistic_commander_company FOREIGN KEY (logistic_company_id) REFERENCES project.logistic_company(logistic_company_id);
 
-ALTER TABLE project.regiment_commander
+ALTER TABLE project.logistic_commander
     ADD CONSTRAINT fk_logistic_commander_brigade FOREIGN KEY (brigade_commander_id) REFERENCES project.brigade_commander(brigade_commander_id);
 
-ALTER TABLE project.regiment_commander
+ALTER TABLE project.logistic_commander
     ADD CONSTRAINT fk_logistic_commander_brigade_group FOREIGN KEY (brigade_group_id) REFERENCES project.brigade_group(brigade_group_id);
 
 -- Додавання зовнішнього ключа до таблиці project.regiment_group

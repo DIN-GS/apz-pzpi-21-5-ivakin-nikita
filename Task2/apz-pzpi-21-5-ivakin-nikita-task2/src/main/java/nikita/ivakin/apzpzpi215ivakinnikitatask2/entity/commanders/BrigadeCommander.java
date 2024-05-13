@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.RegimentGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.POST;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
@@ -37,7 +36,7 @@ public class BrigadeCommander extends Commander{
                     CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    private List<RegimentCommander> regimentCommanders;
+    private List<BattalionCommander> regimentCommanders;
 
     @OneToMany(mappedBy = "brigadeCommander",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,

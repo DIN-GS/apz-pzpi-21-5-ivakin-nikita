@@ -37,7 +37,7 @@ CREATE TABLE project.brigade_group (
                                        brigade_commander_id INTEGER UNIQUE NOT NULL
 );
 
-CREATE TABLE project.regiment_commander (
+/*CREATE TABLE project.regiment_commander (
                                             regiment_commander_id SERIAL PRIMARY KEY,
                                             first_name VARCHAR(255) NOT NULL ,
                                             last_name VARCHAR(255) NOT NULL ,
@@ -76,7 +76,7 @@ CREATE TABLE project.regiment_group (
                                         apc_count INTEGER,
                                         regiment_commander_id INTEGER UNIQUE  NOT NULL,
                                         brigade_group_id INTEGER  NOT NULL
-);
+);*/
 
 CREATE TABLE project.battalion_commander (
                                              battalion_commander_id SERIAL PRIMARY KEY,
@@ -91,8 +91,8 @@ CREATE TABLE project.battalion_commander (
                                              age INTEGER NOT NULL,
                                              passport_number INTEGER NOT NULL,
                                              battalion_group_id INTEGER UNIQUE NOT NULL,
-                                             regiment_commander_id INTEGER UNIQUE NOT NULL,
-                                             regiment_group_id INTEGER NOT NULL
+                                             brigade_commander_id INTEGER UNIQUE NOT NULL ,
+                                             brigade_group_id INTEGER NOT NULL
 );
 
 CREATE TABLE project.battalion_group (
@@ -116,7 +116,7 @@ CREATE TABLE project.battalion_group (
                                          tank_count INTEGER,
                                          apc_count INTEGER,
                                          battalion_commander_id INTEGER UNIQUE NOT NULL ,
-                                         regiment_group_id INTEGER NOT NULL
+                                         brigade_group_id INTEGER  NOT NULL
 
 );
 

@@ -3,8 +3,6 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups;
 import jakarta.persistence.*;
 import lombok.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.RegimentCommander;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class BrigadeGroup extends MilitaryGroup {
                     CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    private List<RegimentGroup> regimentGroups;
+    private List<BattalionGroup> regimentGroups;
 
     @OneToMany(mappedBy = "brigadeGroup",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
