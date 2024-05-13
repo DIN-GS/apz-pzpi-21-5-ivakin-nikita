@@ -17,8 +17,6 @@ import java.util.List;
 @AttributeOverride(name = "id", column = @Column(name = "battalion_commander_id"))
 public class BattalionCommander extends Commander{
 
-
-
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
             fetch = FetchType.LAZY)
     @JoinColumn(name = "battalion_group_id", unique = true)
