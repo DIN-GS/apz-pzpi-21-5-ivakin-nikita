@@ -6,7 +6,7 @@ ALTER TABLE project.brigade_commander
 ALTER TABLE project.brigade_group
     ADD CONSTRAINT fk_brigade_group_commander FOREIGN KEY (brigade_commander_id) REFERENCES project.brigade_commander(brigade_commander_id);
 
--- Додавання зовнішнього ключа до таблиці project.regiment_commander
+/*-- Додавання зовнішнього ключа до таблиці project.regiment_commander
 ALTER TABLE project.regiment_commander
     ADD CONSTRAINT fk_regiment_commander_group FOREIGN KEY (regiment_group_id) REFERENCES project.regiment_group(regiment_group_id);
 
@@ -22,7 +22,7 @@ ALTER TABLE project.regiment_group
 
 ALTER TABLE project.regiment_group
     ADD CONSTRAINT fk_regiment_group_brigade FOREIGN KEY (brigade_group_id) REFERENCES project.brigade_group(brigade_group_id);
-
+*/
 -- Додавання зовнішнього ключа до таблиці project.battalion_commander
 ALTER TABLE project.battalion_commander
     ADD CONSTRAINT fk_battalion_commander_group FOREIGN KEY (battalion_group_id) REFERENCES project.battalion_group(battalion_group_id);

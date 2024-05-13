@@ -28,10 +28,10 @@ ALTER TABLE project.logistic_commander ALTER COLUMN logistic_commander_id SET DE
 CREATE SEQUENCE project.plat_commander_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE project.plat_commander ALTER COLUMN plat_commander_id SET DEFAULT nextval('project.plat_commander_id_seq');
 
--- RegimentCommander Entity
+/*-- RegimentCommander Entity
 CREATE SEQUENCE project.regiment_commander_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE project.regiment_commander ALTER COLUMN regiment_commander_id SET DEFAULT nextval('project.regiment_commander_id_seq');
-
+*/
 -- BattalionGroup Entity
 CREATE SEQUENCE project.battalion_group_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE project.battalion_group ALTER COLUMN battalion_group_id SET DEFAULT nextval('project.battalion_group_id_seq');
@@ -52,6 +52,6 @@ ALTER TABLE project.logistic_company ALTER COLUMN logistic_company_id SET DEFAUL
 CREATE SEQUENCE project.plat_group_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE project.plat_group ALTER COLUMN plat_group_id SET DEFAULT nextval('project.plat_group_id_seq');
 
--- RegimentGroup Entity
+/*-- RegimentGroup Entity
 CREATE SEQUENCE project.regiment_group_id_seq START WITH 1 INCREMENT BY 1;
-ALTER TABLE project.regiment_group ALTER COLUMN regiment_group_id SET DEFAULT nextval('project.regiment_group_id_seq');
+ALTER TABLE project.regiment_group ALTER COLUMN regiment_group_id SET DEFAULT nextval('project.regiment_group_id_seq');*/

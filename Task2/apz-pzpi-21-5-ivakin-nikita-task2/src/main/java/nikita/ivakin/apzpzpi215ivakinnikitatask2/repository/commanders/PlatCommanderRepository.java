@@ -1,4 +1,10 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders;
 
-public interface PlatCommanderRepository {
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface PlatCommanderRepository extends JpaRepository<PlatCommander, Long> {
+
 }
