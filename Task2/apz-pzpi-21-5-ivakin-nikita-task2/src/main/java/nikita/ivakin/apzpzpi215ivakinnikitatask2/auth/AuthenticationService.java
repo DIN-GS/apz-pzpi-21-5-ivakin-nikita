@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BrigadeCommanderService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.*;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.JwtService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.Token;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.TokenRepository;
@@ -31,6 +31,10 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final BrigadeCommanderService brigadeCommanderService;
+    private final BattalionCommanderService battalionCommanderService;
+    private final CompanyCommanderService companyCommanderService;
+    private final PlatCommanderService platCommanderService;
+    private final LogisticCompanyService logisticCompanyService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -61,8 +65,69 @@ public class AuthenticationService {
                         .build();
                 brigadeCommanderService.save(brigCommander);
                 break;
+            case "BATTALION_COMMANDER":
+                BattalionCommander battalionCommander = (BattalionCommander) BattalionCommander.builder()
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .secondName(request.getSecondName())
+                        .age(request.getAge())
+                        .passportNumber(request.getPassportNumber())
+                        .email(request.getEmail())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .post(request.getPost())
+                        .rank(request.getRank())
+                        .role(request.getRole())
+                        .build();
+                battalionCommanderService.save(battalionCommander);
+                break;
+            case "COMPANY_COMMANDER":
+                CompanyCommander companyCommander = (CompanyCommander) CompanyCommander.builder()
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .secondName(request.getSecondName())
+                        .age(request.getAge())
+                        .passportNumber(request.getPassportNumber())
+                        .email(request.getEmail())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .post(request.getPost())
+                        .rank(request.getRank())
+                        .role(request.getRole())
+                        .build();
+                companyCommanderService.save(companyCommander);
+                break;
+            case "PLAT_COMMANDER":
+                PlatCommander platCommander = (PlatCommander) PlatCommander.builder()
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .secondName(request.getSecondName())
+                        .age(request.getAge())
+                        .passportNumber(request.getPassportNumber())
+                        .email(request.getEmail())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .post(request.getPost())
+                        .rank(request.getRank())
+                        .role(request.getRole())
+                        .build();
+                platCommanderService.save(platCommander);
+                break;
+            case "LOGISTIC_COMMANDER":
+                LogisticCommander logisticCommander = (LogisticCommander) LogisticCommander.builder()
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .secondName(request.getSecondName())
+                        .age(request.getAge())
+                        .passportNumber(request.getPassportNumber())
+                        .email(request.getEmail())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .post(request.getPost())
+                        .rank(request.getRank())
+                        .role(request.getRole())
+                        .build();
+                logisticCompanyService.save(logisticCommander);
+                break;
+
             default:
-                log.info("User didn't found");
+                    log.info("Commander wasn't created.");
         }
 
 

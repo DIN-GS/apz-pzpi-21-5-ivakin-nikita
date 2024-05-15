@@ -5,16 +5,17 @@ public enum POST {
     REGIMENT_COMMANDER("Командир полку"),
     BATTALION_COMMANDER("Командир батальйону"),
     COMPANY_COMMANDER("Командир роти"),
-    PLAT_COMMANDER("Командир взводу");
+    PLAT_COMMANDER("Командир взводу"),
+    LOGISTIC_COMMANDER("Командир логістичної роти");
 
-    private final String role;
+    private final String post;
 
-    POST(String role) {
-        this.role = role;
+    POST(String post) {
+        this.post = post;
     }
 
     public String getRole() {
-        return role;
+        return post;
     }
 
 }

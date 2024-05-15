@@ -3,6 +3,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
@@ -11,7 +12,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticC
 @Table(name = "logistic_commander", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @AttributeOverride(name = "id", column = @Column(name = "logistic_commander_id"))

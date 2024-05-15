@@ -14,7 +14,11 @@ import static nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Permission.*;
 @RequiredArgsConstructor
 public enum Role {
 
-    USER(Collections.emptySet()),
+    BRIGADE_COMMANDER(Collections.emptySet()),
+    BATTALION_COMMANDER(Collections.emptySet()),
+    COMPANY_COMMANDER(Collections.emptySet()),
+    PLAT_COMMANDER(Collections.emptySet()),
+    LOGISTIC_COMMANDER(Collections.emptySet()),
     ADMIN(Collections.emptySet());
 
     @Getter
