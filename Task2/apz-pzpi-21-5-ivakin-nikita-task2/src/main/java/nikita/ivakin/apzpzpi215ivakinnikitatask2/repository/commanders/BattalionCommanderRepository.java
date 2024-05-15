@@ -4,7 +4,11 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionComm
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface BattalionCommanderRepository extends JpaRepository<BattalionCommander, Long> {
+
+    Optional<BattalionCommander> findBattalionCommanderByBattalionCommanderId(Integer id);
 
 }

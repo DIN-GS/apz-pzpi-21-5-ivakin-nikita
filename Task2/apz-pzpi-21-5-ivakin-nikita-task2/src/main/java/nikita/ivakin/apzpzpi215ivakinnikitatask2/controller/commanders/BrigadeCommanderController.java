@@ -1,11 +1,12 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
-import org.springframework.http.HttpEntity;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BrigadeCommanderService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,26 +17,34 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/api/brig-com")
+@RequiredArgsConstructor
 public class BrigadeCommanderController {
+
+    private final BrigadeCommanderService brigadeCommanderService;
+    private final BattalionGroupService battalionGroupService;
 
     @GetMapping("/brigade-military-groups")
     public ResponseEntity<List<MilitaryGroup>> getMilitaryGroups() {
-        List<MilitaryGroup> militaryGroups = new ArrayList<MilitaryGroup>();
+        List<MilitaryGroup> militaryGroups = new ArrayList<>();
         return new ResponseEntity<>(militaryGroups, HttpStatus.OK);
     }
 
     @PostMapping("/create/brigade")
     public ResponseEntity<Boolean> createBrigade(@RequestBody BrigadeGroupDTO brigadeGroupDTO) {
-        return new ResponseEntity<>(true, HttpStatus.CREATED);
+        boolean result = brigadeCommanderService.createBrigade(brigadeGroupDTO);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PostMapping("/create/battalion")
     public ResponseEntity<Boolean> createBattalion(@RequestBody BattalionGroupDTO battalionGroupDTO) {
-        return new ResponseEntity<>(true, HttpStatus.CREATED);
+        boolean result = battalionGroupService.createBattalion(battalionGroupDTO);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PutMapping("/assign/battalion-commander")
-    public ResponseEntity<Boolean> assignBattalionCommander(@RequestParam Integer battalionCommanderId) {
+    public ResponseEntity<Boolean> assignBattalionCommander(@RequestParam Integer battalionCommanderId, @RequestParam Integer battalionGroupId) {
+        //boolean result = brigadeCommanderService.assignBattalionCommander(battalionCommanderId);
+        boolean result = battalionGroupService.assignBattalionCommander(battalionCommanderId, battalionGroupId);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 

@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface BrigadeCommanderRepository extends JpaRepository<BrigadeCommander, Long> {
 
     /*Optional<BrigadeCommander> findBrigadeCommanderByBrigadeCommanderId(Integer id);
+*/
+    Optional<BrigadeCommander> findBrigadeCommanderByEmail(String email);
 
-    Optional<BrigadeCommander> findBrigadeCommanderByEmail(String email);*/
 }

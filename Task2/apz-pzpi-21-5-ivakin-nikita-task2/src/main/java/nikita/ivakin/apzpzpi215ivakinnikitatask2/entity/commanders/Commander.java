@@ -3,6 +3,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.POST;
@@ -13,6 +14,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+@Getter
 public abstract class Commander {
 
     @Id
