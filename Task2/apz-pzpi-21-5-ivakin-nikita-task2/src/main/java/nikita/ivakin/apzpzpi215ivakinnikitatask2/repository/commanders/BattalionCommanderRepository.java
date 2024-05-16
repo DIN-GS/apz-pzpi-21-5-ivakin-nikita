@@ -11,4 +11,5 @@ public interface BattalionCommanderRepository extends JpaRepository<BattalionCom
 
     Optional<BattalionCommander> findBattalionCommanderById(Integer id);
 
+    Optional<BattalionCommander> findBattalionCommanderByEmail(String email);
 }

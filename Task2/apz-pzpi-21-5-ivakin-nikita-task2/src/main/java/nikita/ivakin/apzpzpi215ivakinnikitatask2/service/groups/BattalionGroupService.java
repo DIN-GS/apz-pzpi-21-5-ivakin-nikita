@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BattalionCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.BattalionGroupRepository;
@@ -24,8 +25,9 @@ public class BattalionGroupService {
     @Autowired
     private final BattalionCommanderService battalionCommanderService;
 
-    public boolean createBattalion(BattalionGroupDTO battalionGroupDTO) {
+    public boolean createBattalionGroup(BattalionGroupDTO battalionGroupDTO, BrigadeCommander brigadeCommander) {
         BattalionGroup battalionGroup = BattalionGroup.builder()
+                .brigadeGroup(brigadeCommander.getBrigadeGroupId())
                 .ammo40mmGpCount(battalionGroupDTO.getAmmo40mmGpCount())
                 .ammo40mmRpgCount(battalionGroupDTO.getAmmo40mmRpgCount())
                 .ammo145KpvtCount(battalionGroupDTO.getAmmo145KpvtCount())
@@ -41,7 +43,13 @@ public class BattalionGroupService {
                 .apcCount(battalionGroupDTO.getApcCount())
                 .tankCount(battalionGroupDTO.getTankCount())
                 .build();
-        battalionGroupRepository.save(battalionGroup);
+        try {
+            save(battalionGroup);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+
         return true;
     }
 

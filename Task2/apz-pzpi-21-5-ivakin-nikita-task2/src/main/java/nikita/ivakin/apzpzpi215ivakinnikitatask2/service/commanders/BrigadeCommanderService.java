@@ -4,12 +4,16 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BrigadeCommanderRepository;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BrigadeGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.LogisticCompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,10 @@ public class BrigadeCommanderService {
     private final BrigadeGroupService brigadeGroupService;
     @Autowired
     private final LogisticCompanyService logisticCompanyService;
+    @Autowired
+    private final BattalionGroupService battalionGroupService;
+    @Autowired
+    private final BattalionCommanderService battalionCommanderService;
 
     public BrigadeCommander getAuthenticatedBrigadeCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -37,6 +45,7 @@ public class BrigadeCommanderService {
         return findBrigadeCommanderByEmail(brigadeCommanderEmail);
     }
 
+    //TO DO: work with return statement
     public boolean createBrigade(BrigadeGroupDTO brigadeGroupDTO) {
         BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
         brigadeGroupService.createBrigadeGroup(brigadeGroupDTO, brigadeCommander);
@@ -48,11 +57,31 @@ public class BrigadeCommanderService {
 
     public boolean createLogisticCompany(LogisticCompanyDTO logisticCompanyDTO) {
         BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
-        logisticCompanyService.createLogisticCompany(logisticCompanyDTO, brigadeCommander);
-        return true;
+        return logisticCompanyService.createLogisticCompany(logisticCompanyDTO, brigadeCommander);
+    }
+
+    public boolean createBattalion(BattalionGroupDTO battalionGroupDTO) {
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        return battalionGroupService.createBattalionGroup(battalionGroupDTO, brigadeCommander);
     }
 
     public boolean assignLogisticCompanyCommander(LogisticCommander logisticCompanyCommander){
+
+        return true;
+    }
+
+    public boolean assignBattalionCommander(Integer battalionCommanderId, Integer battalionGroupId) {
+        BattalionCommander battalionCommander = battalionCommanderService.findBattalionCommanderById(battalionCommanderId);
+        BattalionGroup battalionGroup = battalionGroupService.findBattalionGroupById(battalionGroupId);
+        battalionGroup.setBattalionCommanderId(battalionCommander);
+        battalionCommander.setBattalionGroup(battalionGroup);
+        try {
+            battalionCommanderService.save(battalionCommander);
+            battalionGroupService.save(battalionGroup);
+        } catch (Exception e) {
+            log.info("Something went wrong in assigning BattalionCommander.");
+            return false;
+        }
 
         return true;
     }

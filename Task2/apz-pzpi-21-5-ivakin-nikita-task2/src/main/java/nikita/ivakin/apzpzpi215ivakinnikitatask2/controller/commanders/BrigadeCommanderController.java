@@ -46,14 +46,14 @@ public class BrigadeCommanderController {
     //TO DO
     @PostMapping("/create/battalion")
     public ResponseEntity<Boolean> createBattalion(@RequestBody BattalionGroupDTO battalionGroupDTO) {
-        boolean result = battalionGroupService.createBattalion(battalionGroupDTO);
+        boolean result = brigadeCommanderService.createBattalion(battalionGroupDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
 
     @PutMapping("/assign/battalion-commander")
     public ResponseEntity<Boolean> assignBattalionCommander(@RequestParam Integer battalionCommanderId, @RequestParam Integer battalionGroupId) {
-        boolean result = battalionGroupService.assignBattalionCommander(battalionCommanderId, battalionGroupId);
+        boolean result = brigadeCommanderService.assignBattalionCommander(battalionCommanderId, battalionGroupId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
