@@ -1,13 +1,3 @@
--- Token Entity
-CREATE SEQUENCE project.token_id_seq
-    START WITH 1
-    INCREMENT BY 1;
-ALTER TABLE project.token ALTER COLUMN id SET DEFAULT nextval('project.token_id_seq');
-
--- User Entity
-CREATE SEQUENCE project.user_id_seq START WITH 1 INCREMENT BY 1;
-ALTER TABLE project._user ALTER COLUMN id SET DEFAULT nextval('project.user_id_seq');
-
 -- BattalionCommander Entity
 CREATE SEQUENCE project.battalion_commander_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE project.battalion_commander ALTER COLUMN battalion_commander_id SET DEFAULT nextval('project.battalion_commander_id_seq');

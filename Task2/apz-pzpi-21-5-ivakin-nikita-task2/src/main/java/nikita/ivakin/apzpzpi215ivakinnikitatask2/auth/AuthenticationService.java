@@ -34,7 +34,7 @@ public class AuthenticationService {
     private final BattalionCommanderService battalionCommanderService;
     private final CompanyCommanderService companyCommanderService;
     private final PlatCommanderService platCommanderService;
-    private final LogisticCompanyService logisticCompanyService;
+    private final LogisticCommanderService logisticCommanderService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -123,7 +123,7 @@ public class AuthenticationService {
                         .rank(request.getRank())
                         .role(request.getRole())
                         .build();
-                logisticCompanyService.save(logisticCommander);
+                logisticCommanderService.save(logisticCommander);
                 break;
 
             default:

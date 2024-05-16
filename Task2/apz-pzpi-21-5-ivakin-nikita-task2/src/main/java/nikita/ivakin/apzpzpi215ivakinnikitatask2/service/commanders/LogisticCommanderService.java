@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class LogisticCompanyService {
+public class LogisticCommanderService {
 
     @Autowired
     private final LogisticCommanderRepository logisticCommanderRepository;

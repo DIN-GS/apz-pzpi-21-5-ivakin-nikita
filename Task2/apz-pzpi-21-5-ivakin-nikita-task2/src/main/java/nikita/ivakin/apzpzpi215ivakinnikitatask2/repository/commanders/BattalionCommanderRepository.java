@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface BattalionCommanderRepository extends JpaRepository<BattalionCommander, Long> {
 
-    Optional<BattalionCommander> findBattalionCommanderByBattalionCommanderId(Integer id);
+    Optional<BattalionCommander> findBattalionCommanderById(Integer id);
 
 }

@@ -3,10 +3,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BattalionCommanderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,7 @@ public class BattalionCommanderService {
     private final BattalionCommanderRepository battalionCommanderRepository;
 
     public BattalionCommander findBattalionCommanderById(Integer id) {
-        Optional<BattalionCommander> tempBatCom = battalionCommanderRepository.findBattalionCommanderByBattalionCommanderId(id);
+        Optional<BattalionCommander> tempBatCom = battalionCommanderRepository.findBattalionCommanderById(id);
         if (tempBatCom.isPresent()) {
             return tempBatCom.get();
         } else {
