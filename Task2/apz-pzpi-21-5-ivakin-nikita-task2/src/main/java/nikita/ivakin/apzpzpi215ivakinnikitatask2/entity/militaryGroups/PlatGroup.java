@@ -2,6 +2,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 
@@ -9,7 +10,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander
 @Table(name = "plat_group", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @AttributeOverride(name = "id", column = @Column(name = "plat_group_id"))

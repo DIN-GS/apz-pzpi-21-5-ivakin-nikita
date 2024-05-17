@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface CompanyCommanderRepository extends JpaRepository<CompanyCommander, Long> {
 
     Optional<CompanyCommander> findCompanyCommanderById(Integer id);
+
+    Optional<CompanyCommander> findCompanyCommanderByEmail(String email);
 }
