@@ -13,7 +13,6 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticComma
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BrigadeCommanderRepository;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BrigadeGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.LogisticCompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +33,6 @@ public class BrigadeCommanderService {
     private final BrigadeGroupService brigadeGroupService;
     @Autowired
     private final LogisticCompanyService logisticCompanyService;
-    @Autowired
-    private final BattalionGroupService battalionGroupService;
     @Autowired
     private final BattalionCommanderService battalionCommanderService;
 
@@ -62,7 +59,7 @@ public class BrigadeCommanderService {
 
     public boolean createBattalion(BattalionGroupDTO battalionGroupDTO) {
         BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
-        return battalionGroupService.createBattalionGroup(battalionGroupDTO, brigadeCommander);
+        return battalionCommanderService.getBattalionGroupService().createBattalionGroup(battalionGroupDTO, brigadeCommander);
     }
 
     public boolean assignLogisticCompanyCommander(LogisticCommander logisticCompanyCommander){
@@ -72,12 +69,12 @@ public class BrigadeCommanderService {
 
     public boolean assignBattalionCommander(Integer battalionCommanderId, Integer battalionGroupId) {
         BattalionCommander battalionCommander = battalionCommanderService.findBattalionCommanderById(battalionCommanderId);
-        BattalionGroup battalionGroup = battalionGroupService.findBattalionGroupById(battalionGroupId);
+        BattalionGroup battalionGroup = battalionCommanderService.getBattalionGroupService().findBattalionGroupById(battalionGroupId);
         battalionGroup.setBattalionCommanderId(battalionCommander);
         battalionCommander.setBattalionGroup(battalionGroup);
         try {
             battalionCommanderService.save(battalionCommander);
-            battalionGroupService.save(battalionGroup);
+            battalionCommanderService.getBattalionGroupService().save(battalionGroup);
         } catch (Exception e) {
             log.info("Something went wrong in assigning BattalionCommander.");
             return false;

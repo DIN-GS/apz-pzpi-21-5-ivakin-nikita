@@ -22,8 +22,6 @@ public class BattalionGroupService {
 
     @Autowired
     private final BattalionGroupRepository battalionGroupRepository;
-    @Autowired
-    private final BattalionCommanderService battalionCommanderService;
 
     public boolean createBattalionGroup(BattalionGroupDTO battalionGroupDTO, BrigadeCommander brigadeCommander) {
         BattalionGroup battalionGroup = BattalionGroup.builder()
@@ -53,7 +51,7 @@ public class BattalionGroupService {
         return true;
     }
 
-    public boolean assignBattalionCommander(Integer batComId, Integer battalionGroupId) {
+    /*public boolean assignBattalionCommander(Integer batComId, Integer battalionGroupId) {
         BattalionCommander battalionCommander = battalionCommanderService.findBattalionCommanderById(batComId);
         BattalionGroup battalionGroup = findBattalionGroupById(battalionGroupId);
         battalionGroup.setBattalionCommanderId(battalionCommander);
@@ -64,7 +62,7 @@ public class BattalionGroupService {
             return false;
         }
         return true;
-    }
+    }*/
 
     public BattalionGroup findBattalionGroupById(Integer id) {
         Optional<BattalionGroup> tempBatGroup = battalionGroupRepository.findBattalionGroupById(id);

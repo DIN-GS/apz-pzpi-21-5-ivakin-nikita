@@ -91,8 +91,8 @@ CREATE TABLE project.battalion_commander (
                                              age INTEGER NOT NULL,
                                              passport_number VARCHAR(255) NOT NULL,
                                              battalion_group_id INTEGER UNIQUE,
-                                             brigade_commander_id INTEGER UNIQUE NOT NULL ,
-                                             brigade_group_id INTEGER NOT NULL
+                                             brigade_commander_id INTEGER UNIQUE,
+                                             brigade_group_id INTEGER
 );
 
 CREATE TABLE project.battalion_group (
@@ -133,8 +133,8 @@ CREATE TABLE project.company_commander (
                                            age INTEGER NOT NULL,
                                            passport_number VARCHAR(255) NOT NULL,
                                            company_group_id INTEGER UNIQUE,
-                                           battalion_commander_id INTEGER UNIQUE NOT NULL,
-                                           battalion_group_id INTEGER NOT NULL
+                                           battalion_commander_id INTEGER UNIQUE ,
+                                           battalion_group_id INTEGER
 );
 
 CREATE TABLE project.company_group (
@@ -174,8 +174,8 @@ CREATE TABLE project.plat_commander (
                                         age INTEGER NOT NULL,
                                         passport_number VARCHAR(255) NOT NULL,
                                         plat_group_id INTEGER UNIQUE,
-                                        company_commander_id INTEGER UNIQUE NOT NULL,
-                                        company_group_id INTEGER NOT NULL
+                                        company_commander_id INTEGER UNIQUE ,
+                                        company_group_id INTEGER
 );
 
 CREATE TABLE project.plat_group (
@@ -215,8 +215,8 @@ CREATE TABLE project.logistic_commander (
                                             age INTEGER NOT NULL,
                                             passport_number VARCHAR(255) NOT NULL,
                                             logistic_company_id INTEGER UNIQUE,
-                                            brigade_commander_id INTEGER UNIQUE NOT NULL ,
-                                            brigade_group_id INTEGER NOT NULL
+                                            brigade_commander_id INTEGER UNIQUE ,
+                                            brigade_group_id INTEGER
 );
 
 

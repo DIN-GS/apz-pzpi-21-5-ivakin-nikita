@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BattalionCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
@@ -30,6 +31,8 @@ public class BattalionCommanderService {
     private final CompanyCommanderService companyCommanderService;
     @Autowired
     private final CompanyGroupService companyGroupService;
+
+
 
     public BattalionCommander getAuthenticatedBattalionCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -58,6 +61,10 @@ public class BattalionCommanderService {
         return true;
     }
 
+    public BattalionGroup findBattalionGroupById(Integer id) {
+        return  battalionGroupService.findBattalionGroupById(id);
+    }
+
     public BattalionCommander findBattalionCommanderByEmail(String email) {
         Optional<BattalionCommander> tempBatCom = battalionCommanderRepository.findBattalionCommanderByEmail(email);
         if (tempBatCom.isPresent()) {
@@ -76,6 +83,10 @@ public class BattalionCommanderService {
             log.info("Error battalion commander with id" + id + " doesn't exist.");
         }
         return null;
+    }
+
+    public BattalionGroupService getBattalionGroupService() {
+        return battalionGroupService;
     }
 
     @Transactional

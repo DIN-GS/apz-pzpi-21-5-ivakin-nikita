@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping("/api/plat-com")
 public class PlatCommanderController {
 
-    @GetMapping("/get-plats")
-    public ResponseEntity<List<PlatGroup>> getPlats(){
+    /*@GetMapping("/get-plat-resources")
+    public ResponseEntity<PlatGroup> getPlats(){
         List<PlatGroup> platGroups = new ArrayList<>();
         return new ResponseEntity<>(platGroups, HttpStatus.OK);
-    }
+    }*/
 
 }
