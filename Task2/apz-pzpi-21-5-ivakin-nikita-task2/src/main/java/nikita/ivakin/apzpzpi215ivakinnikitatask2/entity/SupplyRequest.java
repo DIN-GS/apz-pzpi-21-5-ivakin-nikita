@@ -1,12 +1,9 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 
 import java.time.LocalDate;
 
@@ -14,7 +11,7 @@ import java.time.LocalDate;
 @Table(name = "supply_request", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder
 @Getter
 @Setter
 public class SupplyRequest {
@@ -23,13 +20,6 @@ public class SupplyRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
     private Integer requestId;
-
-    private Integer commanderId;
-
-    private Integer militaryGroupId;
-
-    @Enumerated(EnumType.STRING)
-    private Role roleOfCommander;
 
     private Integer executiveGroupId;
 
@@ -41,6 +31,9 @@ public class SupplyRequest {
     private LocalDate dateOfRequest;
 
     private LocalDate executionСomplitionDate;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
             fetch = FetchType.LAZY)

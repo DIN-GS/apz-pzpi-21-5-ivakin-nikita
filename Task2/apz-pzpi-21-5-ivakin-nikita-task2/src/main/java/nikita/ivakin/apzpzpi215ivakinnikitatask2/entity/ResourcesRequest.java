@@ -1,18 +1,14 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
+import lombok.*;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 
 @Entity
 @Table(name = "resources_request", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder
 @Getter
 @Setter
 public class ResourcesRequest {
@@ -21,6 +17,13 @@ public class ResourcesRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "resources_request_id")
     private Integer id;
+
+    private Integer commanderId;
+
+    private Integer militaryGroupId;
+
+    @Enumerated(EnumType.STRING)
+    private Role roleOfCommander;
 
     @Column(name = "ammo_556x45ar_count")
     private int ammo556x45ArCount;

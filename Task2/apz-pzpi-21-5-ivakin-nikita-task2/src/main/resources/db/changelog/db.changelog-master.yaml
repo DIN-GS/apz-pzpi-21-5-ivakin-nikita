@@ -11,3 +11,9 @@ databaseChangeLog:
   - include:
       file: 004-added-sequences-for-entities.sql
       relativeToChangelogFile: true
+  - include:
+      file: 005-create-tables-for-supplies-operations.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 006-added-sequences-for-supply-resources-and-request-resources.sql
+      relativeToChangelogFile: true
