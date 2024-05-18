@@ -3,7 +3,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Request;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.PlatCommanderService;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class PlatCommanderController {
 
     //For one Plat to see if it was done
     @GetMapping("/get/plat-requests")
-    public ResponseEntity<List<Request>> getPlatRequests(){
+    public ResponseEntity<List<SupplyRequest>> getPlatRequests(){
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 

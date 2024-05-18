@@ -3,7 +3,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Request;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.CompanyCommanderService;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class CompanyCommanderController {
     }
 
     @GetMapping("/get/plat-requests")
-    public ResponseEntity<List<Request>> getPlatsRequests(){
+    public ResponseEntity<List<SupplyRequest>> getPlatsRequests(){
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 

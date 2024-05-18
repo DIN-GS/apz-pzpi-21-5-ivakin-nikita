@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Request;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BrigadeCommanderService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
@@ -59,7 +59,7 @@ public class BrigadeCommanderController {
     }
 
     @GetMapping("/get/battalion-requests")
-    public ResponseEntity<List<Request>> getBattalionsRequests(){
+    public ResponseEntity<List<SupplyRequest>> getBattalionsRequests(){
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 
