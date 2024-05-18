@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface PlatCommanderRepository extends JpaRepository<PlatCommander, Long> {
 
     Optional<PlatCommander> findPlatCommanderById(Integer id);
+
+    Optional<PlatCommander> findPlatCommanderByEmail(String email);
 }
