@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Request;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BrigadeCommanderService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
@@ -55,6 +56,21 @@ public class BrigadeCommanderController {
     public ResponseEntity<Boolean> assignBattalionCommander(@RequestParam Integer battalionCommanderId, @RequestParam Integer battalionGroupId) {
         boolean result = brigadeCommanderService.assignBattalionCommander(battalionCommanderId, battalionGroupId);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/get/battalion-requests")
+    public ResponseEntity<List<Request>> getBattalionsRequests(){
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    }
+
+    @PostMapping("/send/resources-to-battalion")
+    public ResponseEntity<Boolean> sendResources() {
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @PostMapping("/ask/for-resources")
+    public ResponseEntity<Boolean> askForResources(){
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
 

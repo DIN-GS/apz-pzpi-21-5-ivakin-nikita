@@ -3,6 +3,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Request;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.CompanyCommanderService;
 import org.springframework.http.HttpStatus;
@@ -36,5 +37,20 @@ public class CompanyCommanderController {
     public ResponseEntity<Boolean> assignPlatCommander(@RequestParam Integer platCommanderId, @RequestParam Integer platGroupId) {
         boolean result = companyCommanderService.assignPlatCommander(platCommanderId, platGroupId);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/get/plat-requests")
+    public ResponseEntity<List<Request>> getPlatsRequests(){
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    }
+
+    @PostMapping("/send/resources-to-plat")
+    public ResponseEntity<Boolean> sendResources() {
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @PostMapping("/ask/for-resources")
+    public ResponseEntity<Boolean> askForResources(){
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }
