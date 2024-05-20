@@ -16,12 +16,14 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.CompanyCo
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,7 +40,7 @@ public class CompanyCommanderService {
     @Autowired
     private final ResourcesRequestService resourcesRequestService;
     @Autowired
-    private final SupplyRequestRepository supplyRequestRepository;
+    private final SupplyRequestService supplyRequestService;
 
 
 
@@ -119,6 +121,10 @@ public class CompanyCommanderService {
                 .tankCount(resourcesRequestDTO.getTankCount())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
+                .seniorMilitaryGroupId(companyCommander.getBattalionGroup().getId())
+                .commanderId(companyCommander.getId())
+                .militaryGroupId(companyCommander.getCompanyGroup().getId())
+                .roleOfCommander(companyCommander.getRole())
                 .dateOfRequest(LocalDate.now())
                 .status(Status.NOT_PROCESSED)
                 .build();
@@ -131,12 +137,22 @@ public class CompanyCommanderService {
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(companyCommander.getId(), companyCommander.getCompanyGroup().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
-            supplyRequestRepository.save(supplyRequest);
+            supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
             log.info(e.getMessage());
             return false;
         }
         return true;
+    }
+
+    public List<SupplyRequest> getCompanyRequests() {
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        return supplyRequestService.getSupplyRequestsForCompanyByCompanyId(companyCommander.getCompanyGroup().getId());
+    }
+
+    public List<SupplyRequest> getPlatsRequests() {
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        return supplyRequestService.getSupplyRequestsForPlatsByCompanyId(companyCommander.getCompanyGroup().getId());
     }
 }
 

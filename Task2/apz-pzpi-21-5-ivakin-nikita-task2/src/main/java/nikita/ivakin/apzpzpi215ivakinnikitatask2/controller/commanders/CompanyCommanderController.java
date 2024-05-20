@@ -40,9 +40,16 @@ public class CompanyCommanderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/get/company-requests")
+    public ResponseEntity<List<SupplyRequest>> getCompanyRequests(){
+        List<SupplyRequest> supplyRequests = companyCommanderService.getCompanyRequests();
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
+    }
+
     @GetMapping("/get/plat-requests")
     public ResponseEntity<List<SupplyRequest>> getPlatsRequests(){
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        List<SupplyRequest> supplyRequests = companyCommanderService.getPlatsRequests();
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
     @PostMapping("/send/resources-to-plat")

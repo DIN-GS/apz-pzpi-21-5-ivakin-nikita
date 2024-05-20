@@ -17,3 +17,9 @@ databaseChangeLog:
   - include:
       file: 006-added-sequences-for-supply-resources-and-request-resources.sql
       relativeToChangelogFile: true
+  - include:
+      file: 007-alter-table-supply-request.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 008-alter-table-supply-requests.sql
+      relativeToChangelogFile: true

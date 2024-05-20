@@ -17,6 +17,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyReque
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.CompanyGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +42,7 @@ public class BattalionCommanderService {
     @Autowired
     private final ResourcesRequestService resourcesRequestService;
     @Autowired
-    private final SupplyRequestRepository supplyRequestRepository;
+    private final SupplyRequestService supplyRequestRepository;
 
 
 
@@ -127,6 +128,10 @@ public class BattalionCommanderService {
                 .tankCount(resourcesRequestDTO.getTankCount())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
+                .seniorMilitaryGroupId(battalionCommander.getBrigadeGroup().getId())
+                .commanderId(battalionCommander.getId())
+                .militaryGroupId(battalionCommander.getBattalionGroup().getId())
+                .roleOfCommander(battalionCommander.getRole())
                 .dateOfRequest(LocalDate.now())
                 .status(Status.NOT_PROCESSED)
                 .build();

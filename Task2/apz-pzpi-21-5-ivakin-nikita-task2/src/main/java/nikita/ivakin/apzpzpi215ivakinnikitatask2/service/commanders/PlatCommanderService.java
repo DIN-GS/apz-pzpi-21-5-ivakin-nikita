@@ -11,15 +11,17 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatCommanderRepository;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +36,7 @@ public class PlatCommanderService {
     @Autowired
     private final ResourcesRequestService resourcesRequestService;
     @Autowired
-    private final SupplyRequestRepository supplyRequestRepository;
+    private final SupplyRequestService supplyRequestService;
 
     public PlatCommander getAuthenticatedPlatCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -93,6 +95,10 @@ public class PlatCommanderService {
                 .tankCount(resourcesRequestDTO.getTankCount())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
+                .seniorMilitaryGroupId(platCommander.getCompanyGroup().getId())
+                .commanderId(platCommander.getId())
+                .militaryGroupId(platCommander.getPlatGroup().getId())
+                .roleOfCommander(platCommander.getRole())
                 .dateOfRequest(LocalDate.now())
                 .status(Status.NOT_PROCESSED)
                 .build();
@@ -105,7 +111,7 @@ public class PlatCommanderService {
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(platCommander.getId(), platCommander.getPlatGroup().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
-            supplyRequestRepository.save(supplyRequest);
+            supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
             log.info(e.getMessage());
             return false;
@@ -113,10 +119,16 @@ public class PlatCommanderService {
         return true;
     }
 
+    public List<SupplyRequest> getPlatRequests() {
+        PlatCommander platCommander = getAuthenticatedPlatCommander();
+        return supplyRequestService.getSupplyRequestsForPlatByPlatId(platCommander.getPlatGroup().getId());
+    }
+
     @Transactional
     public void save(PlatCommander platCommander) {
         platCommanderRepository.save(platCommander);
     }
+
 
 
 }

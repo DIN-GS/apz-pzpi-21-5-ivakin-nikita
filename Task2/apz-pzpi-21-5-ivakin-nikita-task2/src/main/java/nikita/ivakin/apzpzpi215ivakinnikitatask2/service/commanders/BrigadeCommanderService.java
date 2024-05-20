@@ -142,6 +142,10 @@ public class BrigadeCommanderService {
                 .tankCount(resourcesRequestDTO.getTankCount())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
+                .seniorMilitaryGroupId(null)
+                .commanderId(brigadeCommander.getId())
+                .militaryGroupId(brigadeCommander.getBrigadeGroupId().getId())
+                .roleOfCommander(brigadeCommander.getRole())
                 .dateOfRequest(LocalDate.now())
                 .status(Status.NOT_PROCESSED)
                 .build();

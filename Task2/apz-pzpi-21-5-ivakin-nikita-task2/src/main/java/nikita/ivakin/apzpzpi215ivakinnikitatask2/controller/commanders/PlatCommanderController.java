@@ -34,7 +34,8 @@ public class PlatCommanderController {
     //For one Plat to see if it was done
     @GetMapping("/get/plat-requests")
     public ResponseEntity<List<SupplyRequest>> getPlatRequests(){
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        List<SupplyRequest> supplyRequests = platCommanderService.getPlatRequests();
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
     @PostMapping("/update/plat-resources")

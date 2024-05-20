@@ -25,6 +25,15 @@ public class SupplyRequest {
 
     private Integer executiveCommanderId;
 
+    private Integer commanderId;
+
+    private Integer militaryGroupId;
+
+    private Integer seniorMilitaryGroupId;
+
+    @Enumerated(EnumType.STRING)
+    private Role roleOfCommander;
+
     @Enumerated(EnumType.STRING)
     private Role roleOfExecutiveCommander;
 
