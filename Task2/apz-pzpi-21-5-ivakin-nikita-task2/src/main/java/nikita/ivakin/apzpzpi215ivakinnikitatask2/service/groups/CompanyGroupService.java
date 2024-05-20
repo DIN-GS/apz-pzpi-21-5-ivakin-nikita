@@ -23,6 +23,7 @@ public class CompanyGroupService {
     public boolean createCompanyGroup(CompanyGroupDTO companyGroupDTO, BattalionCommander battalionCommander) {
         CompanyGroup companyGroup = CompanyGroup.builder()
                 .battalionGroup(battalionCommander.getBattalionGroup())
+                .personnelCount(companyGroupDTO.getPersonnelCount())
                 .ammo40mmGpCount(companyGroupDTO.getAmmo40mmGpCount())
                 .ammo40mmRpgCount(companyGroupDTO.getAmmo40mmRpgCount())
                 .ammo145KpvtCount(companyGroupDTO.getAmmo145KpvtCount())

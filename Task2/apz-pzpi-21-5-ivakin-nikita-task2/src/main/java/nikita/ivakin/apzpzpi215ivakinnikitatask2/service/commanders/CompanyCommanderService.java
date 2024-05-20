@@ -45,10 +45,13 @@ public class CompanyCommanderService {
     }
 
     public boolean assignPlatCommander(Integer platCommanderId, Integer platGroupId) {
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
         PlatCommander platCommander = platCommanderService.findPlatCommanderById(platCommanderId);
         PlatGroup platGroup = platGroupService.findPlatGroupById(platGroupId);
         platGroup.setPlatCommanderId(platCommander);
         platCommander.setPlatGroup(platGroup);
+        platCommander.setCompanyCommander(companyCommander);
+        platCommander.setCompanyGroup(companyCommander.getCompanyGroup());
         try {
             platCommanderService.save(platCommander);
             platGroupService.save(platGroup);

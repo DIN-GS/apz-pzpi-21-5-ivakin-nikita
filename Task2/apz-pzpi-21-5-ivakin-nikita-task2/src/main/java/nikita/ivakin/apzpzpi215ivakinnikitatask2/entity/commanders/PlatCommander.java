@@ -20,7 +20,7 @@ public class PlatCommander extends Commander{
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
             fetch = FetchType.LAZY)
-
+    @JoinColumn(name = "plat_group_id")
     private PlatGroup platGroup;
 
 

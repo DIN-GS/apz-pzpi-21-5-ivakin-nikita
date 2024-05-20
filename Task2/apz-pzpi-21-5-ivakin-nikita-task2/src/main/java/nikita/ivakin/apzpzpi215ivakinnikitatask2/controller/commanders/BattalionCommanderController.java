@@ -43,6 +43,7 @@ public class BattalionCommanderController {
 
     @GetMapping("/get/company-requests")
     public ResponseEntity<List<SupplyRequest>> getCompaniesRequests(){
+
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 

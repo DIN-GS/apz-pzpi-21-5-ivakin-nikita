@@ -3,11 +3,13 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +26,8 @@ public class PlatCommanderService {
     private final PlatCommanderRepository platCommanderRepository;
     @Autowired
     private final PlatGroupService platGroupService;
+    @Autowired
+    private final ResourcesRequestService resourcesRequestService;
 
     public PlatCommander getAuthenticatedPlatCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,8 +64,15 @@ public class PlatCommanderService {
        return platGroupService.updatePlatResources(platGroupDTO);
     }
 
+    public boolean askForResources(ResourcesRequestDTO resourcesRequestDTO) {
+
+        return true;
+    }
+
     @Transactional
     public void save(PlatCommander platCommander) {
         platCommanderRepository.save(platCommander);
     }
+
+
 }

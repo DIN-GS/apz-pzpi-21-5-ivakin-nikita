@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.PlatGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ public class PlatGroupService {
 
     public PlatGroup fillPlatGroup(PlatGroupDTO platGroupDTO){
         PlatGroup platGroup = PlatGroup.builder()
+                .personnelCount(platGroupDTO.getPersonnelCount())
                 .ammo40mmGpCount(platGroupDTO.getAmmo40mmGpCount())
                 .ammo40mmRpgCount(platGroupDTO.getAmmo40mmRpgCount())
                 .ammo145KpvtCount(platGroupDTO.getAmmo145KpvtCount())
