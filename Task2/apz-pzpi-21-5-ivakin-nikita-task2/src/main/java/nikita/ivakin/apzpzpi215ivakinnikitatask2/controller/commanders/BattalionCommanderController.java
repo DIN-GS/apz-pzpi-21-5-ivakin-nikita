@@ -56,6 +56,6 @@ public class BattalionCommanderController {
     @PostMapping("/ask/for-resources")
     public ResponseEntity<Boolean> askForResources(@RequestBody ResourcesRequestDTO resourcesRequestDTO){
         boolean result = battalionCommanderService.askForResource(resourcesRequestDTO);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
