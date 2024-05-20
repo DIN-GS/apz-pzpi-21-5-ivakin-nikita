@@ -41,11 +41,16 @@ public class BattalionCommanderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/get/battalion-requests")
+    public ResponseEntity<List<SupplyRequest>> getBattalionRequests(){
+        List<SupplyRequest> supplyRequests = battalionCommanderService.getBattalionRequests();
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
+    }
 
     @GetMapping("/get/company-requests")
     public ResponseEntity<List<SupplyRequest>> getCompaniesRequests(){
-
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        List<SupplyRequest> supplyRequests = battalionCommanderService.getCompaniesRequests();
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
     @PostMapping("/send/resources-to-company")

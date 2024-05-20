@@ -13,5 +13,4 @@ public interface SupplyRequestRepository extends JpaRepository<SupplyRequest, In
 
     List<SupplyRequest> findSupplyRequestsBySeniorMilitaryGroupId(Integer id);
 
-
 }

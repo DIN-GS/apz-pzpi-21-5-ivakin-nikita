@@ -19,6 +19,24 @@ public class SupplyRequestService {
     private final SupplyRequestRepository supplyRequestRepository;
 
 
+    public List<SupplyRequest> getSupplyRequestsForCompaniesByBattalionId(Integer id) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupId(id);
+        if (supplyRequests == null || supplyRequests.size() == 0) {
+            log.info("There aren't supply requests for companies group with battalion id " + id);
+        }
+        return supplyRequests;
+    }
+
+    public List<SupplyRequest> getSupplyRequestsForBattalionByBattalionId(Integer id) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupId(id);
+        if (supplyRequests == null || supplyRequests.size() == 0) {
+            log.info("There aren't supply requests for battalion group with id " + id);
+        }
+        return supplyRequests;
+    }
+
+
+
     public List<SupplyRequest> getSupplyRequestsForPlatByPlatId(Integer id) {
         List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupId(id);
         if (supplyRequests == null || supplyRequests.size() == 0) {
@@ -42,6 +60,8 @@ public class SupplyRequestService {
         }
         return supplyRequests;
     }
+
+
 
 
     @Transactional

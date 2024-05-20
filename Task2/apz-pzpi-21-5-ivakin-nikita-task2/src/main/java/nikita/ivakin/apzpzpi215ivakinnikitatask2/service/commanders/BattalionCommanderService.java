@@ -13,7 +13,6 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.Battalion
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BattalionCommanderRepository;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.CompanyGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
@@ -24,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +42,7 @@ public class BattalionCommanderService {
     @Autowired
     private final ResourcesRequestService resourcesRequestService;
     @Autowired
-    private final SupplyRequestService supplyRequestRepository;
+    private final SupplyRequestService supplyRequestService;
 
 
 
@@ -97,6 +97,16 @@ public class BattalionCommanderService {
         return null;
     }
 
+    public List<SupplyRequest> getBattalionRequests() {
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        return supplyRequestService.getSupplyRequestsForBattalionByBattalionId(battalionCommander.getBattalionGroup().getId());
+    }
+
+    public List<SupplyRequest> getCompaniesRequests() {
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        return supplyRequestService.getSupplyRequestsForCompaniesByBattalionId(battalionCommander.getBattalionGroup().getId());
+    }
+
     public BattalionGroupService getBattalionGroupService() {
         return battalionGroupService;
     }
@@ -144,11 +154,14 @@ public class BattalionCommanderService {
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(battalionCommander.getId(), battalionCommander.getBattalionGroup().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
-            supplyRequestRepository.save(supplyRequest);
+            supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
             log.info(e.getMessage());
             return false;
         }
         return true;
     }
+
+
+
 }
