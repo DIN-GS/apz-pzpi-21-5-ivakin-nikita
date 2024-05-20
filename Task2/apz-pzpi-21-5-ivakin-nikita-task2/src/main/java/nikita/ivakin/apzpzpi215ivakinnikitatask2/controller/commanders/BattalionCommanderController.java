@@ -2,6 +2,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
@@ -53,7 +54,8 @@ public class BattalionCommanderController {
     }
 
     @PostMapping("/ask/for-resources")
-    public ResponseEntity<Boolean> askForResources(){
+    public ResponseEntity<Boolean> askForResources(@RequestBody ResourcesRequestDTO resourcesRequestDTO){
+        boolean result = battalionCommanderService.askForResource(resourcesRequestDTO);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }
