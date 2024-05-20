@@ -5,9 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatCommanderRepository;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -28,6 +33,8 @@ public class PlatCommanderService {
     private final PlatGroupService platGroupService;
     @Autowired
     private final ResourcesRequestService resourcesRequestService;
+    @Autowired
+    private final SupplyRequestRepository supplyRequestRepository;
 
     public PlatCommander getAuthenticatedPlatCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -65,7 +72,44 @@ public class PlatCommanderService {
     }
 
     public boolean askForResources(ResourcesRequestDTO resourcesRequestDTO) {
-
+        PlatCommander platCommander = getAuthenticatedPlatCommander();
+        ResourcesRequest resourcesRequest = ResourcesRequest.builder()
+                .commanderId(platCommander.getId())
+                .militaryGroupId(platCommander.getPlatGroup().getId())
+                .roleOfCommander(platCommander.getRole())
+                .ammo40mmGpCount(resourcesRequestDTO.getAmmo40mmGpCount())
+                .ammo40mmRpgCount(resourcesRequestDTO.getAmmo40mmRpgCount())
+                .ammo145KpvtCount(resourcesRequestDTO.getAmmo145KpvtCount())
+                .ammo545x39AkRpkCount(resourcesRequestDTO.getAmmo545x39AkRpkCount())
+                .ammo556x45ArCount(resourcesRequestDTO.getAmmo556x45ArCount())
+                .ammo762PktCount(resourcesRequestDTO.getAmmo762PktCount())
+                .ammo762x39AkCount(resourcesRequestDTO.getAmmo762x39AkCount())
+                .offensiveGrenadesCount(resourcesRequestDTO.getOffensiveGrenadesCount())
+                .defensiveGrenadesCount(resourcesRequestDTO.getDefensiveGrenadesCount())
+                .riflesCount(resourcesRequestDTO.getRiflesCount())
+                .bodyArmorCount(resourcesRequestDTO.getBodyArmorCount())
+                .helmetsCount(resourcesRequestDTO.getHelmetsCount())
+                .apcCount(resourcesRequestDTO.getApcCount())
+                .tankCount(resourcesRequestDTO.getTankCount())
+                .build();
+        SupplyRequest supplyRequest = SupplyRequest.builder()
+                .dateOfRequest(LocalDate.now())
+                .status(Status.NOT_PROCESSED)
+                .build();
+        try {
+            resourcesRequestService.save(resourcesRequest);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+        resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(platCommander.getId(), platCommander.getPlatGroup().getId());
+        supplyRequest.setResourcesRequestId(resourcesRequest);
+        try {
+            supplyRequestRepository.save(supplyRequest);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
         return true;
     }
 
