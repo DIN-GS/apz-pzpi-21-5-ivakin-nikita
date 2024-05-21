@@ -12,22 +12,23 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BrigadeCommanderRepository;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BrigadeGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.LogisticCompanyService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,7 +47,7 @@ public class BrigadeCommanderService {
     @Autowired
     private final ResourcesRequestService resourcesRequestService;
     @Autowired
-    private final SupplyRequestRepository supplyRequestRepository;
+    private final SupplyRequestService supplyRequestService;
 
 
     public BrigadeCommander getAuthenticatedBrigadeCommander() {
@@ -158,11 +159,21 @@ public class BrigadeCommanderService {
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(brigadeCommander.getId(), brigadeCommander.getBrigadeGroupId().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
-            supplyRequestRepository.save(supplyRequest);
+            supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
             log.info(e.getMessage());
             return false;
         }
         return true;
+    }
+
+    public List<SupplyRequest> getBrigadeRequests() {
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        return supplyRequestService.getSupplyRequestsForBrigadeByBrigadeId(brigadeCommander.getBrigadeGroupId().getId(), brigadeCommander.getRole());
+    }
+
+    public List<SupplyRequest> getBattalionRequests() {
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        return supplyRequestService.getSupplyRequestsForBattalionByBrigadeId(brigadeCommander.getBrigadeGroupId().getId(), Role.BATTALION_COMMANDER);
     }
 }

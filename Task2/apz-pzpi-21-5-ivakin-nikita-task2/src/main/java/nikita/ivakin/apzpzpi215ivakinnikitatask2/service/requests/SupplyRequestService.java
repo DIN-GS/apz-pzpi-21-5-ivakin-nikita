@@ -20,10 +20,12 @@ public class SupplyRequestService {
     private final SupplyRequestRepository supplyRequestRepository;
 
 
-    public List<SupplyRequest> getSupplyRequestsForCompaniesByBattalionId(Integer id, Role role) {
-        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(id, role);
+
+
+    public List<SupplyRequest> getSupplyRequestsForBrigadeByBrigadeId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupIdAndRoleOfCommander(id, role);
         if (supplyRequests == null || supplyRequests.size() == 0) {
-            log.info("There aren't supply requests for companies group with battalion id " + id);
+            log.info("There aren't supply requests for brigade group with id " + id);
         }
         return supplyRequests;
     }
@@ -35,8 +37,6 @@ public class SupplyRequestService {
         }
         return supplyRequests;
     }
-
-
 
     public List<SupplyRequest> getSupplyRequestsForPlatByPlatId(Integer id, Role role) {
         List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupIdAndRoleOfCommander(id, role);
@@ -54,6 +54,8 @@ public class SupplyRequestService {
         return supplyRequests;
     }
 
+
+
     public List<SupplyRequest> getSupplyRequestsForPlatsByCompanyId(Integer id, Role role) {
         List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(id, role);
         if (supplyRequests == null || supplyRequests.size() == 0) {
@@ -61,6 +63,24 @@ public class SupplyRequestService {
         }
         return supplyRequests;
     }
+
+    public List<SupplyRequest> getSupplyRequestsForCompaniesByBattalionId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(id, role);
+        if (supplyRequests == null || supplyRequests.size() == 0) {
+            log.info("There aren't supply requests for companies group with battalion id " + id);
+        }
+        return supplyRequests;
+    }
+
+    public List<SupplyRequest> getSupplyRequestsForBattalionByBrigadeId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(id, role);
+        if (supplyRequests == null || supplyRequests.size() == 0) {
+            log.info("There aren't supply requests for battalion groups with brigade id " + id);
+        }
+        return supplyRequests;
+    }
+
+
 
 
 
