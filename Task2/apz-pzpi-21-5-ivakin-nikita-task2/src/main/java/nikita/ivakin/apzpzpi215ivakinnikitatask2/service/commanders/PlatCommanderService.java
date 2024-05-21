@@ -14,7 +14,6 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatComma
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,13 +27,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PlatCommanderService {
 
-    @Autowired
+
     private final PlatCommanderRepository platCommanderRepository;
-    @Autowired
     private final PlatGroupService platGroupService;
-    @Autowired
     private final ResourcesRequestService resourcesRequestService;
-    @Autowired
     private final SupplyRequestService supplyRequestService;
 
     public PlatCommander getAuthenticatedPlatCommander() {
@@ -94,6 +90,7 @@ public class PlatCommanderService {
                 .tankCount(resourcesRequestDTO.getTankCount())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
+                .brigadeCommanderId(platCommander.getBrigadeCommanderId())
                 .seniorMilitaryGroupId(platCommander.getCompanyGroup().getId())
                 .commanderId(platCommander.getId())
                 .militaryGroupId(platCommander.getPlatGroup().getId())

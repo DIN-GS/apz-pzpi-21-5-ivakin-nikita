@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SupplyRequestService {
 
-    @Autowired
+
     private final SupplyRequestRepository supplyRequestRepository;
-
-
 
 
     public List<SupplyRequest> getSupplyRequestsForBrigadeByBrigadeId(Integer id, Role role) {
@@ -80,8 +77,13 @@ public class SupplyRequestService {
         return supplyRequests;
     }
 
-
-
+    public List<SupplyRequest> getAllSupplyRequestsByBrigadeCommanderId(Integer id) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByBrigadeCommanderId(id);
+        if (supplyRequests == null || supplyRequests.size() == 0) {
+            log.info("There aren't supply requests in brigade yet");
+        }
+        return supplyRequests;
+    }
 
 
 
@@ -93,3 +95,4 @@ public class SupplyRequestService {
 
 
 }
+

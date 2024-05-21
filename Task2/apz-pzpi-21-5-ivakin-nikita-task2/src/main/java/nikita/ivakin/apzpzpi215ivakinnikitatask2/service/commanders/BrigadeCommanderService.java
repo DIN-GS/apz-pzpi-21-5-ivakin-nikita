@@ -82,10 +82,12 @@ public class BrigadeCommanderService {
     }
 
     public boolean assignBattalionCommander(Integer battalionCommanderId, Integer battalionGroupId) {
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
         BattalionCommander battalionCommander = battalionCommanderService.findBattalionCommanderById(battalionCommanderId);
         BattalionGroup battalionGroup = battalionCommanderService.getBattalionGroupService().findBattalionGroupById(battalionGroupId);
         battalionGroup.setBattalionCommanderId(battalionCommander);
         battalionCommander.setBattalionGroup(battalionGroup);
+        battalionCommander.setBrigadeCommander(brigadeCommander);
         try {
             battalionCommanderService.save(battalionCommander);
             battalionCommanderService.getBattalionGroupService().save(battalionGroup);

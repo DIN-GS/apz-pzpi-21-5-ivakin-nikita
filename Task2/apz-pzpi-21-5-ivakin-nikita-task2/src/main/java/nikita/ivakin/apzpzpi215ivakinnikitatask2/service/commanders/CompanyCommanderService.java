@@ -17,7 +17,6 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.CompanyCo
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,15 +30,11 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CompanyCommanderService {
 
-    @Autowired
+
     private final CompanyCommanderRepository companyCommanderRepository;
-    @Autowired
     private final PlatGroupService platGroupService;
-    @Autowired
     private final PlatCommanderService platCommanderService;
-    @Autowired
     private final ResourcesRequestService resourcesRequestService;
-    @Autowired
     private final SupplyRequestService supplyRequestService;
 
 
@@ -121,6 +116,7 @@ public class CompanyCommanderService {
                 .tankCount(resourcesRequestDTO.getTankCount())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
+                .brigadeCommanderId(companyCommander.getBrigadeCommanderId())
                 .seniorMilitaryGroupId(companyCommander.getBattalionGroup().getId())
                 .commanderId(companyCommander.getId())
                 .militaryGroupId(companyCommander.getCompanyGroup().getId())

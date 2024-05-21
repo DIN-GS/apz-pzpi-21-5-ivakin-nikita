@@ -31,6 +31,9 @@ public class SupplyRequest {
 
     private Integer seniorMilitaryGroupId;
 
+    @Column(name = "brigade_commander_id")
+    private Integer brigadeCommanderId;
+
     @Enumerated(EnumType.STRING)
     private Role roleOfCommander;
 

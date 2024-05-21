@@ -36,7 +36,8 @@ public class BrigadeCommander extends Commander{
                     CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    private List<BattalionCommander> regimentCommanders;
+    private List<BattalionCommander> battalionCommanders;
+
 
     @OneToMany(mappedBy = "brigadeCommander",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,

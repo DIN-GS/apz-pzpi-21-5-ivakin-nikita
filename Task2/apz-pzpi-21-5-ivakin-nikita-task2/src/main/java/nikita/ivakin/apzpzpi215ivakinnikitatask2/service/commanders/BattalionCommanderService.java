@@ -18,7 +18,6 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupSe
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.CompanyGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -32,17 +31,11 @@ import java.util.Optional;
 @AllArgsConstructor
 public class BattalionCommanderService {
 
-    @Autowired
     private final BattalionCommanderRepository battalionCommanderRepository;
-    @Autowired
     private final BattalionGroupService battalionGroupService;
-    @Autowired
     private final CompanyCommanderService companyCommanderService;
-    @Autowired
     private final CompanyGroupService companyGroupService;
-    @Autowired
     private final ResourcesRequestService resourcesRequestService;
-    @Autowired
     private final SupplyRequestService supplyRequestService;
 
 
@@ -59,10 +52,13 @@ public class BattalionCommanderService {
     }
 
     public boolean assignCompanyCommander(Integer companyCommanderId, Integer companyGroupId){
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
         CompanyCommander companyCommander = companyCommanderService.findCompanyCommanderById(companyCommanderId);
         CompanyGroup companyGroup = companyGroupService.findCompanyGroupById(companyGroupId);
         companyGroup.setCompanyCommanderId(companyCommander);
         companyCommander.setCompanyGroup(companyGroup);
+        companyCommander.setBattalionCommander(battalionCommander);
+
         try {
             companyCommanderService.save(companyCommander);
             companyGroupService.save(companyGroup);
@@ -139,6 +135,7 @@ public class BattalionCommanderService {
                 .tankCount(resourcesRequestDTO.getTankCount())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
+                .brigadeCommanderId(battalionCommander.getBrigadeCommander().getId())
                 .seniorMilitaryGroupId(battalionCommander.getBrigadeGroup().getId())
                 .commanderId(battalionCommander.getId())
                 .militaryGroupId(battalionCommander.getBattalionGroup().getId())

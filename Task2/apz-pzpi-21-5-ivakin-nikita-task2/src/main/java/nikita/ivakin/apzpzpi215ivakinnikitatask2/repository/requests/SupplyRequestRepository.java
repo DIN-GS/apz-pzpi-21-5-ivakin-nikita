@@ -14,4 +14,6 @@ public interface SupplyRequestRepository extends JpaRepository<SupplyRequest, In
 
     List<SupplyRequest> findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(Integer seniorMilitaryGroupId , Role roleOfCommander);
 
+    List<SupplyRequest> findSupplyRequestsByBrigadeCommanderId(Integer brigadeCommanderId);
+
 }

@@ -45,6 +45,9 @@ public class CompanyCommander extends Commander{
     )
     private List<PlatCommander> platCommanders;
 
+    @Column(name = "brigade_commander_id")
+    private Integer brigadeCommanderId;
+
 
 
 }

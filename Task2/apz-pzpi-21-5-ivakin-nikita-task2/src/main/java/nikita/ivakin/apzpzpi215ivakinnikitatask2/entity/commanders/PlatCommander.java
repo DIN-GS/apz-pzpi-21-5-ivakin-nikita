@@ -37,6 +37,7 @@ public class PlatCommander extends Commander{
     @JoinColumn(name = "company_group_id", unique = true)
     private CompanyGroup companyGroup;
 
-
+    @Column(name = "brigade_commander_id")
+    private Integer brigadeCommanderId;
 
 }
