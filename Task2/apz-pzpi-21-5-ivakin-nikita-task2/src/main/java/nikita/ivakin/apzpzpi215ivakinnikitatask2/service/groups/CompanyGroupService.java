@@ -4,12 +4,15 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.CompanyGroupRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -17,8 +20,57 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CompanyGroupService {
 
-    @Autowired
     private final CompanyGroupRepository companyGroupRepository;
+    private final GivenResourcesService givenResourcesService;
+
+    private boolean fillGivenResources(CompanyGroup companyGroup, BattalionCommander battalionCommander){
+        GivenResources givenResources = GivenResources.builder()
+                .militaryGroupId(companyGroup.getId())
+                .brigadeCommanderId(battalionCommander.getBrigadeCommander().getId())
+                .roleOfCommander(Role.COMPANY_COMMANDER)
+                .ammo40mmGpCount(companyGroup.getAmmo40mmGpCount())
+                .ammo40mmRpgCount(companyGroup.getAmmo40mmRpgCount())
+                .ammo145KpvtCount(companyGroup.getAmmo145KpvtCount())
+                .ammo545x39AkRpkCount(companyGroup.getAmmo545x39AkRpkCount())
+                .ammo556x45ArCount(companyGroup.getAmmo556x45ArCount())
+                .ammo762PktCount(companyGroup.getAmmo762PktCount())
+                .ammo762x39AkCount(companyGroup.getAmmo762x39AkCount())
+                .offensiveGrenadesCount(companyGroup.getOffensiveGrenadesCount())
+                .defensiveGrenadesCount(companyGroup.getDefensiveGrenadesCount())
+                .riflesCount(companyGroup.getRiflesCount())
+                .machineGunsCount(companyGroup.getMachineGunsCount())
+                .bodyArmorCount(companyGroup.getBodyArmorCount())
+                .helmetsCount(companyGroup.getHelmetsCount())
+                .apcCount(companyGroup.getApcCount())
+                .tankCount(companyGroup.getTankCount())
+                .foodCount(companyGroup.getFoodCount())
+                .dryRationsCount(companyGroup.getDryRationsCount())
+                .build();
+        try {
+            givenResourcesService.save(givenResources);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean addGivenResourcesForCompany(BattalionCommander battalionCommander){
+        ArrayList<CompanyGroup> companyGroups = companyGroupRepository.findAll();
+        if (companyGroups.size() > 0) {
+            CompanyGroup companyGroup = companyGroups.get(companyGroups.size()-1);
+            try {
+                fillGivenResources(companyGroup, battalionCommander);
+            } catch (Exception e) {
+                log.info("Error creating given resources entity.");
+                return false;
+            }
+        } else {
+            log.info("Error: there aren't any companies for giving resources.");
+            return false;
+        }
+        return true;
+    }
 
     public boolean createCompanyGroup(CompanyGroupDTO companyGroupDTO, BattalionCommander battalionCommander) {
         CompanyGroup companyGroup = CompanyGroup.builder()
@@ -46,7 +98,7 @@ public class CompanyGroupService {
             return false;
         }
 
-        return true;
+        return addGivenResourcesForCompany(battalionCommander);
     }
 
     public CompanyGroup findCompanyGroupById(Integer id) {

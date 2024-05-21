@@ -8,6 +8,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
@@ -18,11 +19,11 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGr
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BrigadeCommanderRepository;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BrigadeGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.LogisticCompanyService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -36,24 +37,53 @@ import java.util.Optional;
 @AllArgsConstructor
 public class BrigadeCommanderService {
 
-    @Autowired
     private final BrigadeCommanderRepository brigadeCommanderRepository;
-    @Autowired
     private final BrigadeGroupService brigadeGroupService;
-    @Autowired
     private final LogisticCompanyService logisticCompanyService;
-    @Autowired
     private final BattalionCommanderService battalionCommanderService;
-    @Autowired
     private final ResourcesRequestService resourcesRequestService;
-    @Autowired
     private final SupplyRequestService supplyRequestService;
+    private final GivenResourcesService givenResourcesService;
+
 
 
     public BrigadeCommander getAuthenticatedBrigadeCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String brigadeCommanderEmail = authentication.getName();
         return findBrigadeCommanderByEmail(brigadeCommanderEmail);
+    }
+
+    private boolean fillGivenResources(BrigadeGroupDTO brigadeGroupDTO, BrigadeCommander brigadeCommander){
+        GivenResources givenResources = GivenResources.builder()
+                .commanderId(brigadeCommander.getId())
+                .militaryGroupId(brigadeCommander.getBrigadeGroupId().getId())
+                .brigadeCommanderId(brigadeCommander.getId())
+                .roleOfCommander(brigadeCommander.getRole())
+                .ammo40mmGpCount(brigadeGroupDTO.getAmmo40mmGpCount())
+                .ammo40mmRpgCount(brigadeGroupDTO.getAmmo40mmRpgCount())
+                .ammo145KpvtCount(brigadeGroupDTO.getAmmo145KpvtCount())
+                .ammo545x39AkRpkCount(brigadeGroupDTO.getAmmo545x39AkRpkCount())
+                .ammo556x45ArCount(brigadeGroupDTO.getAmmo556x45ArCount())
+                .ammo762PktCount(brigadeGroupDTO.getAmmo762PktCount())
+                .ammo762x39AkCount(brigadeGroupDTO.getAmmo762x39AkCount())
+                .offensiveGrenadesCount(brigadeGroupDTO.getOffensiveGrenadesCount())
+                .defensiveGrenadesCount(brigadeGroupDTO.getDefensiveGrenadesCount())
+                .riflesCount(brigadeGroupDTO.getRiflesCount())
+                .machineGunsCount(brigadeGroupDTO.getMachineGunsCount())
+                .bodyArmorCount(brigadeGroupDTO.getBodyArmorCount())
+                .helmetsCount(brigadeGroupDTO.getHelmetsCount())
+                .apcCount(brigadeGroupDTO.getApcCount())
+                .tankCount(brigadeGroupDTO.getTankCount())
+                .foodCount(brigadeGroupDTO.getFoodCount())
+                .dryRationsCount(brigadeGroupDTO.getDryRationsCount())
+                .build();
+        try {
+            givenResourcesService.save(givenResources);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     //TO DO: work with return statement
@@ -63,6 +93,10 @@ public class BrigadeCommanderService {
         BrigadeGroup brigadeGroup = brigadeGroupService.findBrigadeGroupByBrigadeCommander(brigadeCommander);
         brigadeCommander.setBrigadeGroupId(brigadeGroup);
         save(brigadeCommander);
+        if (!fillGivenResources(brigadeGroupDTO, brigadeCommander)) {
+            log.info("Error in creating given resources entity");
+            return false;
+        }
         return true;
     }
 

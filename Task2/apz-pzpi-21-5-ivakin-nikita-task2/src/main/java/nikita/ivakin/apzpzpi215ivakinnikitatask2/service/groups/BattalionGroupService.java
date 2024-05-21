@@ -4,12 +4,15 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.BattalionGroupRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -17,8 +20,57 @@ import java.util.Optional;
 @AllArgsConstructor
 public class BattalionGroupService {
 
-    @Autowired
     private final BattalionGroupRepository battalionGroupRepository;
+    private final GivenResourcesService givenResourcesService;
+
+    private boolean fillGivenResources(BattalionGroup battalionGroup, BrigadeCommander brigadeCommander){
+        GivenResources givenResources = GivenResources.builder()
+                .militaryGroupId(battalionGroup.getId())
+                .brigadeCommanderId(brigadeCommander.getId())
+                .roleOfCommander(Role.BATTALION_COMMANDER)
+                .ammo40mmGpCount(battalionGroup.getAmmo40mmGpCount())
+                .ammo40mmRpgCount(battalionGroup.getAmmo40mmRpgCount())
+                .ammo145KpvtCount(battalionGroup.getAmmo145KpvtCount())
+                .ammo545x39AkRpkCount(battalionGroup.getAmmo545x39AkRpkCount())
+                .ammo556x45ArCount(battalionGroup.getAmmo556x45ArCount())
+                .ammo762PktCount(battalionGroup.getAmmo762PktCount())
+                .ammo762x39AkCount(battalionGroup.getAmmo762x39AkCount())
+                .offensiveGrenadesCount(battalionGroup.getOffensiveGrenadesCount())
+                .defensiveGrenadesCount(battalionGroup.getDefensiveGrenadesCount())
+                .riflesCount(battalionGroup.getRiflesCount())
+                .machineGunsCount(battalionGroup.getMachineGunsCount())
+                .bodyArmorCount(battalionGroup.getBodyArmorCount())
+                .helmetsCount(battalionGroup.getHelmetsCount())
+                .apcCount(battalionGroup.getApcCount())
+                .tankCount(battalionGroup.getTankCount())
+                .foodCount(battalionGroup.getFoodCount())
+                .dryRationsCount(battalionGroup.getDryRationsCount())
+                .build();
+        try {
+            givenResourcesService.save(givenResources);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean addGivenResourcesForBattalion(BrigadeCommander brigadeCommander){
+        ArrayList<BattalionGroup> battalionGroups = battalionGroupRepository.findAll();
+        if (battalionGroups.size() > 0) {
+            BattalionGroup battalionGroup = battalionGroups.get(battalionGroups.size()-1);
+            try {
+                fillGivenResources(battalionGroup, brigadeCommander);
+            } catch (Exception e) {
+                log.info("Error creating given resources entity.");
+                return false;
+            }
+        } else {
+            log.info("Error: there aren't any battalions for giving resources.");
+            return false;
+        }
+        return true;
+    }
 
     public boolean createBattalionGroup(BattalionGroupDTO battalionGroupDTO, BrigadeCommander brigadeCommander) {
         BattalionGroup battalionGroup = BattalionGroup.builder()
@@ -39,6 +91,7 @@ public class BattalionGroupService {
                 .apcCount(battalionGroupDTO.getApcCount())
                 .tankCount(battalionGroupDTO.getTankCount())
                 .build();
+
         try {
             save(battalionGroup);
         } catch (Exception e) {
@@ -46,7 +99,8 @@ public class BattalionGroupService {
             return false;
         }
 
-        return true;
+        return addGivenResourcesForBattalion(brigadeCommander);
+
     }
 
     /*public boolean assignBattalionCommander(Integer batComId, Integer battalionGroupId) {

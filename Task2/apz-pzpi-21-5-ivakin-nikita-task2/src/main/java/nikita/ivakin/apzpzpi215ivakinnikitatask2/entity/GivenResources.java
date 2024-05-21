@@ -49,7 +49,7 @@ public class GivenResources {
     @Column(name = "ammo_40mm_gp_count")
     private int ammo40mmGpCount;
 
-    @Column(name = "ammo_762pkt")
+    @Column(name = "ammo_762pkt_count")
     private int ammo762PktCount;
     private int defensiveGrenadesCount;
     private int offensiveGrenadesCount;
