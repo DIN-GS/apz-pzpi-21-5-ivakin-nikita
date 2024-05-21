@@ -11,6 +11,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionComm
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BattalionCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
@@ -99,12 +100,12 @@ public class BattalionCommanderService {
 
     public List<SupplyRequest> getBattalionRequests() {
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
-        return supplyRequestService.getSupplyRequestsForBattalionByBattalionId(battalionCommander.getBattalionGroup().getId());
+        return supplyRequestService.getSupplyRequestsForBattalionByBattalionId(battalionCommander.getBattalionGroup().getId(), battalionCommander.getRole());
     }
 
     public List<SupplyRequest> getCompaniesRequests() {
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
-        return supplyRequestService.getSupplyRequestsForCompaniesByBattalionId(battalionCommander.getBattalionGroup().getId());
+        return supplyRequestService.getSupplyRequestsForCompaniesByBattalionId(battalionCommander.getBattalionGroup().getId(), Role.COMPANY_COMMANDER);
     }
 
     public BattalionGroupService getBattalionGroupService() {

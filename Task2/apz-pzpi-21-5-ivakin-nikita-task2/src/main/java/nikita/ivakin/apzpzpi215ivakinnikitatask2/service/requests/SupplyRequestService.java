@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,16 @@ public class SupplyRequestService {
     private final SupplyRequestRepository supplyRequestRepository;
 
 
-    public List<SupplyRequest> getSupplyRequestsForCompaniesByBattalionId(Integer id) {
-        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupId(id);
+    public List<SupplyRequest> getSupplyRequestsForCompaniesByBattalionId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(id, role);
         if (supplyRequests == null || supplyRequests.size() == 0) {
             log.info("There aren't supply requests for companies group with battalion id " + id);
         }
         return supplyRequests;
     }
 
-    public List<SupplyRequest> getSupplyRequestsForBattalionByBattalionId(Integer id) {
-        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupId(id);
+    public List<SupplyRequest> getSupplyRequestsForBattalionByBattalionId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupIdAndRoleOfCommander(id, role);
         if (supplyRequests == null || supplyRequests.size() == 0) {
             log.info("There aren't supply requests for battalion group with id " + id);
         }
@@ -37,24 +38,24 @@ public class SupplyRequestService {
 
 
 
-    public List<SupplyRequest> getSupplyRequestsForPlatByPlatId(Integer id) {
-        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupId(id);
+    public List<SupplyRequest> getSupplyRequestsForPlatByPlatId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupIdAndRoleOfCommander(id, role);
         if (supplyRequests == null || supplyRequests.size() == 0) {
             log.info("There aren't supply requests for plat group with id " + id);
         }
         return supplyRequests;
     }
 
-    public List<SupplyRequest> getSupplyRequestsForCompanyByCompanyId(Integer id) {
-        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupId(id);
+    public List<SupplyRequest> getSupplyRequestsForCompanyByCompanyId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsByMilitaryGroupIdAndRoleOfCommander(id, role);
         if (supplyRequests == null || supplyRequests.size() == 0) {
             log.info("There aren't supply requests for company group with id " + id);
         }
         return supplyRequests;
     }
 
-    public List<SupplyRequest> getSupplyRequestsForPlatsByCompanyId(Integer id) {
-        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsBySeniorMilitaryGroupId(id);
+    public List<SupplyRequest> getSupplyRequestsForPlatsByCompanyId(Integer id, Role role) {
+        List<SupplyRequest> supplyRequests = supplyRequestRepository.findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(id, role);
         if (supplyRequests == null || supplyRequests.size() == 0) {
             log.info("There aren't supply requests for plat groups with company id " + id);
         }

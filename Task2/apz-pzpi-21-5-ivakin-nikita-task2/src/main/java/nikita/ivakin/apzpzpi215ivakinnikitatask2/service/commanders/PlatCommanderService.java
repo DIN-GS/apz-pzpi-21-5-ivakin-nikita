@@ -20,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -121,7 +120,7 @@ public class PlatCommanderService {
 
     public List<SupplyRequest> getPlatRequests() {
         PlatCommander platCommander = getAuthenticatedPlatCommander();
-        return supplyRequestService.getSupplyRequestsForPlatByPlatId(platCommander.getPlatGroup().getId());
+        return supplyRequestService.getSupplyRequestsForPlatByPlatId(platCommander.getPlatGroup().getId(), platCommander.getRole());
     }
 
     @Transactional
