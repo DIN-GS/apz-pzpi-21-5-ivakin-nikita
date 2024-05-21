@@ -64,8 +64,18 @@ public class PlatCommanderService {
         return platGroupService.findPlatGroupByPlatCommander(platCommander);
     }
 
+    //Validation
+    public boolean validateResources(PlatGroupDTO platGroupDTO) {
+        PlatCommander platCommander = getAuthenticatedPlatCommander();
+        PlatGroup platGroup = platGroupService.findPlatGroupById(platCommander.getPlatGroup().getId());
+        //if (platGroupDTO.getAmmo40mmGpCount() < )
+        return true;
+    }
+
+    //Add check of resources
     public PlatGroup updatePlatResources(PlatGroupDTO platGroupDTO) {
-       return platGroupService.updatePlatResources(platGroupDTO);
+        validateResources(platGroupDTO);
+        return platGroupService.updatePlatResources(platGroupDTO);
     }
 
     public boolean askForResources(ResourcesRequestDTO resourcesRequestDTO) {

@@ -21,10 +21,10 @@ public class LogisticCommanderController {
 
     private final LogisticCommanderService logisticCommanderService;
 
-    @GetMapping("/get/demands-of-military-groups")
+    /*@GetMapping("/get/demands-of-military-groups")
     public ResponseEntity<Boolean> getDemands() {
         return new ResponseEntity<>(true, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/get/all-requests")
     public ResponseEntity<List<SupplyRequest>> getAllRequests(){

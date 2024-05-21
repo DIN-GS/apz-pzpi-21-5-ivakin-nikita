@@ -14,7 +14,6 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander
 @Getter
 @Setter
 @AttributeOverride(name = "id", column = @Column(name = "plat_group_id"))
-
 public class PlatGroup extends MilitaryGroup {
 
 
