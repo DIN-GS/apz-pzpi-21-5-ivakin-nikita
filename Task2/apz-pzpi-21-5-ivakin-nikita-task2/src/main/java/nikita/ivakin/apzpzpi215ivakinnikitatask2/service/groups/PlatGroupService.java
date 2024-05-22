@@ -104,7 +104,7 @@ public class PlatGroupService {
     }
 
     //Should add MapStruct
-    public PlatGroup updatePlatResources(PlatGroupDTO platGroupDTO){
+    public boolean updatePlatResources(PlatGroupDTO platGroupDTO){
         PlatGroup platGroup = findPlatGroupById(platGroupDTO.getId());
         platGroup.setAmmo40mmGpCount(platGroupDTO.getAmmo40mmGpCount());
         platGroup.setAmmo40mmRpgCount(platGroupDTO.getAmmo40mmRpgCount());
@@ -125,9 +125,9 @@ public class PlatGroupService {
             platGroupRepository.save(platGroup);
         } catch (Exception e) {
             log.info(e.getMessage());
-            return null;
+            return false;
         }
-        return platGroup;
+        return true;
     }
 
     public PlatGroup findPlatGroupByPlatCommander(PlatCommander platCommander) {

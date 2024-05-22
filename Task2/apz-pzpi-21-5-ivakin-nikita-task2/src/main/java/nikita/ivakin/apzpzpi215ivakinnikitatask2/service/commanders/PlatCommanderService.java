@@ -7,9 +7,11 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
@@ -70,15 +72,21 @@ public class PlatCommanderService {
     //Validation
     public boolean validateResources(PlatGroupDTO platGroupDTO) {
         PlatCommander platCommander = getAuthenticatedPlatCommander();
-        GivenResources givenResources = givenResourcesService.getGivenResources(platCommander.getId(), platCommander.getPlatGroup().getId(), platCommander.getRole(), platCommander.getBrigadeCommanderId());
-        //if (platGroupDTO.getAmmo40mmGpCount() < )
-        return true;
+        GivenResources givenResources = givenResourcesService.getGivenResources(
+                platCommander.getId(), platCommander.getPlatGroup().getId(), platCommander.getRole(), platCommander.getBrigadeCommanderId(), ResourcesType.FOR_PERFORMING_A_MISSION
+        );
+        return platGroupDTO.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 4 && platGroupDTO.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 4
+                && platGroupDTO.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 4 && platGroupDTO.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 4
+                && platGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && platGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
+                && platGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && platGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
+                && platGroupDTO.getHelmetsCount() >= givenResources.getHelmetsCount() && platGroupDTO.getApcCount() >= givenResources.getApcCount();
     }
 
     //Add check of resources
-    public PlatGroup updatePlatResources(PlatGroupDTO platGroupDTO) {
-        validateResources(platGroupDTO);
-        return platGroupService.updatePlatResources(platGroupDTO);
+    public ResourcesUpdateResponse updatePlatResources(PlatGroupDTO platGroupDTO) {
+        boolean validationResult = !validateResources(platGroupDTO);
+        boolean updateResult = platGroupService.updatePlatResources(platGroupDTO);
+        return new ResourcesUpdateResponse(updateResult, validationResult);
     }
 
     public boolean askForResources(ResourcesRequestDTO resourcesRequestDTO) {

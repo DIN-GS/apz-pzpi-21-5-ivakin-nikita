@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.PlatCommanderService;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,9 +38,9 @@ public class PlatCommanderController {
     }
 
     @PostMapping("/update/plat-resources")
-    public ResponseEntity<PlatGroup> updatePlatResources(@RequestBody PlatGroupDTO platGroupDTO) {
-        PlatGroup platGroup = platCommanderService.updatePlatResources(platGroupDTO);
-        return new ResponseEntity<>(platGroup, HttpStatus.OK);
+    public ResponseEntity<ResourcesUpdateResponse> updatePlatResources(@RequestBody PlatGroupDTO platGroupDTO) {
+        ResourcesUpdateResponse resourcesUpdateResponse = platCommanderService.updatePlatResources(platGroupDTO);
+        return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
     @PostMapping("/ask/for-resources")
