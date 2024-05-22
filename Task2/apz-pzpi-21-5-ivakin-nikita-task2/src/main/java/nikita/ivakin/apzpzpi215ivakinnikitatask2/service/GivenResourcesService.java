@@ -4,12 +4,19 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.GivenResourcesRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Service
 @Slf4j
@@ -28,6 +35,97 @@ public class GivenResourcesService {
             log.info("Error given resources entity for this battle group doesn't exist.");
         }
         return null;
+    }
+
+    public boolean allocateResources(ResourcesRequest resourcesRequest, MilitaryGroup givingMilitaryGroup, MilitaryGroup gettingMilitaryGroup,
+                                     Integer commanderId, Role roleOfCommander, Integer brigadeCommanderId) {
+        GivenResources givenResources = new GivenResources();
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo762PktCount(),
+                givingMilitaryGroup::getAmmo762PktCount, givingMilitaryGroup::setAmmo762PktCount,
+                gettingMilitaryGroup::getAmmo762PktCount, gettingMilitaryGroup::setAmmo762PktCount,
+                givenResources::setAmmo762PktCount);
+
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo556x45ArCount(),
+                givingMilitaryGroup::getAmmo556x45ArCount, givingMilitaryGroup::setAmmo556x45ArCount,
+                gettingMilitaryGroup::getAmmo556x45ArCount, gettingMilitaryGroup::setAmmo556x45ArCount,
+                givenResources::setAmmo556x45ArCount);
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo545x39AkRpkCount(),
+                givingMilitaryGroup::getAmmo545x39AkRpkCount, givingMilitaryGroup::setAmmo545x39AkRpkCount,
+                gettingMilitaryGroup::getAmmo545x39AkRpkCount, gettingMilitaryGroup::setAmmo545x39AkRpkCount,
+                givenResources::setAmmo545x39AkRpkCount);
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo762x39AkCount(),
+                givingMilitaryGroup::getAmmo762x39AkCount, givingMilitaryGroup::setAmmo762x39AkCount,
+                gettingMilitaryGroup::getAmmo762x39AkCount, gettingMilitaryGroup::setAmmo762x39AkCount,
+                givenResources::setAmmo762x39AkCount);
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo145KpvtCount(),
+                givingMilitaryGroup::getAmmo145KpvtCount, givingMilitaryGroup::setAmmo145KpvtCount,
+                gettingMilitaryGroup::getAmmo145KpvtCount, gettingMilitaryGroup::setAmmo145KpvtCount,
+                givenResources::setAmmo145KpvtCount);
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo40mmGpCount(),
+                givingMilitaryGroup::getAmmo40mmGpCount, givingMilitaryGroup::setAmmo40mmGpCount,
+                gettingMilitaryGroup::getAmmo40mmGpCount, gettingMilitaryGroup::setAmmo40mmGpCount,
+                givenResources::setAmmo40mmGpCount);
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo40mmRpgCount(),
+                givingMilitaryGroup::getAmmo40mmRpgCount, givingMilitaryGroup::setAmmo40mmRpgCount,
+                gettingMilitaryGroup::getAmmo40mmRpgCount, gettingMilitaryGroup::setAmmo40mmRpgCount,
+                givenResources::setAmmo40mmRpgCount);
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getBodyArmorCount(),
+                givingMilitaryGroup::getBodyArmorCount, givingMilitaryGroup::setBodyArmorCount,
+                gettingMilitaryGroup::getBodyArmorCount, gettingMilitaryGroup::setBodyArmorCount,
+                givenResources::setBodyArmorCount);
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getHelmetsCount(),
+                givingMilitaryGroup::getHelmetsCount, givingMilitaryGroup::setHelmetsCount,
+                gettingMilitaryGroup::getHelmetsCount, gettingMilitaryGroup::setHelmetsCount,
+                givenResources::setHelmetsCount);
+
+        countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getApcCount(),
+                givingMilitaryGroup::getApcCount, givingMilitaryGroup::setApcCount,
+                gettingMilitaryGroup::getApcCount, gettingMilitaryGroup::setApcCount,
+                givenResources::setApcCount);
+
+        givenResources.setCommanderId(commanderId);
+        givenResources.setMilitaryGroupId(gettingMilitaryGroup.getId());
+        givenResources.setRoleOfCommander(roleOfCommander);
+        givenResources.setBrigadeCommanderId(brigadeCommanderId);
+        givenResources.setIssueDate(LocalDate.now());
+        givenResources.setAllocationOfResources(ResourcesType.FOR_CLOSING_DEFICIENCY);
+        try {
+            save(givenResources);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public void allocateResourceForPlat(CompanyGroup companyGroup, PlatGroup platGroup, GivenResources givenResources, int requestedAmount,
+                                        Supplier<Integer> getCompanyCount, Consumer<Integer> setCompanyCount,
+                                        Supplier<Integer> getPlatCount, Consumer<Integer> setPlatCount,
+                                        Consumer<Integer> setGivenResourcesCount) {
+        int companyCount = getCompanyCount.get();
+        int allocatedAmount = Math.min(companyCount, requestedAmount);
+        setPlatCount.accept(getPlatCount.get() + allocatedAmount);
+        setCompanyCount.accept(companyCount - allocatedAmount);
+        setGivenResourcesCount.accept(allocatedAmount);
+    }
+
+    public void countResources(MilitaryGroup givingMilitaryGroup, MilitaryGroup gettingMilitaryGroup, GivenResources givenResources, int requestedAmount,
+                               Supplier<Integer> getCompanyCount, Consumer<Integer> setCompanyCount,
+                               Supplier<Integer> getPlatCount, Consumer<Integer> setPlatCount,
+                               Consumer<Integer> setGivenResourcesCount) {
+        int companyCount = getCompanyCount.get();
+        int allocatedAmount = Math.min(companyCount, requestedAmount);
+        setPlatCount.accept(getPlatCount.get() + allocatedAmount);
+        setCompanyCount.accept(companyCount - allocatedAmount);
+        setGivenResourcesCount.accept(allocatedAmount);
     }
 
     @Transactional

@@ -61,8 +61,9 @@ public class CompanyCommanderController {
     }
 
     @PostMapping("/send/resources-to-plat")
-    public ResponseEntity<Boolean> sendResources() {
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    public ResponseEntity<ResourcesUpdateResponse> sendResources(@RequestParam SupplyRequest supplyRequest) {
+        ResourcesUpdateResponse resourcesUpdateResponse = companyCommanderService.sendResourcesToPlat(supplyRequest);
+        return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
     @PostMapping("/ask/for-resources")

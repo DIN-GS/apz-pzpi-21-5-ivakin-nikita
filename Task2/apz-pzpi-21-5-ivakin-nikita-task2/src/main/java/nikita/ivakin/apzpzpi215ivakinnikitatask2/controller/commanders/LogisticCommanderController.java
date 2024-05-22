@@ -29,7 +29,7 @@ public class LogisticCommanderController {
     @GetMapping("/get/all-requests")
     public ResponseEntity<List<SupplyRequest>> getAllRequests(){
         List<SupplyRequest> supplyRequests = logisticCommanderService.getAllRequests();
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
     //Change status of request and sign who is going to do it and when

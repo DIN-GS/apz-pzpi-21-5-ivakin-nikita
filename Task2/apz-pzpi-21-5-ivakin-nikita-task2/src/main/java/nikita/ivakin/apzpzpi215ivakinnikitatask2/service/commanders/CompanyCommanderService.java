@@ -13,6 +13,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
@@ -159,22 +160,41 @@ public class CompanyCommanderService {
         return supplyRequestService.getSupplyRequestsForPlatsByCompanyId(companyCommander.getCompanyGroup().getId(), Role.PLAT_COMMANDER);
     }
 
-    public boolean validateResources(CompanyGroupDTO companyGroupDTO) {
+    public boolean validateResources(CompanyGroup companyGroup) {
         CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
         GivenResources givenResources = givenResourcesService.getGivenResources(
                 companyCommander.getId(), companyCommander.getCompanyGroup().getId(), companyCommander.getRole(), companyCommander.getBrigadeCommanderId(), ResourcesType.FOR_PERFORMING_A_MISSION
         );
-        return companyGroupDTO.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 4 && companyGroupDTO.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 4
-                && companyGroupDTO.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 4 && companyGroupDTO.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 4
-                && companyGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && companyGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
-                && companyGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && companyGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
-                && companyGroupDTO.getHelmetsCount() >= givenResources.getHelmetsCount() && companyGroupDTO.getApcCount() >= givenResources.getApcCount();
+        return companyGroup.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 4 && companyGroup.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 4
+                && companyGroup.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 4 && companyGroup.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 4
+                && companyGroup.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && companyGroup.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
+                && companyGroup.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && companyGroup.getBodyArmorCount() >= givenResources.getBodyArmorCount()
+                && companyGroup.getHelmetsCount() >= givenResources.getHelmetsCount() && companyGroup.getApcCount() >= givenResources.getApcCount();
     }
 
+    //add throw
     public ResourcesUpdateResponse updateCompanyResources(CompanyGroupDTO companyGroupDTO) {
-        boolean validationResult = !validateResources(companyGroupDTO);
-        boolean updateResult = companyGroupService.updateCompanyResources(companyGroupDTO);
+        CompanyGroup companyGroup = companyGroupService.updateCompanyResources(companyGroupDTO);
+        boolean validationResult = !validateResources(companyGroup);
+        boolean updateResult = companyGroup != null;
         return new ResourcesUpdateResponse(updateResult, validationResult);
     }
+
+    public ResourcesUpdateResponse sendResourcesToPlat(SupplyRequest supplyRequest) {
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        if (supplyRequest.getBrigadeCommanderId().equals(companyCommander.getBrigadeCommanderId()) && supplyRequest.getSeniorMilitaryGroupId().equals(companyCommander.getCompanyGroup().getId())){
+            PlatGroup platGroup = platGroupService.findPlatGroupById(supplyRequest.getMilitaryGroupId());
+            return allocateResources(supplyRequest.getResourcesRequestId(), companyCommander.getCompanyGroup(), companyCommander, platGroup);
+        }
+        return new ResourcesUpdateResponse(false, false);
+    }
+
+    public ResourcesUpdateResponse allocateResources(ResourcesRequest resourcesRequest, CompanyGroup companyGroup, CompanyCommander companyCommander, PlatGroup platGroup) {
+        boolean needForSupply = givenResourcesService.allocateResources(resourcesRequest, companyGroup, platGroup,
+                platGroup.getPlatCommanderId().getId(), platGroup.getPlatCommanderId().getRole(), platGroup.getPlatCommanderId().getBrigadeCommanderId());
+        return new ResourcesUpdateResponse(true, needForSupply);
+    }
+
+
 }
 

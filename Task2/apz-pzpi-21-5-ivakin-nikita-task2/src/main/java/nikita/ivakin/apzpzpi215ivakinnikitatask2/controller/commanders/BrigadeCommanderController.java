@@ -69,13 +69,13 @@ public class BrigadeCommanderController {
     @GetMapping("/get/brigade-requests")
     public ResponseEntity<List<SupplyRequest>> getBrigadeRequests(){
         List<SupplyRequest> supplyRequests = brigadeCommanderService.getBrigadeRequests();
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
     @GetMapping("/get/battalion-requests")
     public ResponseEntity<List<SupplyRequest>> getBattalionsRequests(){
         List<SupplyRequest> supplyRequests = brigadeCommanderService.getBattalionRequests();
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
     @PostMapping("/send/resources-to-battalion")

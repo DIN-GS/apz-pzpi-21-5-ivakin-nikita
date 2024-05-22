@@ -111,7 +111,7 @@ public class CompanyGroupService {
         return null;
     }
 
-    public boolean updateCompanyResources(CompanyGroupDTO companyGroupDTO) {
+    public CompanyGroup updateCompanyResources(CompanyGroupDTO companyGroupDTO) {
         CompanyGroup companyGroup = findCompanyGroupById(companyGroupDTO.getId());
         companyGroup.setAmmo40mmGpCount(companyGroupDTO.getAmmo40mmGpCount());
         companyGroup.setAmmo40mmRpgCount(companyGroupDTO.getAmmo40mmRpgCount());
@@ -132,9 +132,9 @@ public class CompanyGroupService {
             companyGroupRepository.save(companyGroup);
         } catch (Exception e) {
             log.info(e.getMessage());
-            return false;
+            return null;
         }
-        return true;
+        return companyGroup;
     }
 
 

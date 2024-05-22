@@ -184,4 +184,10 @@ public class BattalionCommanderService {
         boolean updateResult = battalionGroupService.updateBattalionResources(battalionGroupDTO);
         return new ResourcesUpdateResponse(updateResult, validationResult);
     }
+
+    public ResourcesUpdateResponse sendResourcesToBattalion(SupplyRequest supplyRequest) {
+
+
+        return null;
+    }
 }
