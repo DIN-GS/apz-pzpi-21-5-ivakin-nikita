@@ -10,12 +10,14 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BrigadeCommanderRepository;
@@ -212,4 +214,23 @@ public class BrigadeCommanderService {
         BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
         return supplyRequestService.getSupplyRequestsForBattalionByBrigadeId(brigadeCommander.getBrigadeGroupId().getId(), Role.BATTALION_COMMANDER);
     }
+
+    public boolean validateResources(BrigadeGroupDTO brigadeGroupDTO) {
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        GivenResources givenResources = givenResourcesService.getGivenResources(
+                brigadeCommander.getId(), brigadeCommander.getBrigadeGroupId().getId(), brigadeCommander.getRole(), brigadeCommander.getId(), ResourcesType.FOR_PERFORMING_A_MISSION
+        );
+        return brigadeGroupDTO.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 4 && brigadeGroupDTO.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 4
+                && brigadeGroupDTO.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 4 && brigadeGroupDTO.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 4
+                && brigadeGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && brigadeGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
+                && brigadeGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && brigadeGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
+                && brigadeGroupDTO.getHelmetsCount() >= givenResources.getHelmetsCount() && brigadeGroupDTO.getApcCount() >= givenResources.getApcCount();
+    }
+
+    public ResourcesUpdateResponse updateBrigadeResources(BrigadeGroupDTO brigadeGroupDTO) {
+        boolean validationResult = !validateResources(brigadeGroupDTO);
+        boolean updateResult = brigadeGroupService.updateBrigadeResources(brigadeGroupDTO);
+        return new ResourcesUpdateResponse(updateResult, validationResult);
+    }
 }
+

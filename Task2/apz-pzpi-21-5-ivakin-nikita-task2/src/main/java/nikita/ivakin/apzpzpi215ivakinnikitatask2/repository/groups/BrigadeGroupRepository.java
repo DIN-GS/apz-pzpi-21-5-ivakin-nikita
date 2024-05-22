@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface BrigadeGroupRepository extends JpaRepository<BrigadeGroup, Long> {
 
     Optional<BrigadeGroup> findBrigadeGroupByBrigadeCommanderId(BrigadeCommander brigadeCommanderId);
+
+    Optional<BrigadeGroup> findBrigadeGroupById(Integer id);
 }

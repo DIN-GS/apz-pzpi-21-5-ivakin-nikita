@@ -111,8 +111,37 @@ public class CompanyGroupService {
         return null;
     }
 
+    public boolean updateCompanyResources(CompanyGroupDTO companyGroupDTO) {
+        CompanyGroup companyGroup = findCompanyGroupById(companyGroupDTO.getId());
+        companyGroup.setAmmo40mmGpCount(companyGroupDTO.getAmmo40mmGpCount());
+        companyGroup.setAmmo40mmRpgCount(companyGroupDTO.getAmmo40mmRpgCount());
+        companyGroup.setAmmo145KpvtCount(companyGroupDTO.getAmmo145KpvtCount());
+        companyGroup.setAmmo545x39AkRpkCount(companyGroupDTO.getAmmo545x39AkRpkCount());
+        companyGroup.setAmmo762PktCount(companyGroupDTO.getAmmo762PktCount());
+        companyGroup.setAmmo556x45ArCount(companyGroupDTO.getAmmo556x45ArCount());
+        companyGroup.setAmmo762x39AkCount(companyGroupDTO.getAmmo762x39AkCount());
+        companyGroup.setOffensiveGrenadesCount(companyGroupDTO.getOffensiveGrenadesCount());
+        companyGroup.setDefensiveGrenadesCount(companyGroupDTO.getDefensiveGrenadesCount());
+        companyGroup.setRiflesCount(companyGroupDTO.getRiflesCount());
+        companyGroup.setMachineGunsCount(companyGroup.getMachineGunsCount());
+        companyGroup.setBodyArmorCount(companyGroupDTO.getBodyArmorCount());
+        companyGroup.setHelmetsCount(companyGroupDTO.getHelmetsCount());
+        companyGroup.setApcCount(companyGroupDTO.getApcCount());
+        companyGroup.setTankCount(companyGroupDTO.getTankCount());
+        try {
+            companyGroupRepository.save(companyGroup);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+
     @Transactional
     public void save(CompanyGroup companyGroup) {
         companyGroupRepository.save(companyGroup);
     }
+
+
 }

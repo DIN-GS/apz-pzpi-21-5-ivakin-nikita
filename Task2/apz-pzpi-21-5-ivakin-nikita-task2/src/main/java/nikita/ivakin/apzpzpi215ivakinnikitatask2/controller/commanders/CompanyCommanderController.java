@@ -3,7 +3,9 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.CompanyCommanderService;
@@ -32,6 +34,12 @@ public class CompanyCommanderController {
     public ResponseEntity<Boolean> createPlat(@RequestBody PlatGroupDTO platGroupDTO) {
         boolean result = companyCommanderService.createPlat(platGroupDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/update/company-resources")
+    public ResponseEntity<ResourcesUpdateResponse> updateCompanyResources(@RequestBody CompanyGroupDTO companyGroupDTO) {
+        ResourcesUpdateResponse resourcesUpdateResponse = companyCommanderService.updateCompanyResources(companyGroupDTO);
+        return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
     @PutMapping("/assign/plat-commander")

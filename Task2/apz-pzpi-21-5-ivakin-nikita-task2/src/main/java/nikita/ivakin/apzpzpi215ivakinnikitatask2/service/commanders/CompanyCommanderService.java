@@ -5,15 +5,21 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.CompanyCommanderRepository;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.CompanyGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
@@ -32,10 +38,12 @@ public class CompanyCommanderService {
 
 
     private final CompanyCommanderRepository companyCommanderRepository;
+    private final CompanyGroupService companyGroupService;
     private final PlatGroupService platGroupService;
     private final PlatCommanderService platCommanderService;
     private final ResourcesRequestService resourcesRequestService;
     private final SupplyRequestService supplyRequestService;
+    private final GivenResourcesService givenResourcesService;
 
 
 
@@ -149,6 +157,24 @@ public class CompanyCommanderService {
     public List<SupplyRequest> getPlatsRequests() {
         CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
         return supplyRequestService.getSupplyRequestsForPlatsByCompanyId(companyCommander.getCompanyGroup().getId(), Role.PLAT_COMMANDER);
+    }
+
+    public boolean validateResources(CompanyGroupDTO companyGroupDTO) {
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        GivenResources givenResources = givenResourcesService.getGivenResources(
+                companyCommander.getId(), companyCommander.getCompanyGroup().getId(), companyCommander.getRole(), companyCommander.getBrigadeCommanderId(), ResourcesType.FOR_PERFORMING_A_MISSION
+        );
+        return companyGroupDTO.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 4 && companyGroupDTO.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 4
+                && companyGroupDTO.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 4 && companyGroupDTO.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 4
+                && companyGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && companyGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
+                && companyGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && companyGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
+                && companyGroupDTO.getHelmetsCount() >= givenResources.getHelmetsCount() && companyGroupDTO.getApcCount() >= givenResources.getApcCount();
+    }
+
+    public ResourcesUpdateResponse updateCompanyResources(CompanyGroupDTO companyGroupDTO) {
+        boolean validationResult = !validateResources(companyGroupDTO);
+        boolean updateResult = companyGroupService.updateCompanyResources(companyGroupDTO);
+        return new ResourcesUpdateResponse(updateResult, validationResult);
     }
 }
 

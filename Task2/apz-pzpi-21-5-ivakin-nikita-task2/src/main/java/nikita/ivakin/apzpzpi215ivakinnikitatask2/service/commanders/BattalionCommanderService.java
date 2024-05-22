@@ -4,16 +4,21 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BattalionCommanderRepository;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.CompanyGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
@@ -37,6 +42,7 @@ public class BattalionCommanderService {
     private final CompanyGroupService companyGroupService;
     private final ResourcesRequestService resourcesRequestService;
     private final SupplyRequestService supplyRequestService;
+    private final GivenResourcesService givenResourcesService;
 
 
 
@@ -160,6 +166,22 @@ public class BattalionCommanderService {
         return true;
     }
 
+    public boolean validateResources(BattalionGroupDTO battalionGroupDTO) {
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        GivenResources givenResources = givenResourcesService.getGivenResources(
+                battalionCommander.getId(), battalionCommander.getBattalionGroup().getId(), battalionCommander.getRole(), battalionCommander.getBrigadeCommander().getId(), ResourcesType.FOR_PERFORMING_A_MISSION
+        );
+        return battalionGroupDTO.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 4 && battalionGroupDTO.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 4
+                && battalionGroupDTO.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 4 && battalionGroupDTO.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 4
+                && battalionGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && battalionGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
+                && battalionGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && battalionGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
+                && battalionGroupDTO.getHelmetsCount() >= givenResources.getHelmetsCount() && battalionGroupDTO.getApcCount() >= givenResources.getApcCount();
+    }
 
 
+    public ResourcesUpdateResponse updateBattalionResources(BattalionGroupDTO battalionGroupDTO) {
+        boolean validationResult = !validateResources(battalionGroupDTO);
+        boolean updateResult = battalionGroupService.updateBattalionResources(battalionGroupDTO);
+        return new ResourcesUpdateResponse(updateResult, validationResult);
+    }
 }

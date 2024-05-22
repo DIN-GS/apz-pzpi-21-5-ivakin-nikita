@@ -3,7 +3,9 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BattalionCommanderService;
@@ -51,6 +53,12 @@ public class BattalionCommanderController {
     public ResponseEntity<List<SupplyRequest>> getCompaniesRequests(){
         List<SupplyRequest> supplyRequests = battalionCommanderService.getCompaniesRequests();
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
+    }
+
+    @PostMapping("/update/battalion-resources")
+    public ResponseEntity<ResourcesUpdateResponse> updateBattalionResources(@RequestBody BattalionGroupDTO battalionGroupDTO) {
+        ResourcesUpdateResponse resourcesUpdateResponse = battalionCommanderService.updateBattalionResources(battalionGroupDTO);
+        return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
     @PostMapping("/send/resources-to-company")

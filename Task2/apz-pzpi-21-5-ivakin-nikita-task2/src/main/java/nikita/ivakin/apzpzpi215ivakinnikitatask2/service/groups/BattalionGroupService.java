@@ -126,10 +126,38 @@ public class BattalionGroupService {
         return null;
     }
 
+    public boolean updateBattalionResources(BattalionGroupDTO battalionGroupDTO) {
+        BattalionGroup battalionGroup = findBattalionGroupById(battalionGroupDTO.getId());
+        battalionGroup.setAmmo40mmGpCount(battalionGroupDTO.getAmmo40mmGpCount());
+        battalionGroup.setAmmo40mmRpgCount(battalionGroupDTO.getAmmo40mmRpgCount());
+        battalionGroup.setAmmo145KpvtCount(battalionGroupDTO.getAmmo145KpvtCount());
+        battalionGroup.setAmmo545x39AkRpkCount(battalionGroupDTO.getAmmo545x39AkRpkCount());
+        battalionGroup.setAmmo762PktCount(battalionGroupDTO.getAmmo762PktCount());
+        battalionGroup.setAmmo556x45ArCount(battalionGroupDTO.getAmmo556x45ArCount());
+        battalionGroup.setAmmo762x39AkCount(battalionGroupDTO.getAmmo762x39AkCount());
+        battalionGroup.setOffensiveGrenadesCount(battalionGroupDTO.getOffensiveGrenadesCount());
+        battalionGroup.setDefensiveGrenadesCount(battalionGroupDTO.getDefensiveGrenadesCount());
+        battalionGroup.setRiflesCount(battalionGroupDTO.getRiflesCount());
+        battalionGroup.setMachineGunsCount(battalionGroup.getMachineGunsCount());
+        battalionGroup.setBodyArmorCount(battalionGroupDTO.getBodyArmorCount());
+        battalionGroup.setHelmetsCount(battalionGroupDTO.getHelmetsCount());
+        battalionGroup.setApcCount(battalionGroupDTO.getApcCount());
+        battalionGroup.setTankCount(battalionGroupDTO.getTankCount());
+        try {
+            battalionGroupRepository.save(battalionGroup);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
 
     @Transactional
     public void save(BattalionGroup battalionGroup) {
         battalionGroupRepository.save(battalionGroup);
     }
+
+
 }
 

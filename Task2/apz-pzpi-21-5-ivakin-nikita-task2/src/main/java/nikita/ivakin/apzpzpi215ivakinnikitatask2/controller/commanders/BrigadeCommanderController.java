@@ -6,6 +6,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BrigadeCommanderService;
@@ -37,6 +38,12 @@ public class BrigadeCommanderController {
     public ResponseEntity<Boolean> createBrigade(@RequestBody BrigadeGroupDTO brigadeGroupDTO) {
         boolean result = brigadeCommanderService.createBrigade(brigadeGroupDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/update/brigade-resources")
+    public ResponseEntity<ResourcesUpdateResponse> updateBrigadeResources(@RequestBody BrigadeGroupDTO brigadeGroupDTO) {
+        ResourcesUpdateResponse resourcesUpdateResponse = brigadeCommanderService.updateBrigadeResources(brigadeGroupDTO);
+        return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
     @PostMapping("/create/logistic-company")
