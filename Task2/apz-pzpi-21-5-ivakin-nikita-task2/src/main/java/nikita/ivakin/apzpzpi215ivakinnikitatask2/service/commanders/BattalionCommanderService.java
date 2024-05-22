@@ -185,9 +185,21 @@ public class BattalionCommanderService {
         return new ResourcesUpdateResponse(updateResult, validationResult);
     }
 
-    public ResourcesUpdateResponse sendResourcesToBattalion(SupplyRequest supplyRequest) {
+    public ResourcesUpdateResponse sendResourcesToCompany(SupplyRequest supplyRequest) {
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        if (supplyRequest.getBrigadeCommanderId().equals(battalionCommander.getBrigadeCommander().getId()) && supplyRequest.getSeniorMilitaryGroupId().equals(battalionCommander.getBattalionGroup().getId())
+                && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)) {
+            CompanyGroup companyGroup = companyGroupService.findCompanyGroupById(supplyRequest.getMilitaryGroupId());
+            return allocateResources(supplyRequest.getResourcesRequestId(), battalionCommander.getBattalionGroup(), battalionCommander, companyGroup);
+        }
 
+        return new ResourcesUpdateResponse(false, false);
+    }
 
-        return null;
+    public ResourcesUpdateResponse allocateResources(ResourcesRequest resourcesRequest, BattalionGroup battalionGroup, BattalionCommander battalionCommander, CompanyGroup companyGroup) {
+        boolean needForSupply = givenResourcesService.allocateResources(resourcesRequest, battalionGroup, companyGroup,
+                companyGroup.getCompanyCommanderId().getId(), companyGroup.getCompanyCommanderId().getRole(),
+                companyGroup.getCompanyCommanderId().getBrigadeCommanderId());
+        return new ResourcesUpdateResponse(true, needForSupply);
     }
 }

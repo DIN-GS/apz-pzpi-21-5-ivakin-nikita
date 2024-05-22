@@ -182,7 +182,8 @@ public class CompanyCommanderService {
 
     public ResourcesUpdateResponse sendResourcesToPlat(SupplyRequest supplyRequest) {
         CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
-        if (supplyRequest.getBrigadeCommanderId().equals(companyCommander.getBrigadeCommanderId()) && supplyRequest.getSeniorMilitaryGroupId().equals(companyCommander.getCompanyGroup().getId())){
+        if (supplyRequest.getBrigadeCommanderId().equals(companyCommander.getBrigadeCommanderId()) && supplyRequest.getSeniorMilitaryGroupId().equals(companyCommander.getCompanyGroup().getId())
+                && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)){
             PlatGroup platGroup = platGroupService.findPlatGroupById(supplyRequest.getMilitaryGroupId());
             return allocateResources(supplyRequest.getResourcesRequestId(), companyCommander.getCompanyGroup(), companyCommander, platGroup);
         }
@@ -191,7 +192,8 @@ public class CompanyCommanderService {
 
     public ResourcesUpdateResponse allocateResources(ResourcesRequest resourcesRequest, CompanyGroup companyGroup, CompanyCommander companyCommander, PlatGroup platGroup) {
         boolean needForSupply = givenResourcesService.allocateResources(resourcesRequest, companyGroup, platGroup,
-                platGroup.getPlatCommanderId().getId(), platGroup.getPlatCommanderId().getRole(), platGroup.getPlatCommanderId().getBrigadeCommanderId());
+                platGroup.getPlatCommanderId().getId(), platGroup.getPlatCommanderId().getRole(),
+                platGroup.getPlatCommanderId().getBrigadeCommanderId());
         return new ResourcesUpdateResponse(true, needForSupply);
     }
 

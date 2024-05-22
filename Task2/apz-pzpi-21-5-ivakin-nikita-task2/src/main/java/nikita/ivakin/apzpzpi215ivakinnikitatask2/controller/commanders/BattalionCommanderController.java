@@ -63,7 +63,7 @@ public class BattalionCommanderController {
 
     @PostMapping("/send/resources-to-company")
     public ResponseEntity<Boolean> sendResources(@RequestBody SupplyRequest supplyRequest) {
-        ResourcesUpdateResponse resourcesUpdateResponse = battalionCommanderService.sendResourcesToBattalion(supplyRequest);
+        ResourcesUpdateResponse resourcesUpdateResponse = battalionCommanderService.sendResourcesToCompany(supplyRequest);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
