@@ -11,4 +11,6 @@ public interface LogisticCommanderRepository extends JpaRepository<LogisticComma
 
     Optional<LogisticCommander> findLogisticCommanderByEmail(String email);
 
+    Optional<LogisticCommander> findLogisticCommanderById(Integer id);
+
 }

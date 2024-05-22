@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface LogisticCompanyRepository extends JpaRepository<LogisticCompany, Long> {
 
     Optional<LogisticCompany> findLogisticCompanyByBrigadeGroup(BrigadeGroup brigadeGroup);
+
+    Optional<LogisticCompany> findLogisticCompanyById(Integer id);
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.LogisticCompanyRepository;
@@ -54,6 +55,17 @@ public class LogisticCompanyService {
         }
 
         return true;
+    }
+
+
+    public LogisticCompany findLogisticCompanyById(Integer id) {
+        Optional<LogisticCompany> tempLogGCom = logisticCompanyRepository.findLogisticCompanyById(id);
+        if (tempLogGCom.isPresent()) {
+            return tempLogGCom.get();
+        } else {
+            log.info("Error logistic company with id" + id + " doesn't exist.");
+        }
+        return null;
     }
 
     public LogisticCompany findBrigadeGroupByBrigadeCommander(BrigadeCommander brigadeCommander) {

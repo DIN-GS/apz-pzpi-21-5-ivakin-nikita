@@ -53,4 +53,13 @@ public class LogisticCommanderService {
     }
 
 
+    public LogisticCommander findLogisticCommanderById(Integer logisticCommanderId) {
+        Optional<LogisticCommander> tempLogCommander = logisticCommanderRepository.findLogisticCommanderById(logisticCommanderId);
+        if (tempLogCommander.isPresent()) {
+            return tempLogCommander.get();
+        } else {
+            log.info("Error logistic commander with id" + logisticCommanderId + " doesn't exist.");
+        }
+        return null;
+    }
 }

@@ -17,6 +17,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeComman
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
@@ -46,6 +47,7 @@ public class BrigadeCommanderService {
     private final ResourcesRequestService resourcesRequestService;
     private final SupplyRequestService supplyRequestService;
     private final GivenResourcesService givenResourcesService;
+    private final LogisticCommanderService logisticCommanderService;
 
 
 
@@ -112,8 +114,13 @@ public class BrigadeCommanderService {
         return battalionCommanderService.getBattalionGroupService().createBattalionGroup(battalionGroupDTO, brigadeCommander);
     }
 
-    public boolean assignLogisticCompanyCommander(LogisticCommander logisticCompanyCommander){
-
+    public boolean assignLogisticCompanyCommander(Integer logisticCommanderId, Integer logisticCompanyId){
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        LogisticCommander logisticCommander = logisticCommanderService.findLogisticCommanderById(logisticCommanderId);
+        LogisticCompany logisticCompany = logisticCompanyService.findLogisticCompanyById(logisticCompanyId);
+        logisticCompany.setLogisticCommanderId(logisticCommander);
+        logisticCommander.setLogisticCompany(logisticCompany);
+        logisticCommander.setBrigadeCommander(brigadeCommander);
         return true;
     }
 
