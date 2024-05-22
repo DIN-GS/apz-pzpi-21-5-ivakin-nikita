@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatCommanderRepository;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.ResourcesRequestService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
@@ -32,6 +34,7 @@ public class PlatCommanderService {
     private final PlatGroupService platGroupService;
     private final ResourcesRequestService resourcesRequestService;
     private final SupplyRequestService supplyRequestService;
+    private final GivenResourcesService givenResourcesService;
 
     public PlatCommander getAuthenticatedPlatCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -67,7 +70,7 @@ public class PlatCommanderService {
     //Validation
     public boolean validateResources(PlatGroupDTO platGroupDTO) {
         PlatCommander platCommander = getAuthenticatedPlatCommander();
-        PlatGroup platGroup = platGroupService.findPlatGroupById(platCommander.getPlatGroup().getId());
+        GivenResources givenResources = givenResourcesService.getGivenResources(platCommander.getId(), platCommander.getPlatGroup().getId(), platCommander.getRole(), platCommander.getBrigadeCommanderId());
         //if (platGroupDTO.getAmmo40mmGpCount() < )
         return true;
     }

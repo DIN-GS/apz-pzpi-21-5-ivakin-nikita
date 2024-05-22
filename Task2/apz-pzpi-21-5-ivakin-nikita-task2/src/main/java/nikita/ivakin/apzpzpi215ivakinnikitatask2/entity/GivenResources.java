@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "given_resources", schema = "project")
@@ -30,6 +33,10 @@ public class GivenResources {
 
     @Enumerated(EnumType.STRING)
     private Role roleOfCommander;
+
+    private LocalDate issueDate;
+
+    private ResourcesType allocationOfResources;
 
     @Column(name = "ammo_556x45ar_count")
     private int ammo556x45ArCount;
