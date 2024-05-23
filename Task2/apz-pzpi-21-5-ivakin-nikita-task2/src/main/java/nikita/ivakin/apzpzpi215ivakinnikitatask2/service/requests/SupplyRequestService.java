@@ -9,6 +9,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyReque
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -83,6 +84,17 @@ public class SupplyRequestService {
             log.info("There aren't supply requests in brigade yet");
         }
         return supplyRequests;
+    }
+
+    public SupplyRequest getSupplyRequestById(Integer id) {
+        Optional<SupplyRequest> tempSupplyRequest = supplyRequestRepository.findSupplyRequestByRequestId(id);
+        if (tempSupplyRequest.isPresent()) {
+            return tempSupplyRequest.get();
+        } else {
+            //throw exception
+            log.error("There aren't any supply requests with id " + id);
+        }
+        return null;
     }
 
 

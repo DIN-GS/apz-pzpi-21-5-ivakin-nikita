@@ -21,11 +21,6 @@ public class LogisticCommanderController {
 
     private final LogisticCommanderService logisticCommanderService;
 
-    /*@GetMapping("/get/demands-of-military-groups")
-    public ResponseEntity<Boolean> getDemands() {
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }*/
-
     @GetMapping("/get/all-requests")
     public ResponseEntity<List<SupplyRequest>> getAllRequests(){
         List<SupplyRequest> supplyRequests = logisticCommanderService.getAllRequests();
@@ -33,13 +28,15 @@ public class LogisticCommanderController {
     }
 
     //Change status of request and sign who is going to do it and when
-    @PostMapping("/take/execution-of-request")
-    public ResponseEntity<Boolean> takeExecutionOfRequest(@RequestBody SupplyRequestDTO requestDTO){
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    @PostMapping("/take/execution-of-supply-request/{id}")
+    public ResponseEntity<Boolean> takeExecutionOfRequest(@PathVariable Integer id){
+        boolean result = logisticCommanderService.takeExecutionOfRequest(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/confirm/execution-of-request")
-    public ResponseEntity<Boolean> confirmExecutionOfRequest(@RequestBody SupplyRequestDTO requestDTO){
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    @PostMapping("/confirm/delivery-of-supply-request/{id}")
+    public ResponseEntity<Boolean> confirmDeliveryOfRequest(@PathVariable Integer id){
+        boolean result = logisticCommanderService.confirmExecutionOfRequest(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

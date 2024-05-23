@@ -42,6 +42,10 @@ public class SupplyRequest {
 
     private LocalDate dateOfRequest;
 
+    private LocalDate dateOfExecuting;
+
+    private LocalDate deliveryComplitionDate;
+
     private LocalDate executionСomplitionDate;
 
     @Enumerated(EnumType.STRING)

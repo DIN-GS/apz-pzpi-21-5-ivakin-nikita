@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SupplyRequestRepository extends JpaRepository<SupplyRequest, Integer> {
@@ -15,5 +16,7 @@ public interface SupplyRequestRepository extends JpaRepository<SupplyRequest, In
     List<SupplyRequest> findSupplyRequestsBySeniorMilitaryGroupIdAndRoleOfCommander(Integer seniorMilitaryGroupId , Role roleOfCommander);
 
     List<SupplyRequest> findSupplyRequestsByBrigadeCommanderId(Integer brigadeCommanderId);
+
+    Optional<SupplyRequest> findSupplyRequestByRequestId(Integer requestId);
 
 }
