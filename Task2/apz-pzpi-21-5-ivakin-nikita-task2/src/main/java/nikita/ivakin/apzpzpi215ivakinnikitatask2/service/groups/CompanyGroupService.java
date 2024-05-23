@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.CompanyGroupRepository;
@@ -13,6 +14,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -137,11 +139,17 @@ public class CompanyGroupService {
         return companyGroup;
     }
 
+    public List<CompanyGroup> findCompanyGroupsByBattalionGroupId(BattalionGroup battalionGroup) {
+       return companyGroupRepository.findAllByBattalionGroup(battalionGroup);
+    }
+
+
 
     @Transactional
     public void save(CompanyGroup companyGroup) {
         companyGroupRepository.save(companyGroup);
     }
+
 
 
 }

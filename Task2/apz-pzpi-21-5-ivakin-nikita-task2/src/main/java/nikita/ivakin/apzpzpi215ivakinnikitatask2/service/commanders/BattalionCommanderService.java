@@ -11,6 +11,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
@@ -76,9 +77,7 @@ public class BattalionCommanderService {
         return true;
     }
 
-    public BattalionGroup findBattalionGroupById(Integer id) {
-        return  battalionGroupService.findBattalionGroupById(id);
-    }
+
 
     public BattalionCommander findBattalionCommanderByEmail(String email) {
         Optional<BattalionCommander> tempBatCom = battalionCommanderRepository.findBattalionCommanderByEmail(email);
@@ -201,5 +200,10 @@ public class BattalionCommanderService {
                 companyGroup.getCompanyCommanderId().getId(), companyGroup.getCompanyCommanderId().getRole(),
                 companyGroup.getCompanyCommanderId().getBrigadeCommanderId());
         return new ResourcesUpdateResponse(true, needForSupply);
+    }
+
+    public List<CompanyGroup> getBattalionCompanyGroups(){
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        return companyGroupService.findCompanyGroupsByBattalionGroupId(battalionCommander.getBattalionGroup());
     }
 }

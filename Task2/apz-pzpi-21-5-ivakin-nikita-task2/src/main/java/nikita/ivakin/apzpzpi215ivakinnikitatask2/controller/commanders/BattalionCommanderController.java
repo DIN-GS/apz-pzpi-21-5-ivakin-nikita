@@ -7,6 +7,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BattalionCommanderService;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,9 @@ public class BattalionCommanderController {
 
     private final BattalionCommanderService battalionCommanderService;
 
-    @GetMapping("/battalion-military-groups")
-    public ResponseEntity<List<MilitaryGroup>> getBattalionMilitaryGroups(){
-        List<MilitaryGroup> battalionMilitaryGroups = new ArrayList<>();
+    @GetMapping("/battalion-company-groups")
+    public ResponseEntity<List<CompanyGroup>> getBattalionCompanyGroups(){
+        List<CompanyGroup> battalionMilitaryGroups = battalionCommanderService.getBattalionCompanyGroups();
         return new ResponseEntity<>(battalionMilitaryGroups, HttpStatus.OK);
     }
 

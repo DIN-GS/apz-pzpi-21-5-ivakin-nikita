@@ -198,5 +198,9 @@ public class CompanyCommanderService {
     }
 
 
+    public List<PlatGroup> getCompanyPlatGroups() {
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        return platGroupService.findPlatGroupsByCompanyGroup(companyCommander.getCompanyGroup());
+    }
 }
 

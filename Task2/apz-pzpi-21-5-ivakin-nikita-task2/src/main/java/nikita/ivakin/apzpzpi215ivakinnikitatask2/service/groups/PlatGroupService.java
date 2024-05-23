@@ -7,6 +7,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.PlatGroupRepository;
@@ -14,6 +15,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -140,6 +142,10 @@ public class PlatGroupService {
         return null;
     }
 
+    public List<PlatGroup> findPlatGroupsByCompanyGroup(CompanyGroup companyGroup) {
+        return platGroupRepository.findPlatGroupsByCompanyGroup(companyGroup);
+    }
+
     public PlatGroup findPlatGroupById(Integer id) {
         Optional<PlatGroup> tempPlatGroup = platGroupRepository.findPlatGroupById(id);
         if (tempPlatGroup.isPresent()) {
@@ -154,4 +160,6 @@ public class PlatGroupService {
     public void save(PlatGroup platGroup) {
         platGroupRepository.save(platGroup);
     }
+
+
 }

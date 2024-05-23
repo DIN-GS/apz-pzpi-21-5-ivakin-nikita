@@ -7,12 +7,15 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.BattalionGroupRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -152,11 +155,24 @@ public class BattalionGroupService {
         return true;
     }
 
+    public List<BattalionGroup> findBattalionsByBrigadeGroupId(BrigadeGroup brigadeGroup) {
+        List<BattalionGroup> militaryGroups = new ArrayList<BattalionGroup>();
+        try {
+            militaryGroups.addAll(battalionGroupRepository.findAllByBrigadeGroup(brigadeGroup));
+        } catch (Exception e) {
+            log.error("Error in finding battalion groups");
+        }
+
+        return militaryGroups;
+    }
+
+
 
     @Transactional
     public void save(BattalionGroup battalionGroup) {
         battalionGroupRepository.save(battalionGroup);
     }
+
 
 
 }

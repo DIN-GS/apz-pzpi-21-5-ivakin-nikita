@@ -8,14 +8,12 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BrigadeCommanderService;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,13 +23,12 @@ import java.util.List;
 public class BrigadeCommanderController {
 
     private final BrigadeCommanderService brigadeCommanderService;
-    private final BattalionGroupService battalionGroupService;
 
 
-    @GetMapping("/brigade-military-groups")
-    public ResponseEntity<List<MilitaryGroup>> getMilitaryGroups() {
-        List<MilitaryGroup> militaryGroups = new ArrayList<>();
-        return new ResponseEntity<>(militaryGroups, HttpStatus.OK);
+    @GetMapping("/brigade-battalion-groups")
+    public ResponseEntity<List<BattalionGroup>> getBattalionGroups() {
+        List<BattalionGroup> battalionGroups = brigadeCommanderService.getBrigadeBattalionGroups();
+        return new ResponseEntity<>(battalionGroups, HttpStatus.OK);
     }
 
     @PostMapping("/create/brigade")
@@ -87,7 +84,7 @@ public class BrigadeCommanderController {
     @PostMapping("/ask/for-resources")
     public ResponseEntity<Boolean> askForResources(@RequestBody ResourcesRequestDTO resourcesRequestDTO){
         boolean result = brigadeCommanderService.askForResources(resourcesRequestDTO);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 

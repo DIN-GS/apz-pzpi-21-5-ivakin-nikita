@@ -8,6 +8,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.CompanyCommanderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,10 @@ public class CompanyCommanderController {
 
     private final CompanyCommanderService companyCommanderService;
 
-    @GetMapping("/company-military-groups")
-    public ResponseEntity<List<MilitaryGroup>> getCompanyMilitaryGroups() {
-        List<MilitaryGroup> companyMilitaryGroups = new ArrayList<>();
-        return new ResponseEntity<>(companyMilitaryGroups, HttpStatus.OK);
+    @GetMapping("/company-plat-groups")
+    public ResponseEntity<List<PlatGroup>> getCompanyPlatGroups() {
+        List<PlatGroup> platGroups = companyCommanderService.getCompanyPlatGroups();
+        return new ResponseEntity<>(platGroups, HttpStatus.OK);
     }
 
     @PostMapping("/create/plat")

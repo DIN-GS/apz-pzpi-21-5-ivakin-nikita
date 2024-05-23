@@ -15,9 +15,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
@@ -32,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -254,6 +253,17 @@ public class BrigadeCommanderService {
         boolean needForSupply = givenResourcesService.allocateResources(resourcesRequest, brigadeGroup, battalionGroup,
                 battalionGroup.getBattalionCommanderId().getId(), battalionGroup.getBattalionCommanderId().getRole(), battalionGroup.getBattalionCommanderId().getBrigadeCommander().getId());
         return new ResourcesUpdateResponse(true, needForSupply);
+    }
+
+    public List<BattalionGroup> getBrigadeBattalionGroups() {
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        return battalionCommanderService.getBattalionGroupService().findBattalionsByBrigadeGroupId(brigadeCommander.getBrigadeGroupId());
+
+    }
+
+    public List<BattalionGroup> getAllBattalions(){
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        return battalionCommanderService.getBattalionGroupService().findBattalionsByBrigadeGroupId(brigadeCommander.getBrigadeGroupId());
     }
 }
 
