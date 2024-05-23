@@ -10,6 +10,10 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupUpdateException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.PlatGroupRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
@@ -26,7 +30,7 @@ public class PlatGroupService {
     private final PlatGroupRepository platGroupRepository;
     private final GivenResourcesService givenResourcesService;
 
-    private boolean fillGivenResources(PlatGroup platGroup, CompanyCommander companyCommander){
+    private void fillGivenResources(PlatGroup platGroup, CompanyCommander companyCommander){
         GivenResources givenResources = GivenResources.builder()
                 .militaryGroupId(platGroup.getId())
                 .brigadeCommanderId(companyCommander.getBrigadeCommanderId())
@@ -52,25 +56,17 @@ public class PlatGroupService {
         try {
             givenResourcesService.save(givenResources);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new GivenResourcesCreationException("Error creating given resources entity.");
         }
-        return true;
     }
 
     public boolean addGivenResourcesForPlat(CompanyCommander companyCommander){
         ArrayList<PlatGroup> platGroups = platGroupRepository.findAll();
         if (platGroups.size() > 0) {
             PlatGroup platGroup = platGroups.get(platGroups.size()-1);
-            try {
-                fillGivenResources(platGroup, companyCommander);
-            } catch (Exception e) {
-                log.info("Error creating given resources entity.");
-                return false;
-            }
+            fillGivenResources(platGroup, companyCommander);
         } else {
-            log.info("Error: there aren't any plats for giving resources.");
-            return false;
+            throw new MilitaryGroupNotFoundException("There aren't any plats for giving resources.");
         }
         return true;
     }
@@ -98,8 +94,7 @@ public class PlatGroupService {
         try {
             save(platGroup);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupCreationException("Something went wrong when creating plat group.");
         }
 
         return addGivenResourcesForPlat(companyCommander);
@@ -126,8 +121,7 @@ public class PlatGroupService {
         try {
             platGroupRepository.save(platGroup);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupUpdateException("Something went wrong while updating plat group with id "+ platGroup.getId(), e);
         }
         return true;
     }
@@ -137,9 +131,8 @@ public class PlatGroupService {
         if (tempPlatGroup.isPresent()) {
             return tempPlatGroup.get();
         } else {
-            log.info("Error plat group with plat commander id" + platCommander.getId() + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error plat group with plat commander id" + platCommander.getId() + " doesn't exist.");
         }
-        return null;
     }
 
     public List<PlatGroup> findPlatGroupsByCompanyGroup(CompanyGroup companyGroup) {
@@ -151,9 +144,8 @@ public class PlatGroupService {
         if (tempPlatGroup.isPresent()) {
             return tempPlatGroup.get();
         } else {
-            log.info("Error plat group with id" + id + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error plat group with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
     @Transactional

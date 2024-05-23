@@ -9,6 +9,10 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionComm
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupUpdateException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.CompanyGroupRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
@@ -25,7 +29,7 @@ public class CompanyGroupService {
     private final CompanyGroupRepository companyGroupRepository;
     private final GivenResourcesService givenResourcesService;
 
-    private boolean fillGivenResources(CompanyGroup companyGroup, BattalionCommander battalionCommander){
+    private void fillGivenResources(CompanyGroup companyGroup, BattalionCommander battalionCommander){
         GivenResources givenResources = GivenResources.builder()
                 .militaryGroupId(companyGroup.getId())
                 .brigadeCommanderId(battalionCommander.getBrigadeCommander().getId())
@@ -51,25 +55,18 @@ public class CompanyGroupService {
         try {
             givenResourcesService.save(givenResources);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new GivenResourcesCreationException("Error creating given resources entity.");
         }
-        return true;
     }
 
     public boolean addGivenResourcesForCompany(BattalionCommander battalionCommander){
         ArrayList<CompanyGroup> companyGroups = companyGroupRepository.findAll();
         if (companyGroups.size() > 0) {
             CompanyGroup companyGroup = companyGroups.get(companyGroups.size()-1);
-            try {
-                fillGivenResources(companyGroup, battalionCommander);
-            } catch (Exception e) {
-                log.info("Error creating given resources entity.");
-                return false;
-            }
+            fillGivenResources(companyGroup, battalionCommander);
         } else {
             log.info("Error: there aren't any companies for giving resources.");
-            return false;
+            throw new MilitaryGroupNotFoundException("There aren't any companies for giving resources.");
         }
         return true;
     }
@@ -96,8 +93,7 @@ public class CompanyGroupService {
         try {
             save(companyGroup);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupCreationException("Something went wrong while creating company group.");
         }
 
         return addGivenResourcesForCompany(battalionCommander);
@@ -108,9 +104,8 @@ public class CompanyGroupService {
         if (tempCompGroup.isPresent()) {
             return tempCompGroup.get();
         } else {
-            log.info("Error battalion group with id" + id + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error company group with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
     public CompanyGroup updateCompanyResources(CompanyGroupDTO companyGroupDTO) {
@@ -133,16 +128,18 @@ public class CompanyGroupService {
         try {
             companyGroupRepository.save(companyGroup);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return null;
+            throw new MilitaryGroupUpdateException("Something went wrong while updating company group with id "+ companyGroup.getId(), e);
         }
         return companyGroup;
     }
 
     public List<CompanyGroup> findCompanyGroupsByBattalionGroupId(BattalionGroup battalionGroup) {
-       return companyGroupRepository.findAllByBattalionGroup(battalionGroup);
+        try {
+            return companyGroupRepository.findAllByBattalionGroup(battalionGroup);
+        } catch (Exception e) {
+            throw new MilitaryGroupNotFoundException("Error in finding company groups with battalion group id " + battalionGroup.getId());
+        }
     }
-
 
 
     @Transactional

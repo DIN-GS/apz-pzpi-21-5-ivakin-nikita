@@ -8,8 +8,11 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupUpdateException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.BattalionGroupRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
@@ -26,7 +29,7 @@ public class BattalionGroupService {
     private final BattalionGroupRepository battalionGroupRepository;
     private final GivenResourcesService givenResourcesService;
 
-    private boolean fillGivenResources(BattalionGroup battalionGroup, BrigadeCommander brigadeCommander){
+    private void fillGivenResources(BattalionGroup battalionGroup, BrigadeCommander brigadeCommander){
         GivenResources givenResources = GivenResources.builder()
                 .militaryGroupId(battalionGroup.getId())
                 .brigadeCommanderId(brigadeCommander.getId())
@@ -52,25 +55,17 @@ public class BattalionGroupService {
         try {
             givenResourcesService.save(givenResources);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new GivenResourcesCreationException("Error creating given resources entity.");
         }
-        return true;
     }
 
     public boolean addGivenResourcesForBattalion(BrigadeCommander brigadeCommander){
         ArrayList<BattalionGroup> battalionGroups = battalionGroupRepository.findAll();
         if (battalionGroups.size() > 0) {
             BattalionGroup battalionGroup = battalionGroups.get(battalionGroups.size()-1);
-            try {
-                fillGivenResources(battalionGroup, brigadeCommander);
-            } catch (Exception e) {
-                log.info("Error creating given resources entity.");
-                return false;
-            }
+            fillGivenResources(battalionGroup, brigadeCommander);
         } else {
-            log.info("Error: there aren't any battalions for giving resources.");
-            return false;
+            throw new MilitaryGroupNotFoundException("There aren't any battalions for giving resources.");
         }
         return true;
     }
@@ -98,35 +93,21 @@ public class BattalionGroupService {
         try {
             save(battalionGroup);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupCreationException("Something went wrong while creating battalion group.");
         }
 
         return addGivenResourcesForBattalion(brigadeCommander);
 
     }
 
-    /*public boolean assignBattalionCommander(Integer batComId, Integer battalionGroupId) {
-        BattalionCommander battalionCommander = battalionCommanderService.findBattalionCommanderById(batComId);
-        BattalionGroup battalionGroup = findBattalionGroupById(battalionGroupId);
-        battalionGroup.setBattalionCommanderId(battalionCommander);
-        try {
-            save(battalionGroup);
-        } catch (Exception e) {
-            log.info("Error");
-            return false;
-        }
-        return true;
-    }*/
 
     public BattalionGroup findBattalionGroupById(Integer id) {
         Optional<BattalionGroup> tempBatGroup = battalionGroupRepository.findBattalionGroupById(id);
         if (tempBatGroup.isPresent()) {
             return tempBatGroup.get();
         } else {
-            log.info("Error battalion group with id" + id + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error battalion group with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
     public boolean updateBattalionResources(BattalionGroupDTO battalionGroupDTO) {
@@ -149,21 +130,17 @@ public class BattalionGroupService {
         try {
             battalionGroupRepository.save(battalionGroup);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupUpdateException("Something went wrong while updating battalion group with id "+ battalionGroup.getId(), e);
         }
         return true;
     }
 
     public List<BattalionGroup> findBattalionsByBrigadeGroupId(BrigadeGroup brigadeGroup) {
-        List<BattalionGroup> militaryGroups = new ArrayList<BattalionGroup>();
         try {
-            militaryGroups.addAll(battalionGroupRepository.findAllByBrigadeGroup(brigadeGroup));
+            return battalionGroupRepository.findAllByBrigadeGroup(brigadeGroup);
         } catch (Exception e) {
-            log.error("Error in finding battalion groups");
+            throw new MilitaryGroupNotFoundException("Error in finding battalion groups with brigade group id " + brigadeGroup.getId());
         }
-
-        return militaryGroups;
     }
 
 

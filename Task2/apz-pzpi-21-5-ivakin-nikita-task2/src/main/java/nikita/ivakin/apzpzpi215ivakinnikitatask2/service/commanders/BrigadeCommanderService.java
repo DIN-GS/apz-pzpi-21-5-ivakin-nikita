@@ -261,9 +261,5 @@ public class BrigadeCommanderService {
 
     }
 
-    public List<BattalionGroup> getAllBattalions(){
-        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
-        return battalionCommanderService.getBattalionGroupService().findBattalionsByBrigadeGroupId(brigadeCommander.getBrigadeGroupId());
-    }
 }
 

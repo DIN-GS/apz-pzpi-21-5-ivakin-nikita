@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupUpdateException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.BrigadeGroupRepository;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +49,7 @@ public class BrigadeGroupService {
         try {
             save(brigadeGroup);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupCreationException("Something went wrong while creating brigade group.");
         }
 
         return true;
@@ -59,14 +61,13 @@ public class BrigadeGroupService {
         if (tempBrigGroup.isPresent()) {
             return tempBrigGroup.get();
         } else {
-            log.info("Error brigade group with brigade commander id" + brigadeCommanderId.getId() + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error brigade group with brigade commander id " + brigadeCommanderId.getId() + " doesn't exist.");
         }
-        return null;
     }
 
     @Transactional
     public void save(BrigadeGroup brigadeGroup) {
-        brigadeGroupRepository.save(brigadeGroup);
+            brigadeGroupRepository.save(brigadeGroup);
     }
 
     public BrigadeGroup findBrigadeGroupById(Integer id) {
@@ -74,9 +75,8 @@ public class BrigadeGroupService {
         if (tempBrigGroup.isPresent()) {
             return tempBrigGroup.get();
         } else {
-            log.info("Error brigade group with id" + id + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error brigade group with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
     public boolean updateBrigadeResources(BrigadeGroupDTO brigadeGroupDTO) {
@@ -100,7 +100,7 @@ public class BrigadeGroupService {
             brigadeGroupRepository.save(brigadeGroup);
         } catch (Exception e) {
             log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupUpdateException("Something went wrong while updating brigade group with id "+ brigadeGroup.getId(), e);
         }
         return true;
     }

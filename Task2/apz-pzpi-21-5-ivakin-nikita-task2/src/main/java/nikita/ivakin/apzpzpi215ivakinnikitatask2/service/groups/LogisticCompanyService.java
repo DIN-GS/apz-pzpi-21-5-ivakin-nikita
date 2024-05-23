@@ -3,12 +3,11 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.LogisticCompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,8 +49,7 @@ public class LogisticCompanyService {
         try {
             save(logisticCompany);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new MilitaryGroupCreationException("Something went wrong while creating logistic company.");
         }
 
         return true;
@@ -63,20 +61,17 @@ public class LogisticCompanyService {
         if (tempLogGCom.isPresent()) {
             return tempLogGCom.get();
         } else {
-            log.info("Error logistic company with id" + id + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error logistic company with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
-    public LogisticCompany findBrigadeGroupByBrigadeCommander(BrigadeCommander brigadeCommander) {
-
+    public LogisticCompany findLogisticCompanyByBrigadeCommander(BrigadeCommander brigadeCommander) {
         Optional<LogisticCompany> tempLogComp = logisticCompanyRepository.findLogisticCompanyByBrigadeGroup(brigadeCommander.getBrigadeGroupId());
         if (tempLogComp.isPresent()) {
             return tempLogComp.get();
         } else {
-            log.info("Error logistic company with brigade commander id" + brigadeCommander.getId() + " doesn't exist.");
+            throw new MilitaryGroupNotFoundException("Error logistic company with brigade commander id" + brigadeCommander.getId() + " doesn't exist.");
         }
-        return null;
     }
 
 
