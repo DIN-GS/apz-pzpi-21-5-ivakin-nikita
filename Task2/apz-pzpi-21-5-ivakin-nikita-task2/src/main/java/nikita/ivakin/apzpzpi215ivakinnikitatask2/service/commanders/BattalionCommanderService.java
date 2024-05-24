@@ -18,6 +18,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGr
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BattalionCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BattalionGroupService;
@@ -48,9 +49,13 @@ public class BattalionCommanderService {
 
 
     public BattalionCommander getAuthenticatedBattalionCommander() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String battalionCommanderEmail = authentication.getName();
-        return findBattalionCommanderByEmail(battalionCommanderEmail);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String battalionCommanderEmail = authentication.getName();
+            return findBattalionCommanderByEmail(battalionCommanderEmail);
+        } catch (Exception e) {
+            throw new CommanderAuthenticationException("Error in getting authenticated battalion commander.");
+        }
     }
 
     public boolean createCompany(CompanyGroupDTO companyGroupDTO) {
@@ -84,9 +89,8 @@ public class BattalionCommanderService {
         if (tempBatCom.isPresent()) {
             return tempBatCom.get();
         } else {
-            log.info("Error battalion commander with email" + email  + " doesn't exist.");
+            throw new CommanderNotFoundException("Error battalion commander with email" + email  + " doesn't exist.");
         }
-        return null;
     }
 
     public BattalionCommander findBattalionCommanderById(Integer id) {
@@ -94,9 +98,8 @@ public class BattalionCommanderService {
         if (tempBatCom.isPresent()) {
             return tempBatCom.get();
         } else {
-            log.info("Error battalion commander with id" + id + " doesn't exist.");
+            throw new CommanderNotFoundException("Error battalion commander with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
     public List<SupplyRequest> getBattalionRequests() {
@@ -151,21 +154,20 @@ public class BattalionCommanderService {
         try {
             resourcesRequestService.save(resourcesRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new ResourcesRequestCreationException("Something went wrong in creation resources request in battalion commander method ask for resources.");
         }
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(battalionCommander.getId(), battalionCommander.getBattalionGroup().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
             supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new SupplyRequestCreationException("Something went wrong in creation supply request in battalion commander method ask for resources.");
         }
         return true;
     }
 
     public boolean validateResources(BattalionGroupDTO battalionGroupDTO) {
+
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
         GivenResources givenResources = givenResourcesService.getGivenResources(
                 battalionCommander.getId(), battalionCommander.getBattalionGroup().getId(), battalionCommander.getRole(), battalionCommander.getBrigadeCommander().getId(), ResourcesType.FOR_PERFORMING_A_MISSION
@@ -175,21 +177,34 @@ public class BattalionCommanderService {
                 && battalionGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && battalionGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
                 && battalionGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && battalionGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
                 && battalionGroupDTO.getHelmetsCount() >= givenResources.getHelmetsCount() && battalionGroupDTO.getApcCount() >= givenResources.getApcCount();
+
     }
 
 
     public ResourcesUpdateResponse updateBattalionResources(BattalionGroupDTO battalionGroupDTO) {
-        boolean validationResult = !validateResources(battalionGroupDTO);
-        boolean updateResult = battalionGroupService.updateBattalionResources(battalionGroupDTO);
+        boolean validationResult;
+        boolean updateResult;
+        try {
+            validationResult = !validateResources(battalionGroupDTO);
+            updateResult = battalionGroupService.updateBattalionResources(battalionGroupDTO);
+        } catch (Exception e) {
+            throw new MilitaryGroupUpdateException("Something went wrong in updating battalion resources.", e);
+        }
+
         return new ResourcesUpdateResponse(updateResult, validationResult);
     }
 
     public ResourcesUpdateResponse sendResourcesToCompany(SupplyRequest supplyRequest) {
-        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
-        if (supplyRequest.getBrigadeCommanderId().equals(battalionCommander.getBrigadeCommander().getId()) && supplyRequest.getSeniorMilitaryGroupId().equals(battalionCommander.getBattalionGroup().getId())
-                && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)) {
-            CompanyGroup companyGroup = companyGroupService.findCompanyGroupById(supplyRequest.getMilitaryGroupId());
-            return allocateResources(supplyRequest.getResourcesRequestId(), battalionCommander.getBattalionGroup(), battalionCommander, companyGroup);
+        try {
+
+            BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+            if (supplyRequest.getBrigadeCommanderId().equals(battalionCommander.getBrigadeCommander().getId()) && supplyRequest.getSeniorMilitaryGroupId().equals(battalionCommander.getBattalionGroup().getId())
+                    && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)) {
+                CompanyGroup companyGroup = companyGroupService.findCompanyGroupById(supplyRequest.getMilitaryGroupId());
+                return allocateResources(supplyRequest.getResourcesRequestId(), battalionCommander.getBattalionGroup(), battalionCommander, companyGroup);
+            }
+        } catch (Exception e) {
+            throw new CommanderSendingResourcesException("Error in sending resources to company.");
         }
 
         return new ResourcesUpdateResponse(false, false);

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.ResourcesRequestNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.ResourcesRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,7 @@ public class ResourcesRequestService {
         if (tempResReq.isPresent()) {
             return tempResReq.get();
         } else {
-            log.info("Error resources request with commander id " +commanderId+ " and military group id " + militaryGroupId+ " doesn't exist.");
+            throw new ResourcesRequestNotFoundException("Error resources request with commander id " +commanderId+ " and military group id " + militaryGroupId+ " doesn't exist.");
         }
-        return null;
     }
 }

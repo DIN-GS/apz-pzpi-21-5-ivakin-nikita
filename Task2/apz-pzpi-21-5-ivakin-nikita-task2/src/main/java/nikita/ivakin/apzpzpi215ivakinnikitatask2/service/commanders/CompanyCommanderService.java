@@ -18,6 +18,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.CompanyCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.CompanyGroupService;
@@ -49,9 +50,13 @@ public class CompanyCommanderService {
 
 
     public CompanyCommander getAuthenticatedCompanyCommander() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String companyCommanderEmail = authentication.getName();
-        return findCompanyCommanderByEmail(companyCommanderEmail);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String companyCommanderEmail = authentication.getName();
+            return findCompanyCommanderByEmail(companyCommanderEmail);
+        } catch (Exception e) {
+            throw new CommanderAuthenticationException("Error in getting authenticated company commander.");
+        }
     }
 
     public boolean createPlat(PlatGroupDTO platGroupDTO) {
@@ -71,8 +76,7 @@ public class CompanyCommanderService {
             platCommanderService.save(platCommander);
             platGroupService.save(platGroup);
         } catch (Exception e) {
-            log.info("Something went wrong in assigning PlatCommander.");
-            return false;
+            throw new CommanderAssigningException("Something went wrong in assigning PlatCommander.");
         }
 
         return true;
@@ -83,9 +87,8 @@ public class CompanyCommanderService {
         if (tempCompCom.isPresent()) {
             return tempCompCom.get();
         } else {
-            log.info("Error company commander with id" + id + " doesn't exist.");
+            throw new CommanderNotFoundException("Error company commander with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
     public CompanyCommander findCompanyCommanderByEmail(String email) {
@@ -93,9 +96,8 @@ public class CompanyCommanderService {
         if (tempCompCom.isPresent()) {
             return tempCompCom.get();
         } else {
-            log.info("Error company commander with email" + email  + " doesn't exist.");
+            throw new CommanderNotFoundException("Error company commander with email" + email  + " doesn't exist.");
         }
-        return null;
     }
 
     @Transactional
@@ -136,16 +138,14 @@ public class CompanyCommanderService {
         try {
             resourcesRequestService.save(resourcesRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new ResourcesRequestCreationException("Something went wrong in creation resources request in company commander method ask for resources.");
         }
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(companyCommander.getId(), companyCommander.getCompanyGroup().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
             supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new SupplyRequestCreationException("Something went wrong in creation supply request in company commander method ask for resources.");
         }
         return true;
     }
@@ -174,19 +174,28 @@ public class CompanyCommanderService {
 
     //add throw
     public ResourcesUpdateResponse updateCompanyResources(CompanyGroupDTO companyGroupDTO) {
-        CompanyGroup companyGroup = companyGroupService.updateCompanyResources(companyGroupDTO);
-        boolean validationResult = !validateResources(companyGroup);
-        boolean updateResult = companyGroup != null;
-        return new ResourcesUpdateResponse(updateResult, validationResult);
+        try {
+            CompanyGroup companyGroup = companyGroupService.updateCompanyResources(companyGroupDTO);
+            boolean validationResult = !validateResources(companyGroup);
+            boolean updateResult = companyGroup != null;
+            return new ResourcesUpdateResponse(updateResult, validationResult);
+        } catch (Exception e) {
+            throw new MilitaryGroupUpdateException("Something went wrong  in updating company resources.");
+        }
     }
 
     public ResourcesUpdateResponse sendResourcesToPlat(SupplyRequest supplyRequest) {
-        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
-        if (supplyRequest.getBrigadeCommanderId().equals(companyCommander.getBrigadeCommanderId()) && supplyRequest.getSeniorMilitaryGroupId().equals(companyCommander.getCompanyGroup().getId())
-                && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)){
-            PlatGroup platGroup = platGroupService.findPlatGroupById(supplyRequest.getMilitaryGroupId());
-            return allocateResources(supplyRequest.getResourcesRequestId(), companyCommander.getCompanyGroup(), companyCommander, platGroup);
+        try {
+            CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+            if (supplyRequest.getBrigadeCommanderId().equals(companyCommander.getBrigadeCommanderId()) && supplyRequest.getSeniorMilitaryGroupId().equals(companyCommander.getCompanyGroup().getId())
+                    && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)){
+                PlatGroup platGroup = platGroupService.findPlatGroupById(supplyRequest.getMilitaryGroupId());
+                return allocateResources(supplyRequest.getResourcesRequestId(), companyCommander.getCompanyGroup(), companyCommander, platGroup);
+            }
+        } catch (Exception e) {
+            throw new CommanderSendingResourcesException("Error in sending resources to plat.");
         }
+
         return new ResourcesUpdateResponse(false, false);
     }
 

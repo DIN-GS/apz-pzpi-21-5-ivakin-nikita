@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.SupplyRequestNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.SupplyRequestRepository;
 import org.springframework.stereotype.Service;
 
@@ -91,10 +92,8 @@ public class SupplyRequestService {
         if (tempSupplyRequest.isPresent()) {
             return tempSupplyRequest.get();
         } else {
-            //throw exception
-            log.error("There aren't any supply requests with id " + id);
+            throw new SupplyRequestNotFoundException("There aren't any supply requests with id " + id);
         }
-        return null;
     }
 
 

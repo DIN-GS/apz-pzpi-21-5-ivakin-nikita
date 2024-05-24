@@ -13,6 +13,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.PlatGroupService;
@@ -39,9 +40,13 @@ public class PlatCommanderService {
     private final GivenResourcesService givenResourcesService;
 
     public PlatCommander getAuthenticatedPlatCommander() {
+        try {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String platCommanderEmail = authentication.getName();
         return findPlatCommanderByEmail(platCommanderEmail);
+        } catch (Exception e) {
+            throw new CommanderAuthenticationException("Error in getting authenticated brigade commander.");
+        }
     }
 
     public PlatCommander findPlatCommanderById(Integer id){
@@ -49,9 +54,8 @@ public class PlatCommanderService {
         if (tempPlatCom.isPresent()) {
             return tempPlatCom.get();
         } else {
-            log.info("Error plat commander with id" + id + " doesn't exist.");
+            throw new CommanderNotFoundException("Error plat commander with id" + id + " doesn't exist.");
         }
-        return null;
     }
 
     public PlatCommander findPlatCommanderByEmail(String email) {
@@ -59,9 +63,8 @@ public class PlatCommanderService {
         if (tempPlatCom.isPresent()) {
             return tempPlatCom.get();
         } else {
-            log.info("Error plat commander with email" + email  + " doesn't exist.");
+            throw new CommanderNotFoundException("Error plat commander with email" + email  + " doesn't exist.");
         }
-        return null;
     }
 
     public PlatGroup getPlatGroup(){
@@ -84,9 +87,13 @@ public class PlatCommanderService {
 
     //Add check of resources
     public ResourcesUpdateResponse updatePlatResources(PlatGroupDTO platGroupDTO) {
-        boolean validationResult = !validateResources(platGroupDTO);
-        boolean updateResult = platGroupService.updatePlatResources(platGroupDTO);
-        return new ResourcesUpdateResponse(updateResult, validationResult);
+        try {
+            boolean validationResult = !validateResources(platGroupDTO);
+            boolean updateResult = platGroupService.updatePlatResources(platGroupDTO);
+            return new ResourcesUpdateResponse(updateResult, validationResult);
+        } catch (Exception e) {
+            throw new MilitaryGroupUpdateException("Something went wrong in updating plat resources.");
+        }
     }
 
     public boolean askForResources(ResourcesRequestDTO resourcesRequestDTO) {
@@ -122,16 +129,14 @@ public class PlatCommanderService {
         try {
             resourcesRequestService.save(resourcesRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new ResourcesRequestCreationException("Something went wrong in creation resources request in plat commander method ask for resources.");
         }
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(platCommander.getId(), platCommander.getPlatGroup().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
             supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new SupplyRequestCreationException("Something went wrong in creation supply request in plat commander method ask for resources.");
         }
         return true;
     }

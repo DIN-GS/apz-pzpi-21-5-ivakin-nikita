@@ -10,6 +10,8 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryG
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.GivenResourcesRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +34,8 @@ public class GivenResourcesService {
         if (tempGivenResources.isPresent()) {
             return tempGivenResources.get();
         } else {
-            log.info("Error given resources entity for this battle group doesn't exist.");
+            throw new GivenResourcesNotFoundException("Error given resources entity for this battle group doesn't exist.");
         }
-        return null;
     }
 
     public boolean allocateResources(ResourcesRequest resourcesRequest, MilitaryGroup givingMilitaryGroup, MilitaryGroup gettingMilitaryGroup,
@@ -99,8 +100,7 @@ public class GivenResourcesService {
         try {
             save(givenResources);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new GivenResourcesCreationException("Something went wrong in creation given resources entity.", e);
         }
 
         return true;

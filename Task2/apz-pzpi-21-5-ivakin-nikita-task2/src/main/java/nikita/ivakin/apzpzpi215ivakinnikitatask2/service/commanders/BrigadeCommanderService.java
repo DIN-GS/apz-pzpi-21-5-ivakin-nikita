@@ -15,10 +15,13 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.*;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BrigadeCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.BrigadeGroupService;
@@ -30,7 +33,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +53,14 @@ public class BrigadeCommanderService {
 
 
     public BrigadeCommander getAuthenticatedBrigadeCommander() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String brigadeCommanderEmail = authentication.getName();
-        return findBrigadeCommanderByEmail(brigadeCommanderEmail);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String brigadeCommanderEmail = authentication.getName();
+            return findBrigadeCommanderByEmail(brigadeCommanderEmail);
+        } catch (Exception e) {
+            throw new CommanderAuthenticationException("Error in getting authenticated brigade commander.");
+        }
+
     }
 
     private boolean fillGivenResources(BrigadeGroupDTO brigadeGroupDTO, BrigadeCommander brigadeCommander){
@@ -83,8 +90,7 @@ public class BrigadeCommanderService {
         try {
             givenResourcesService.save(givenResources);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new GivenResourcesCreationException("Something went wrong while creating given resources in creation of brigade.");
         }
         return true;
     }
@@ -95,11 +101,10 @@ public class BrigadeCommanderService {
         brigadeGroupService.createBrigadeGroup(brigadeGroupDTO, brigadeCommander);
         BrigadeGroup brigadeGroup = brigadeGroupService.findBrigadeGroupByBrigadeCommander(brigadeCommander);
         brigadeCommander.setBrigadeGroupId(brigadeGroup);
+
+        fillGivenResources(brigadeGroupDTO, brigadeCommander);
+
         save(brigadeCommander);
-        if (!fillGivenResources(brigadeGroupDTO, brigadeCommander)) {
-            log.info("Error in creating given resources entity");
-            return false;
-        }
         return true;
     }
 
@@ -134,10 +139,8 @@ public class BrigadeCommanderService {
             battalionCommanderService.save(battalionCommander);
             battalionCommanderService.getBattalionGroupService().save(battalionGroup);
         } catch (Exception e) {
-            log.info("Something went wrong in assigning BattalionCommander.");
-            return false;
+            throw new CommanderAssigningException("Something went wrong in assigning BattalionCommander with id" + battalionCommanderId);
         }
-
         return true;
     }
     @Transactional
@@ -145,24 +148,14 @@ public class BrigadeCommanderService {
         brigadeCommanderRepository.save(brigadeCommander);
     }
 
-    /*BrigadeCommander findBrigadeCommanderById(Integer id) {
-        Optional<BrigadeCommander> tempBrigCom = brigadeCommanderRepository.findBrigadeCommanderByBrigadeCommanderId(id);
-        if (tempBrigCom.isPresent()) {
-            return tempBrigCom.get();
-        } else {
-            log.info("Error brigade commander with id" + id + " doesn't exist.");
-        }
-        return null;
-    }*/
 
     public BrigadeCommander findBrigadeCommanderByEmail(String email) {
         Optional<BrigadeCommander> tempBrigCom = brigadeCommanderRepository.findBrigadeCommanderByEmail(email);
         if (tempBrigCom.isPresent()) {
             return tempBrigCom.get();
         } else {
-            log.info("Error brigade commander with email" + email  + " doesn't exist.");
+            throw new CommanderNotFoundException("Error brigade commander with email" + email  + " doesn't exist.");
         }
-        return null;
     }
 
     public boolean askForResources(ResourcesRequestDTO resourcesRequestDTO) {
@@ -197,16 +190,14 @@ public class BrigadeCommanderService {
         try {
             resourcesRequestService.save(resourcesRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new ResourcesRequestCreationException("Something went wrong while creating resources request.", e);
         }
         resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(brigadeCommander.getId(), brigadeCommander.getBrigadeGroupId().getId());
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
             supplyRequestService.save(supplyRequest);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            return false;
+            throw new SupplyRequestCreationException("Something went wrong while creating supply request.", e);
         }
         return true;
     }
@@ -234,8 +225,15 @@ public class BrigadeCommanderService {
     }
 
     public ResourcesUpdateResponse updateBrigadeResources(BrigadeGroupDTO brigadeGroupDTO) {
-        boolean validationResult = !validateResources(brigadeGroupDTO);
-        boolean updateResult = brigadeGroupService.updateBrigadeResources(brigadeGroupDTO);
+        boolean validationResult;
+        boolean updateResult;
+        try {
+            validationResult = !validateResources(brigadeGroupDTO);
+            updateResult = brigadeGroupService.updateBrigadeResources(brigadeGroupDTO);
+        } catch (Exception e) {
+            throw new MilitaryGroupUpdateException("Error updating resources in brigade.");
+        }
+
         return new ResourcesUpdateResponse(updateResult, validationResult);
     }
 
@@ -250,8 +248,14 @@ public class BrigadeCommanderService {
     }
 
     public ResourcesUpdateResponse allocateResources(ResourcesRequest resourcesRequest, BrigadeGroup brigadeGroup, BrigadeCommander brigadeCommander, BattalionGroup battalionGroup) {
-        boolean needForSupply = givenResourcesService.allocateResources(resourcesRequest, brigadeGroup, battalionGroup,
-                battalionGroup.getBattalionCommanderId().getId(), battalionGroup.getBattalionCommanderId().getRole(), battalionGroup.getBattalionCommanderId().getBrigadeCommander().getId());
+        boolean needForSupply = false;
+        try {
+            givenResourcesService.allocateResources(resourcesRequest, brigadeGroup, battalionGroup,
+                    battalionGroup.getBattalionCommanderId().getId(), battalionGroup.getBattalionCommanderId().getRole(), battalionGroup.getBattalionCommanderId().getBrigadeCommander().getId());
+        } catch (Exception e) {
+            throw new GivenResourcesCreationException("Something went wrong in allocation resources for battalion group");
+        }
+
         return new ResourcesUpdateResponse(true, needForSupply);
     }
 
