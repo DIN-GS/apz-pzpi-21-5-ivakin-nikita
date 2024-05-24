@@ -1,10 +1,14 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
+import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.CreateGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.UpdateGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
@@ -12,6 +16,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryG
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.BattalionCommanderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,7 +37,7 @@ public class BattalionCommanderController {
     }
 
     @PostMapping("/create/company")
-    public ResponseEntity<Boolean> createCompany(@RequestBody CompanyGroupDTO companyGroupDTO){
+    public ResponseEntity<Boolean> createCompany(@Validated({Default.class, CreateGroup.class}) @RequestBody CompanyGroupDTO companyGroupDTO){
         boolean result = battalionCommanderService.createCompany(companyGroupDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -57,7 +62,7 @@ public class BattalionCommanderController {
     }
 
     @PostMapping("/update/battalion-resources")
-    public ResponseEntity<ResourcesUpdateResponse> updateBattalionResources(@RequestBody BattalionGroupDTO battalionGroupDTO) {
+    public ResponseEntity<ResourcesUpdateResponse> updateBattalionResources(@Validated({Default.class, UpdateGroup.class})@RequestBody BattalionGroupDTO battalionGroupDTO) {
         ResourcesUpdateResponse resourcesUpdateResponse = battalionCommanderService.updateBattalionResources(battalionGroupDTO);
         return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
@@ -69,7 +74,7 @@ public class BattalionCommanderController {
     }
 
     @PostMapping("/ask/for-resources")
-    public ResponseEntity<Boolean> askForResources(@RequestBody ResourcesRequestDTO resourcesRequestDTO){
+    public ResponseEntity<Boolean> askForResources(@Valid @RequestBody ResourcesRequestDTO resourcesRequestDTO){
         boolean result = battalionCommanderService.askForResource(resourcesRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

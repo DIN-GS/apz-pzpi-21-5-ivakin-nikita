@@ -1,15 +1,19 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.CreateGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.UpdateGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.PlatCommanderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +42,7 @@ public class PlatCommanderController {
     }
 
     @PostMapping("/update/plat-resources")
-    public ResponseEntity<ResourcesUpdateResponse> updatePlatResources(@RequestBody PlatGroupDTO platGroupDTO) {
+    public ResponseEntity<ResourcesUpdateResponse> updatePlatResources(@Validated({Default.class, UpdateGroup.class})@RequestBody PlatGroupDTO platGroupDTO) {
         ResourcesUpdateResponse resourcesUpdateResponse = platCommanderService.updatePlatResources(platGroupDTO);
         return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
