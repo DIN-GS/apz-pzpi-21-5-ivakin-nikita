@@ -12,8 +12,8 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.UpdateGroup;
 public class BattalionGroupDTO {
 
     private Integer id;
-    @Min(value = 7000, message = "Personnel count in battalion have to be 400 - 600.", groups = {CreateGroup.class})
-    @Max(value = 8000, message = "Personnel count in battalion have to be 400 - 600.", groups = {CreateGroup.class})
+    @Min(value = 400, message = "Personnel count in battalion have to be 400 - 600.", groups = {CreateGroup.class})
+    @Max(value = 600, message = "Personnel count in battalion have to be 400 - 600.", groups = {CreateGroup.class})
     @Min(value = 0, message = "Personnel count in battalion should be bigger or equal 0.", groups = {UpdateGroup.class})
     private int personnelCount;
 

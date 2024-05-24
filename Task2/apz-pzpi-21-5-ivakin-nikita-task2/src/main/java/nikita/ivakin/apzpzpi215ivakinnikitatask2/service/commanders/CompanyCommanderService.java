@@ -66,12 +66,18 @@ public class CompanyCommanderService {
 
     public boolean assignPlatCommander(Integer platCommanderId, Integer platGroupId) {
         CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        if (companyCommander.getCompanyGroup() == null) {
+            throw new CommanderDoesNotAssignedException("Commander isn't assigned to any company, assigning a plat commander isn't possible.");
+        }
         PlatCommander platCommander = platCommanderService.findPlatCommanderById(platCommanderId);
         PlatGroup platGroup = platGroupService.findPlatGroupById(platGroupId);
+        givenResourcesService.assignCommander(platCommanderId, platGroupId, companyCommander.getBrigadeCommanderId(), Role.PLAT_COMMANDER);
+
         platGroup.setPlatCommanderId(platCommander);
         platCommander.setPlatGroup(platGroup);
         platCommander.setCompanyCommander(companyCommander);
         platCommander.setCompanyGroup(companyCommander.getCompanyGroup());
+        platCommander.setBrigadeCommanderId(companyCommander.getBrigadeCommanderId());
         try {
             platCommanderService.save(platCommander);
             platGroupService.save(platGroup);
@@ -210,6 +216,12 @@ public class CompanyCommanderService {
     public List<PlatGroup> getCompanyPlatGroups() {
         CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
         return platGroupService.findPlatGroupsByCompanyGroup(companyCommander.getCompanyGroup());
+    }
+
+    public CompanyGroupDTO getCompanyGroup() {
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        CompanyGroup companyGroup = companyGroupService.findCompanyGroupByCompanyCommander(companyCommander);
+        return companyGroupService.mapCompanyGroupToDTO(companyGroup);
     }
 }
 

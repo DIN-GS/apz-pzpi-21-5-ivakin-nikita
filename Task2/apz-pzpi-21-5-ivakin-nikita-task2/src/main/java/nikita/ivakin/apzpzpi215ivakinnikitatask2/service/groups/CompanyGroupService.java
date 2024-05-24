@@ -4,19 +4,22 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupUpdateException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.CompanyGroupRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +37,8 @@ public class CompanyGroupService {
                 .militaryGroupId(companyGroup.getId())
                 .brigadeCommanderId(battalionCommander.getBrigadeCommander().getId())
                 .roleOfCommander(Role.COMPANY_COMMANDER)
+                .issueDate(LocalDate.now())
+                .allocationOfResources(ResourcesType.FOR_PERFORMING_A_MISSION)
                 .ammo40mmGpCount(companyGroup.getAmmo40mmGpCount())
                 .ammo40mmRpgCount(companyGroup.getAmmo40mmRpgCount())
                 .ammo145KpvtCount(companyGroup.getAmmo145KpvtCount())
@@ -85,7 +90,10 @@ public class CompanyGroupService {
                 .offensiveGrenadesCount(companyGroupDTO.getOffensiveGrenadesCount())
                 .defensiveGrenadesCount(companyGroupDTO.getDefensiveGrenadesCount())
                 .riflesCount(companyGroupDTO.getRiflesCount())
+                .machineGunsCount(companyGroupDTO.getMachineGunsCount())
                 .bodyArmorCount(companyGroupDTO.getBodyArmorCount())
+                .dryRationsCount(companyGroupDTO.getDryRationsCount())
+                .foodCount(companyGroupDTO.getFoodCount())
                 .helmetsCount(companyGroupDTO.getHelmetsCount())
                 .apcCount(companyGroupDTO.getApcCount())
                 .tankCount(companyGroupDTO.getTankCount())
@@ -138,6 +146,43 @@ public class CompanyGroupService {
             return companyGroupRepository.findAllByBattalionGroup(battalionGroup);
         } catch (Exception e) {
             throw new MilitaryGroupNotFoundException("Error in finding company groups with battalion group id " + battalionGroup.getId());
+        }
+    }
+
+    public CompanyGroup findCompanyGroupByCompanyCommander(CompanyCommander companyCommander) {
+        Optional<CompanyGroup> tempCompanyGroup = companyGroupRepository.findCompanyGroupByCompanyCommanderId(companyCommander);
+        if (tempCompanyGroup.isPresent()) {
+            return tempCompanyGroup.get();
+        } else {
+            throw new MilitaryGroupNotFoundException("Error company group with company commander id" + companyCommander.getId() + " doesn't exist.");
+        }
+    }
+
+    public CompanyGroupDTO mapCompanyGroupToDTO(CompanyGroup companyGroup) {
+        try {
+            return CompanyGroupDTO.builder()
+                    .id(companyGroup.getId())
+                    .personnelCount(companyGroup.getPersonnelCount())
+                    .ammo40mmGpCount(companyGroup.getAmmo40mmGpCount())
+                    .ammo40mmRpgCount(companyGroup.getAmmo40mmRpgCount())
+                    .ammo145KpvtCount(companyGroup.getAmmo145KpvtCount())
+                    .ammo545x39AkRpkCount(companyGroup.getAmmo545x39AkRpkCount())
+                    .ammo556x45ArCount(companyGroup.getAmmo556x45ArCount())
+                    .ammo762PktCount(companyGroup.getAmmo762PktCount())
+                    .ammo762x39AkCount(companyGroup.getAmmo762x39AkCount())
+                    .offensiveGrenadesCount(companyGroup.getOffensiveGrenadesCount())
+                    .defensiveGrenadesCount(companyGroup.getDefensiveGrenadesCount())
+                    .riflesCount(companyGroup.getRiflesCount())
+                    .machineGunsCount(companyGroup.getMachineGunsCount())
+                    .dryRationsCount(companyGroup.getDryRationsCount())
+                    .foodCount(companyGroup.getFoodCount())
+                    .bodyArmorCount(companyGroup.getBodyArmorCount())
+                    .helmetsCount(companyGroup.getHelmetsCount())
+                    .apcCount(companyGroup.getApcCount())
+                    .tankCount(companyGroup.getTankCount())
+                    .build();
+        } catch (Exception e) {
+            throw new MilitaryGroupMappingToDtoException("Something went wrong in mapping company group to company group dto.");
         }
     }
 

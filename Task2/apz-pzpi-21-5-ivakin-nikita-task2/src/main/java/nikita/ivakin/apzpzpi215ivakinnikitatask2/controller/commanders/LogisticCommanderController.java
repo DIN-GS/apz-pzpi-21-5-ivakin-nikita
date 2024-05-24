@@ -8,6 +8,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.LogisticComm
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class LogisticCommanderController {
 
     private final LogisticCommanderService logisticCommanderService;
 
+    @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
     @GetMapping("/get/all-requests")
     public ResponseEntity<List<SupplyRequest>> getAllRequests(){
         List<SupplyRequest> supplyRequests = logisticCommanderService.getAllRequests();
@@ -28,12 +30,15 @@ public class LogisticCommanderController {
     }
 
     //Change status of request and sign who is going to do it and when
+    @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
     @PostMapping("/take/execution-of-supply-request/{id}")
     public ResponseEntity<Boolean> takeExecutionOfRequest(@PathVariable Integer id){
         boolean result = logisticCommanderService.takeExecutionOfRequest(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
+    @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
     @PostMapping("/confirm/delivery-of-supply-request/{id}")
     public ResponseEntity<Boolean> confirmDeliveryOfRequest(@PathVariable Integer id){
         boolean result = logisticCommanderService.confirmExecutionOfRequest(id);

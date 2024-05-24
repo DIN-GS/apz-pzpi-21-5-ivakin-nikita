@@ -36,6 +36,7 @@ public abstract class Commander {
     @Column(name = "post")
     private POST post;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
 

@@ -11,6 +11,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.Token;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -52,12 +53,8 @@ public class User implements UserDetails {
     @Size(min = 9, max = 9, message = "Passport number must be exactly 9 digits")
     @Pattern(regexp = "\\d{9}", message = "Passport number must contain only digits")
     @Column(name = "passport_number")
-    private String passport_number;
+    private String passportNumber;
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,20}$",
-            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
     @Column(name = "password")
     private String password;
 
@@ -79,7 +76,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override

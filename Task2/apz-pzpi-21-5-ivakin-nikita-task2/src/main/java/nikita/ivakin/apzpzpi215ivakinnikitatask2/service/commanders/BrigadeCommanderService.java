@@ -63,12 +63,16 @@ public class BrigadeCommanderService {
 
     }
 
+
+
     private boolean fillGivenResources(BrigadeGroupDTO brigadeGroupDTO, BrigadeCommander brigadeCommander){
         GivenResources givenResources = GivenResources.builder()
                 .commanderId(brigadeCommander.getId())
                 .militaryGroupId(brigadeCommander.getBrigadeGroupId().getId())
                 .brigadeCommanderId(brigadeCommander.getId())
                 .roleOfCommander(brigadeCommander.getRole())
+                .issueDate(LocalDate.now())
+                .allocationOfResources(ResourcesType.FOR_PERFORMING_A_MISSION)
                 .ammo40mmGpCount(brigadeGroupDTO.getAmmo40mmGpCount())
                 .ammo40mmRpgCount(brigadeGroupDTO.getAmmo40mmRpgCount())
                 .ammo145KpvtCount(brigadeGroupDTO.getAmmo145KpvtCount())
@@ -132,6 +136,7 @@ public class BrigadeCommanderService {
         BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
         BattalionCommander battalionCommander = battalionCommanderService.findBattalionCommanderById(battalionCommanderId);
         BattalionGroup battalionGroup = battalionCommanderService.getBattalionGroupService().findBattalionGroupById(battalionGroupId);
+        givenResourcesService.assignCommander(battalionCommanderId, battalionGroupId, brigadeCommander.getId(), Role.BATTALION_COMMANDER);
         battalionGroup.setBattalionCommanderId(battalionCommander);
         battalionCommander.setBattalionGroup(battalionGroup);
         battalionCommander.setBrigadeCommander(brigadeCommander);
@@ -265,5 +270,10 @@ public class BrigadeCommanderService {
 
     }
 
+    public BrigadeGroupDTO getBrigadeGroup() {
+        BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
+        BrigadeGroup brigadeGroup = brigadeGroupService.findBrigadeGroupByBrigadeCommander(brigadeCommander);
+        return brigadeGroupService.mapBrigadeGroupToDTO(brigadeGroup);
+    }
 }
 

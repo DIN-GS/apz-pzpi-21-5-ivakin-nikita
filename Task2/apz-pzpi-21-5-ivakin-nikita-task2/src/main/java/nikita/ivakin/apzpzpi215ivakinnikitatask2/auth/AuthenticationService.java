@@ -42,13 +42,14 @@ public class AuthenticationService {
                 .lastName(request.getLastName())
                 .secondName(request.getSecondName())
                 .email(request.getEmail())
+                .passportNumber(request.getPassportNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .rank(request.getRank())
                 .post(request.getPost())
                 .build();
         String role = request.getRole().name();
-
+        var savedUser = repository.save(user);
         switch(role) {
             case "BRIGADE_COMMANDER":
                 BrigadeCommander brigCommander = (BrigadeCommander) BrigadeCommander.builder()
@@ -131,7 +132,7 @@ public class AuthenticationService {
         }
 
 
-        var savedUser = repository.save(user);
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);

@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,9 +22,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST_URL = {
-
-    };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -35,10 +31,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.anyRequest()
-                                .permitAll()
-                )
+                .authorizeHttpRequests(req -> {
+                    req.requestMatchers("/api/brig-com/**").hasAnyRole("BRIGADE_COMMANDER", "ADMIN")
+                            .requestMatchers("/api/bat-com/**").hasAnyRole("BATTALION_COMMANDER", "ADMIN")
+                            .requestMatchers("/api/com-com/**").hasAnyRole("COMPANY_COMMANDER", "ADMIN")
+                            .requestMatchers("/api/plat-com/**").hasAnyRole("PLAT_COMMANDER", "ADMIN")
+                            .requestMatchers("/api/log-com/**").hasAnyRole("LOGISTIC_COMMANDER", "ADMIN")
+                            .anyRequest().permitAll();
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

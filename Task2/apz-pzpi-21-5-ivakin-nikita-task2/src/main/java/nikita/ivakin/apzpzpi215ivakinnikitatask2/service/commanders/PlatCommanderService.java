@@ -67,9 +67,10 @@ public class PlatCommanderService {
         }
     }
 
-    public PlatGroup getPlatGroup(){
+    public PlatGroupDTO getPlatGroup(){
         PlatCommander platCommander = getAuthenticatedPlatCommander();
-        return platGroupService.findPlatGroupByPlatCommander(platCommander);
+        PlatGroup platGroup = platGroupService.findPlatGroupByPlatCommander(platCommander);
+        return platGroupService.mapPlatGroupToDTO(platGroup);
     }
 
     //Validation

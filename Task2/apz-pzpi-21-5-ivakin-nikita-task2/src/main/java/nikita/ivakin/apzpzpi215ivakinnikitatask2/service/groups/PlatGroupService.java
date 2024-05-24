@@ -9,15 +9,14 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyComman
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupUpdateException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.PlatGroupRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +34,8 @@ public class PlatGroupService {
                 .militaryGroupId(platGroup.getId())
                 .brigadeCommanderId(companyCommander.getBrigadeCommanderId())
                 .roleOfCommander(Role.PLAT_COMMANDER)
+                .issueDate(LocalDate.now())
+                .allocationOfResources(ResourcesType.FOR_PERFORMING_A_MISSION)
                 .ammo40mmGpCount(platGroup.getAmmo40mmGpCount())
                 .ammo40mmRpgCount(platGroup.getAmmo40mmRpgCount())
                 .ammo145KpvtCount(platGroup.getAmmo145KpvtCount())
@@ -74,6 +75,7 @@ public class PlatGroupService {
 
     public boolean createPlatGroup(PlatGroupDTO platGroupDTO, CompanyCommander companyCommander) {
         PlatGroup platGroup = PlatGroup.builder()
+                .personnelCount(platGroupDTO.getPersonnelCount())
                 .companyGroup(companyCommander.getCompanyGroup())
                 .ammo40mmGpCount(platGroupDTO.getAmmo40mmGpCount())
                 .ammo40mmRpgCount(platGroupDTO.getAmmo40mmRpgCount())
@@ -85,6 +87,9 @@ public class PlatGroupService {
                 .offensiveGrenadesCount(platGroupDTO.getOffensiveGrenadesCount())
                 .defensiveGrenadesCount(platGroupDTO.getDefensiveGrenadesCount())
                 .riflesCount(platGroupDTO.getRiflesCount())
+                .machineGunsCount(platGroupDTO.getMachineGunsCount())
+                .dryRationsCount(platGroupDTO.getDryRationsCount())
+                .foodCount(platGroupDTO.getFoodCount())
                 .bodyArmorCount(platGroupDTO.getBodyArmorCount())
                 .helmetsCount(platGroupDTO.getHelmetsCount())
                 .apcCount(platGroupDTO.getApcCount())
@@ -148,10 +153,39 @@ public class PlatGroupService {
         }
     }
 
+    public PlatGroupDTO mapPlatGroupToDTO(PlatGroup platGroup) {
+        try {
+            return PlatGroupDTO.builder()
+                    .id(platGroup.getId())
+                    .personnelCount(platGroup.getPersonnelCount())
+                    .ammo40mmGpCount(platGroup.getAmmo40mmGpCount())
+                    .ammo40mmRpgCount(platGroup.getAmmo40mmRpgCount())
+                    .ammo145KpvtCount(platGroup.getAmmo145KpvtCount())
+                    .ammo545x39AkRpkCount(platGroup.getAmmo545x39AkRpkCount())
+                    .ammo556x45ArCount(platGroup.getAmmo556x45ArCount())
+                    .ammo762PktCount(platGroup.getAmmo762PktCount())
+                    .ammo762x39AkCount(platGroup.getAmmo762x39AkCount())
+                    .offensiveGrenadesCount(platGroup.getOffensiveGrenadesCount())
+                    .defensiveGrenadesCount(platGroup.getDefensiveGrenadesCount())
+                    .riflesCount(platGroup.getRiflesCount())
+                    .machineGunsCount(platGroup.getMachineGunsCount())
+                    .dryRationsCount(platGroup.getDryRationsCount())
+                    .foodCount(platGroup.getFoodCount())
+                    .bodyArmorCount(platGroup.getBodyArmorCount())
+                    .helmetsCount(platGroup.getHelmetsCount())
+                    .apcCount(platGroup.getApcCount())
+                    .tankCount(platGroup.getTankCount())
+                    .build();
+        } catch (Exception e) {
+            throw new MilitaryGroupMappingToDtoException("Something went wrong in mapping plat group to plat group dto.");
+        }
+    }
+
     @Transactional
     public void save(PlatGroup platGroup) {
         platGroupRepository.save(platGroup);
     }
+
 
 
 }

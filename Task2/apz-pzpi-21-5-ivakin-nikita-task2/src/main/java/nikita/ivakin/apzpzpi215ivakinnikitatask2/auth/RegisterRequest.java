@@ -1,6 +1,5 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.auth;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -44,16 +43,17 @@ public class RegisterRequest {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private int age;
 
     @NotBlank(message = "Passport number cannot be blank")
     @Size(min = 9, max = 9, message = "Passport number must be exactly 9 digits")
-    @Pattern(regexp = "\\d{9}", message = "Passport number must contain only digits")
-    private String passport_number;
+    @Pattern(regexp = "^\\d{9}$", message = "Passport number must contain exactly 9 digits")
+    private String passportNumber;
 
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,20}$",
-            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,20}$",
+            message = "Password must contain at least one uppercase letter, one lowercase letter, and one digit")
     private String password;
 
 

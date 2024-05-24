@@ -27,6 +27,28 @@ public class GivenResourcesService {
 
     private final GivenResourcesRepository givenResourcesRepository;
 
+    public void assignCommander(Integer commanderId, Integer militaryGroupId, Integer brigadeCommanderId, Role roleOfCommander) {
+        GivenResources givenResources = findGivenResources(militaryGroupId, brigadeCommanderId, roleOfCommander);
+        givenResources.setCommanderId(commanderId);
+        try {
+            save(givenResources);
+        } catch (Exception e) {
+            throw new GivenResourcesCreationException("Something went wrong in saving given resources");
+        }
+    }
+
+    private GivenResources findGivenResources(Integer militaryGroupId, Integer brigadeCommanderId, Role roleOfCommander) {
+        Optional<GivenResources> tempGivenResources = givenResourcesRepository.findGivenResourcesByMilitaryGroupIdAndRoleOfCommanderAndBrigadeCommanderId(
+                militaryGroupId, roleOfCommander, brigadeCommanderId
+        );
+        if (tempGivenResources.isPresent()){
+            return tempGivenResources.get();
+        } else {
+            throw new GivenResourcesNotFoundException("There aren't any given resources for military group with id " +
+                    militaryGroupId + ", and commander role " + roleOfCommander );
+        }
+    }
+
     public GivenResources getGivenResources(Integer commanderId, Integer militaryGroupId, Role roleOfCommander, Integer brigadeCommanderId, ResourcesType allocationOfResources) {
         Optional<GivenResources> tempGivenResources = givenResourcesRepository.findGivenResourcesByCommanderIdAndMilitaryGroupIdAndRoleOfCommanderAndBrigadeCommanderIdAndAllocationOfResources(
                 commanderId, militaryGroupId, roleOfCommander, brigadeCommanderId, allocationOfResources

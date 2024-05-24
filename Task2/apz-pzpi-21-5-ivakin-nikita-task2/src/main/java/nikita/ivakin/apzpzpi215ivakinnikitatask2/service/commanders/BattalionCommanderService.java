@@ -11,7 +11,6 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
@@ -60,16 +59,25 @@ public class BattalionCommanderService {
 
     public boolean createCompany(CompanyGroupDTO companyGroupDTO) {
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        if (battalionCommander.getBattalionGroup() == null) {
+            throw new CommanderDoesNotAssignedException("Commander isn't assigned to any battalion, creating a company isn't possible.");
+        }
         return companyGroupService.createCompanyGroup(companyGroupDTO, battalionCommander);
     }
 
     public boolean assignCompanyCommander(Integer companyCommanderId, Integer companyGroupId){
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        if (battalionCommander.getBattalionGroup() == null) {
+            throw new CommanderDoesNotAssignedException("Commander isn't assigned to any battalion, assigning a company commander isn't possible.");
+        }
         CompanyCommander companyCommander = companyCommanderService.findCompanyCommanderById(companyCommanderId);
         CompanyGroup companyGroup = companyGroupService.findCompanyGroupById(companyGroupId);
+        givenResourcesService.assignCommander(companyCommanderId, companyGroupId, battalionCommander.getBrigadeCommander().getId(), Role.COMPANY_COMMANDER);
         companyGroup.setCompanyCommanderId(companyCommander);
         companyCommander.setCompanyGroup(companyGroup);
         companyCommander.setBattalionCommander(battalionCommander);
+        companyCommander.setBattalionGroup(battalionCommander.getBattalionGroup());
+        companyCommander.setBrigadeCommanderId(battalionCommander.getBrigadeCommander().getId());
 
         try {
             companyCommanderService.save(companyCommander);
@@ -220,5 +228,11 @@ public class BattalionCommanderService {
     public List<CompanyGroup> getBattalionCompanyGroups(){
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
         return companyGroupService.findCompanyGroupsByBattalionGroupId(battalionCommander.getBattalionGroup());
+    }
+
+    public BattalionGroupDTO getBattalionGroup() {
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        BattalionGroup battalionGroup = battalionGroupService.findBattalionGroupByBattalionCommander(battalionCommander);
+        return battalionGroupService.mapBattalionGroupToDTO(battalionGroup);
     }
 }

@@ -36,6 +36,7 @@ public class GivenResources {
 
     private LocalDate issueDate;
 
+    @Enumerated(EnumType.STRING)
     private ResourcesType allocationOfResources;
 
     @Column(name = "ammo_556x45ar_count")

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.CreateGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.UpdateGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
@@ -13,6 +12,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.PlatCommanderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,25 +28,29 @@ public class PlatCommanderController {
 
     //Create Service for messages with ask for resources
 
+    @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
     @GetMapping("/get-plat-resources")
-    public ResponseEntity<PlatGroup> getPlats(){
-        PlatGroup platGroup = platCommanderService.getPlatGroup();
-        return new ResponseEntity<>(platGroup, HttpStatus.OK);
+    public ResponseEntity<PlatGroupDTO> getPlatsResources(){
+        PlatGroupDTO platGroupDTO = platCommanderService.getPlatGroup();
+        return new ResponseEntity<>(platGroupDTO, HttpStatus.OK);
     }
 
     //For one Plat to see if it was done
+    @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
     @GetMapping("/get/plat-requests")
     public ResponseEntity<List<SupplyRequest>> getPlatRequests(){
         List<SupplyRequest> supplyRequests = platCommanderService.getPlatRequests();
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
     @PostMapping("/update/plat-resources")
     public ResponseEntity<ResourcesUpdateResponse> updatePlatResources(@Validated({Default.class, UpdateGroup.class})@RequestBody PlatGroupDTO platGroupDTO) {
         ResourcesUpdateResponse resourcesUpdateResponse = platCommanderService.updatePlatResources(platGroupDTO);
         return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
     @PostMapping("/ask/for-resources")
     public ResponseEntity<Boolean> askForResources(@RequestBody ResourcesRequestDTO resourcesRequestDTO) {
         boolean result = platCommanderService.askForResources(resourcesRequestDTO);

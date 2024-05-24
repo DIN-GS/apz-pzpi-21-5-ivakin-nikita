@@ -38,6 +38,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
     }
 
+    @ExceptionHandler(CommanderDoesNotAssignedException.class)
+    public ResponseEntity<CustomErrorResponse> handleCommanderDoesNotAssignedException(CommanderDoesNotAssignedException ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(CommanderNotFoundException.class)
     public ResponseEntity<CustomErrorResponse> handleCommanderSendingResourcesException(CommanderNotFoundException ex) {
         CustomErrorResponse error = new CustomErrorResponse();

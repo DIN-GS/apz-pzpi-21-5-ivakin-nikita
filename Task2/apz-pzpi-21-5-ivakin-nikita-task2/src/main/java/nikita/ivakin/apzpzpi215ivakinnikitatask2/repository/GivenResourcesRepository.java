@@ -14,4 +14,6 @@ public interface GivenResourcesRepository extends JpaRepository<GivenResources, 
     Optional<GivenResources> findGivenResourcesByCommanderIdAndMilitaryGroupIdAndRoleOfCommanderAndBrigadeCommanderIdAndAllocationOfResources(
             Integer commanderId, Integer militaryGroupId, Role roleOfCommander, Integer brigadeCommanderId, ResourcesType allocationOfResources
     );
+
+    Optional<GivenResources> findGivenResourcesByMilitaryGroupIdAndRoleOfCommanderAndBrigadeCommanderId(Integer militaryGroupId, Role roleOfCommander, Integer brigadeCommanderId);
 }

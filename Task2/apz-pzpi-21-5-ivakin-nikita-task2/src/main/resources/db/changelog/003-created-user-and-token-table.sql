@@ -5,7 +5,7 @@ CREATE TABLE project._user (
    last_name VARCHAR(255),
    second_name VARCHAR(255),
    email VARCHAR(255) UNIQUE,
-   passport_number VARCHAR(255),
+   passport_number VARCHAR(255) UNIQUE,
    password VARCHAR(255),
    rank VARCHAR(255),
    post VARCHAR(255),

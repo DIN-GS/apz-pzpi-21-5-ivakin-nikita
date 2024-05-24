@@ -3,10 +3,13 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupMappingToDtoException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupUpdateException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.BrigadeGroupRepository;
@@ -103,5 +106,33 @@ public class BrigadeGroupService {
             throw new MilitaryGroupUpdateException("Something went wrong while updating brigade group with id "+ brigadeGroup.getId(), e);
         }
         return true;
+    }
+
+    public BrigadeGroupDTO mapBrigadeGroupToDTO(BrigadeGroup brigadeGroup) {
+        try {
+            return BrigadeGroupDTO.builder()
+                    .id(brigadeGroup.getId())
+                    .personnelCount(brigadeGroup.getPersonnelCount())
+                    .ammo40mmGpCount(brigadeGroup.getAmmo40mmGpCount())
+                    .ammo40mmRpgCount(brigadeGroup.getAmmo40mmRpgCount())
+                    .ammo145KpvtCount(brigadeGroup.getAmmo145KpvtCount())
+                    .ammo545x39AkRpkCount(brigadeGroup.getAmmo545x39AkRpkCount())
+                    .ammo556x45ArCount(brigadeGroup.getAmmo556x45ArCount())
+                    .ammo762PktCount(brigadeGroup.getAmmo762PktCount())
+                    .ammo762x39AkCount(brigadeGroup.getAmmo762x39AkCount())
+                    .offensiveGrenadesCount(brigadeGroup.getOffensiveGrenadesCount())
+                    .defensiveGrenadesCount(brigadeGroup.getDefensiveGrenadesCount())
+                    .riflesCount(brigadeGroup.getRiflesCount())
+                    .machineGunsCount(brigadeGroup.getMachineGunsCount())
+                    .dryRationsCount(brigadeGroup.getDryRationsCount())
+                    .foodCount(brigadeGroup.getFoodCount())
+                    .bodyArmorCount(brigadeGroup.getBodyArmorCount())
+                    .helmetsCount(brigadeGroup.getHelmetsCount())
+                    .apcCount(brigadeGroup.getApcCount())
+                    .tankCount(brigadeGroup.getTankCount())
+                    .build();
+        } catch (Exception e) {
+            throw new MilitaryGroupMappingToDtoException("Something went wrong in mapping brigade group to brigade group dto.");
+        }
     }
 }

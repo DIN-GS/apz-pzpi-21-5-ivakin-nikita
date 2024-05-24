@@ -1,5 +1,6 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups;
 
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,8 @@ import java.util.Optional;
 public interface BattalionGroupRepository extends JpaRepository<BattalionGroup, Long> {
 
     Optional<BattalionGroup> findBattalionGroupById(Integer id);
+
+    Optional<BattalionGroup> findBattalionGroupByBattalionCommanderId(BattalionCommander battalionCommanderId);
 
     ArrayList<BattalionGroup> findAllByBrigadeGroup(BrigadeGroup brigadeGroup);
 
