@@ -4,14 +4,17 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.PlatCommanderDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.PlatCommanderRepository;
@@ -24,6 +27,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,10 +84,10 @@ public class PlatCommanderService {
         GivenResources givenResources = givenResourcesService.getGivenResources(
                 platCommander.getId(), platCommander.getPlatGroup().getId(), platCommander.getRole(), platCommander.getBrigadeCommanderId(), ResourcesType.FOR_PERFORMING_A_MISSION
         );
-        return platGroupDTO.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 4 && platGroupDTO.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 4
-                && platGroupDTO.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 4 && platGroupDTO.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 4
-                && platGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 4 && platGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 4
-                && platGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 4 && platGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
+        return platGroupDTO.getAmmo762PktCount() >= givenResources.getAmmo762PktCount() / 5 && platGroupDTO.getAmmo556x45ArCount() >= givenResources.getAmmo556x45ArCount() / 5
+                && platGroupDTO.getAmmo545x39AkRpkCount() >= givenResources.getAmmo545x39AkRpkCount() / 5 && platGroupDTO.getAmmo762x39AkCount() >= givenResources.getAmmo762x39AkCount() / 5
+                && platGroupDTO.getAmmo145KpvtCount() >= givenResources.getAmmo145KpvtCount() / 5 && platGroupDTO.getAmmo40mmGpCount() >= givenResources.getAmmo40mmGpCount() / 5
+                && platGroupDTO.getAmmo40mmRpgCount() >= givenResources.getAmmo40mmRpgCount() / 5 && platGroupDTO.getBodyArmorCount() >= givenResources.getBodyArmorCount()
                 && platGroupDTO.getHelmetsCount() >= givenResources.getHelmetsCount() && platGroupDTO.getApcCount() >= givenResources.getApcCount();
     }
 
@@ -117,6 +122,7 @@ public class PlatCommanderService {
                 .helmetsCount(resourcesRequestDTO.getHelmetsCount())
                 .apcCount(resourcesRequestDTO.getApcCount())
                 .tankCount(resourcesRequestDTO.getTankCount())
+                .exactTime(LocalDateTime.now())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
                 .brigadeCommanderId(platCommander.getBrigadeCommanderId())
@@ -132,14 +138,37 @@ public class PlatCommanderService {
         } catch (Exception e) {
             throw new ResourcesRequestCreationException("Something went wrong in creation resources request in plat commander method ask for resources.");
         }
-        resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(platCommander.getId(), platCommander.getPlatGroup().getId());
+        resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupIdAndExactTime(platCommander.getId(), platCommander.getPlatGroup().getId(), resourcesRequest.getExactTime(), Role.PLAT_COMMANDER);
         supplyRequest.setResourcesRequestId(resourcesRequest);
-        try {
+        //try {
             supplyRequestService.save(supplyRequest);
-        } catch (Exception e) {
+        /*} catch (Exception e) {
             throw new SupplyRequestCreationException("Something went wrong in creation supply request in plat commander method ask for resources.");
-        }
+        }*/
         return true;
+    }
+
+    public List<PlatCommanderDTO> findPlatCommanderByCompanyCommander(CompanyCommander companyCommander) {
+        List<PlatCommander> platCommanders = platCommanderRepository.findPlatCommanderByCompanyCommander(companyCommander);
+        List<PlatCommanderDTO> platCommanderDTOS = new ArrayList<>();
+        for (PlatCommander platCommander : platCommanders){
+            platCommanderDTOS.add(mapPlatCommanderToDTO(platCommander));
+        }
+        return platCommanderDTOS;
+    }
+
+    private PlatCommanderDTO mapPlatCommanderToDTO(PlatCommander platCommander) {
+        return PlatCommanderDTO.builder()
+                .id(platCommander.getId())
+                .firstName(platCommander.getFirstName())
+                .lastName(platCommander.getLastName())
+                .secondName(platCommander.getSecondName())
+                .passportNumber(platCommander.getPassportNumber())
+                .email(platCommander.getEmail())
+                .rank(platCommander.getRank())
+                .role(platCommander.getRole())
+                .platGroupId(platCommander.getPlatGroup().getId())
+                .build();
     }
 
     public List<SupplyRequest> getPlatRequests() {
@@ -153,5 +182,15 @@ public class PlatCommanderService {
     }
 
 
-
+    public boolean confirmGettingOfResources(Integer supplyRequestId) {
+        try {
+            SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyRequestId);
+            supplyRequest.setStatus(Status.FINISHED);
+            supplyRequest.setDeliveryComplitionDate(LocalDate.now());
+            supplyRequestService.save(supplyRequest);
+            return true;
+        } catch (Exception e) {
+            throw new SupplyRequestUpdateException("Error in updating supply request in plat commander service.");
+        }
+    }
 }

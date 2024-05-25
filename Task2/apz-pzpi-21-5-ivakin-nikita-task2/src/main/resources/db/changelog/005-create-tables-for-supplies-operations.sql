@@ -2,7 +2,7 @@ CREATE TABLE project.supply_request (
                                        request_id SERIAL PRIMARY KEY,
                                        executive_commander_id INTEGER,
                                        executive_group_id INTEGER,
-                                       role_of_executive_commander VARCHAR(255) NOT NULL ,
+                                       role_of_executive_commander VARCHAR(255),
                                        date_of_request DATE,
                                        execution_complition_date DATE,
                                        status VARCHAR(255) NOT NULL ,
@@ -30,5 +30,6 @@ CREATE TABLE project.resources_request (
                                            dry_rations_count INTEGER,
                                            food_count INTEGER,
                                            tank_count INTEGER,
-                                           apc_count INTEGER
+                                           apc_count INTEGER,
+                                           exact_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

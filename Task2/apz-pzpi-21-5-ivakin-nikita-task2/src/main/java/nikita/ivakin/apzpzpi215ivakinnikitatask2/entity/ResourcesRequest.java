@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "resources_request", schema = "project")
 @AllArgsConstructor
@@ -56,8 +58,7 @@ public class ResourcesRequest {
     private int tankCount;
     private int apcCount;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @JoinColumn(name = "supply_request_id", unique = true)
-    private SupplyRequest supplyRequestId;
+    @Column(name = "exact_time")
+    private LocalDateTime exactTime;
+
 }

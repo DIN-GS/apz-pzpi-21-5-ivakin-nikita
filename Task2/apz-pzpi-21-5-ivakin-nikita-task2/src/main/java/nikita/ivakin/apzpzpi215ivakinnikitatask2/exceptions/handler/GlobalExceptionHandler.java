@@ -24,9 +24,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<CustomErrorResponse> handleCommanderAssigningException(CommanderAssigningException ex) {
         CustomErrorResponse error = new CustomErrorResponse();
         error.setMessage(ex.getMessage());
-        error.setStatus(HttpStatus.NOT_MODIFIED.value());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
         error.setTimeStamp(System.currentTimeMillis());
-        return new ResponseEntity<>(error, HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CommanderAuthenticationException.class)
@@ -105,9 +105,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<CustomErrorResponse> handleMilitaryGroupUpdateException(MilitaryGroupUpdateException ex) {
         CustomErrorResponse error = new CustomErrorResponse();
         error.setMessage(ex.getMessage());
-        error.setStatus(HttpStatus.NOT_MODIFIED.value());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
         error.setTimeStamp(System.currentTimeMillis());
-        return new ResponseEntity<>(error, HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourcesRequestCreationException.class)
@@ -146,6 +146,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(SupplyRequestUpdateException.class)
+    public ResponseEntity<CustomErrorResponse> handleSupplyRequestUpdateException(SupplyRequestUpdateException ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
 
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -158,4 +167,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var exceptionBody = new ValidationExceptionResponse("validation_exceptions", errors.toString());
         return handleExceptionInternal(ex, exceptionBody, new HttpHeaders(), status, webRequest);
     }
+
+
 }

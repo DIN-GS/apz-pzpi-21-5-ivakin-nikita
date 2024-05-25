@@ -1,5 +1,6 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
@@ -40,19 +41,23 @@ public class SupplyRequest {
     @Enumerated(EnumType.STRING)
     private Role roleOfExecutiveCommander;
 
+    @Column(name = "date_of_request")
     private LocalDate dateOfRequest;
 
+    @Column(name = "date_of_executing")
     private LocalDate dateOfExecuting;
 
+    @Column(name = "delivery_complition_date")
     private LocalDate deliveryComplitionDate;
 
+    @Column(name = "execution_complition_date")
     private LocalDate executionСomplitionDate;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "resources_request_id", unique = true)
     private ResourcesRequest resourcesRequestId;
 

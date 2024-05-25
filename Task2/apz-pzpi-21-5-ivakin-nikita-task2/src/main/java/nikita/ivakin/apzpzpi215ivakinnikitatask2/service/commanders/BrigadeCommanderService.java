@@ -33,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -183,6 +184,7 @@ public class BrigadeCommanderService {
                 .helmetsCount(resourcesRequestDTO.getHelmetsCount())
                 .apcCount(resourcesRequestDTO.getApcCount())
                 .tankCount(resourcesRequestDTO.getTankCount())
+                .exactTime(LocalDateTime.now())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
                 .seniorMilitaryGroupId(null)
@@ -197,7 +199,7 @@ public class BrigadeCommanderService {
         } catch (Exception e) {
             throw new ResourcesRequestCreationException("Something went wrong while creating resources request.", e);
         }
-        resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(brigadeCommander.getId(), brigadeCommander.getBrigadeGroupId().getId());
+        resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupIdAndExactTime(brigadeCommander.getId(), brigadeCommander.getBrigadeGroupId().getId(), resourcesRequest.getExactTime(), Role.BRIGADE_COMMANDER);
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
             supplyRequestService.save(supplyRequest);

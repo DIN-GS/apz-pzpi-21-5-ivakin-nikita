@@ -27,7 +27,7 @@ public class PlatCommanderController {
     private final PlatCommanderService platCommanderService;
 
     //Create Service for messages with ask for resources
-
+    //checked
     @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
     @GetMapping("/get-plat-resources")
     public ResponseEntity<PlatGroupDTO> getPlatsResources(){
@@ -35,25 +35,37 @@ public class PlatCommanderController {
         return new ResponseEntity<>(platGroupDTO, HttpStatus.OK);
     }
 
+    //checked
     //For one Plat to see if it was done
     @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
     @GetMapping("/get/plat-requests")
     public ResponseEntity<List<SupplyRequest>> getPlatRequests(){
         List<SupplyRequest> supplyRequests = platCommanderService.getPlatRequests();
+        log.info("error");
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
-    @PostMapping("/update/plat-resources")
+    @PutMapping("/update/plat-resources")
     public ResponseEntity<ResourcesUpdateResponse> updatePlatResources(@Validated({Default.class, UpdateGroup.class})@RequestBody PlatGroupDTO platGroupDTO) {
         ResourcesUpdateResponse resourcesUpdateResponse = platCommanderService.updatePlatResources(platGroupDTO);
         return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
     @PostMapping("/ask/for-resources")
     public ResponseEntity<Boolean> askForResources(@RequestBody ResourcesRequestDTO resourcesRequestDTO) {
         boolean result = platCommanderService.askForResources(resourcesRequestDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //checked
+    @PreAuthorize("hasAnyRole('PLAT_COMMANDER', 'ADMIN')")
+    @PutMapping("/confirm/getting-of-resources")
+    public ResponseEntity<Boolean> confirmGettingOfResources(@RequestParam Integer supplyRequestId){
+        boolean result = platCommanderService.confirmGettingOfResources(supplyRequestId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

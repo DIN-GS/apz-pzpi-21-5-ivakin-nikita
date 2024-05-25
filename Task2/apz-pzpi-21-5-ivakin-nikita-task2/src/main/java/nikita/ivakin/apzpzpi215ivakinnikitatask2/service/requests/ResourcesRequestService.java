@@ -4,11 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.ResourcesRequestNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests.ResourcesRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -25,8 +27,8 @@ public class ResourcesRequestService {
     }
 
 
-    public ResourcesRequest findResourcesRequestByCommanderIdAndMilitaryGroupId(Integer commanderId, Integer militaryGroupId) {
-        Optional<ResourcesRequest> tempResReq = resourcesRequestRepository.findResourcesRequestByCommanderIdAndMilitaryGroupId(commanderId, militaryGroupId);
+    public ResourcesRequest findResourcesRequestByCommanderIdAndMilitaryGroupIdAndExactTime(Integer commanderId, Integer militaryGroupId, LocalDateTime exactTime, Role roleOfCommander) {
+        Optional<ResourcesRequest> tempResReq = resourcesRequestRepository.findResourcesRequestByCommanderIdAndMilitaryGroupIdAndExactTimeAndRoleOfCommander(commanderId, militaryGroupId, exactTime, roleOfCommander);
         if (tempResReq.isPresent()) {
             return tempResReq.get();
         } else {

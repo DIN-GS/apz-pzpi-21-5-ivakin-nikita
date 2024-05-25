@@ -140,9 +140,15 @@ public class PlatGroupService {
         }
     }
 
-    public List<PlatGroup> findPlatGroupsByCompanyGroup(CompanyGroup companyGroup) {
-        return platGroupRepository.findPlatGroupsByCompanyGroup(companyGroup);
+    public List<PlatGroupDTO> findPlatGroupsByCompanyGroup(CompanyGroup companyGroup) {
+        List<PlatGroup> platGroups = platGroupRepository.findPlatGroupsByCompanyGroup(companyGroup);
+        List<PlatGroupDTO> platGroupDTOS = new ArrayList<>();
+        for (PlatGroup platGroup : platGroups){
+            platGroupDTOS.add(mapPlatGroupToDTO(platGroup));
+        }
+        return platGroupDTOS;
     }
+
 
     public PlatGroup findPlatGroupById(Integer id) {
         Optional<PlatGroup> tempPlatGroup = platGroupRepository.findPlatGroupById(id);

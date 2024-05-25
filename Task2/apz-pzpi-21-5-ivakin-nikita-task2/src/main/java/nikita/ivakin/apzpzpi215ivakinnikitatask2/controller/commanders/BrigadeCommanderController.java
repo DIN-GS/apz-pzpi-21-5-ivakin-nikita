@@ -31,13 +31,15 @@ public class BrigadeCommanderController {
 
     private final BrigadeCommanderService brigadeCommanderService;
 
-    @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
+    //check
+    @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
     @GetMapping("/get-brigade-resources")
     public ResponseEntity<BrigadeGroupDTO> getBrigadeResources() {
         BrigadeGroupDTO brigadeGroupDTO = brigadeCommanderService.getBrigadeGroup();
         return new ResponseEntity<>(brigadeGroupDTO, HttpStatus.OK);
     }
 
+    //check
     @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
     @GetMapping("/brigade-battalion-groups")
     public ResponseEntity<List<BattalionGroup>> getBattalionGroups() {
@@ -80,6 +82,7 @@ public class BrigadeCommanderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    //check
     @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
     @GetMapping("/get/brigade-requests")
     public ResponseEntity<List<SupplyRequest>> getBrigadeRequests(){
@@ -87,6 +90,7 @@ public class BrigadeCommanderController {
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
+    //check
     @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
     @GetMapping("/get/battalion-requests")
     public ResponseEntity<List<SupplyRequest>> getBattalionsRequests(){
@@ -94,6 +98,7 @@ public class BrigadeCommanderController {
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
+    //check
     @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
     @PostMapping("/send/resources-to-battalion")
     public ResponseEntity<ResourcesUpdateResponse> sendResources(@RequestBody SupplyRequest supplyRequest) {
@@ -101,6 +106,7 @@ public class BrigadeCommanderController {
         return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
+    //check
     @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
     @PostMapping("/ask/for-resources")
     public ResponseEntity<Boolean> askForResources(@RequestBody ResourcesRequestDTO resourcesRequestDTO){

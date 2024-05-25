@@ -20,7 +20,7 @@ public class CompanyCommander extends Commander{
 
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "company_group_id")
     private CompanyGroup companyGroup;
 

@@ -2,6 +2,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders;
 
 import lombok.Builder;
 import lombok.Data;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.POST;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
@@ -18,6 +19,8 @@ public class PlatCommanderDTO {
 
     private String secondName;
 
+    private String passportNumber;
+
     private RANK rank;
 
     private POST post;
@@ -27,4 +30,8 @@ public class PlatCommanderDTO {
     private Integer age;
 
     private String email;
+
+    private Integer platGroupId;
+
+    private PlatGroupDTO platGroup;
 }

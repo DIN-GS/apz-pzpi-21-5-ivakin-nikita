@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.PlatCommanderDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
@@ -30,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,6 +133,7 @@ public class CompanyCommanderService {
                 .helmetsCount(resourcesRequestDTO.getHelmetsCount())
                 .apcCount(resourcesRequestDTO.getApcCount())
                 .tankCount(resourcesRequestDTO.getTankCount())
+                .exactTime(LocalDateTime.now())
                 .build();
         SupplyRequest supplyRequest = SupplyRequest.builder()
                 .brigadeCommanderId(companyCommander.getBrigadeCommanderId())
@@ -146,7 +149,7 @@ public class CompanyCommanderService {
         } catch (Exception e) {
             throw new ResourcesRequestCreationException("Something went wrong in creation resources request in company commander method ask for resources.");
         }
-        resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupId(companyCommander.getId(), companyCommander.getCompanyGroup().getId());
+        resourcesRequest = resourcesRequestService.findResourcesRequestByCommanderIdAndMilitaryGroupIdAndExactTime(companyCommander.getId(), companyCommander.getCompanyGroup().getId(), resourcesRequest.getExactTime(),Role.COMPANY_COMMANDER);
         supplyRequest.setResourcesRequestId(resourcesRequest);
         try {
             supplyRequestService.save(supplyRequest);
@@ -194,9 +197,16 @@ public class CompanyCommanderService {
         try {
             CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
             if (supplyRequest.getBrigadeCommanderId().equals(companyCommander.getBrigadeCommanderId()) && supplyRequest.getSeniorMilitaryGroupId().equals(companyCommander.getCompanyGroup().getId())
-                    && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)){
+                    && supplyRequest.getRoleOfCommander().equals(Role.PLAT_COMMANDER)){
                 PlatGroup platGroup = platGroupService.findPlatGroupById(supplyRequest.getMilitaryGroupId());
-                return allocateResources(supplyRequest.getResourcesRequestId(), companyCommander.getCompanyGroup(), companyCommander, platGroup);
+                ResourcesUpdateResponse resourcesUpdateResponse = allocateResources(supplyRequest.getResourcesRequestId(), companyCommander.getCompanyGroup(), companyCommander, platGroup);
+                supplyRequest.setStatus(Status.EXECUTING);
+                supplyRequest.setDateOfExecuting(LocalDate.now());
+                supplyRequest.setExecutiveCommanderId(companyCommander.getId());
+                supplyRequest.setExecutiveGroupId(companyCommander.getCompanyGroup().getId());
+                supplyRequest.setRoleOfExecutiveCommander(Role.COMPANY_COMMANDER);
+                supplyRequestService.save(supplyRequest);
+                return resourcesUpdateResponse;
             }
         } catch (Exception e) {
             throw new CommanderSendingResourcesException("Error in sending resources to plat.");
@@ -213,15 +223,43 @@ public class CompanyCommanderService {
     }
 
 
-    public List<PlatGroup> getCompanyPlatGroups() {
+    public List<PlatGroupDTO> getCompanyPlatGroups() {
         CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
-        return platGroupService.findPlatGroupsByCompanyGroup(companyCommander.getCompanyGroup());
+        List<PlatGroupDTO> platGroupDTOS = platGroupService.findPlatGroupsByCompanyGroup(companyCommander.getCompanyGroup());
+        List<PlatCommanderDTO> platCommanderDTOS = getCompanyPlatCommanders();
+        for (PlatGroupDTO platGroupDTO : platGroupDTOS){
+            for (PlatCommanderDTO platCommanderDTO : platCommanderDTOS){
+                if (platCommanderDTO.getPlatGroupId().equals(platGroupDTO.getId())){
+                    platGroupDTO.setPlatCommanderDTO(platCommanderDTO);
+                    break;
+                }
+            }
+        }
+        return platGroupDTOS;
+    }
+
+    public List<PlatCommanderDTO> getCompanyPlatCommanders(){
+        CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
+        List<PlatCommanderDTO> platCommanderDTOS = platCommanderService.findPlatCommanderByCompanyCommander(companyCommander);
+        return platCommanderDTOS;
     }
 
     public CompanyGroupDTO getCompanyGroup() {
         CompanyCommander companyCommander = getAuthenticatedCompanyCommander();
         CompanyGroup companyGroup = companyGroupService.findCompanyGroupByCompanyCommander(companyCommander);
         return companyGroupService.mapCompanyGroupToDTO(companyGroup);
+    }
+
+    public boolean confirmGettingOfResources(Integer supplyRequestId) {
+        try {
+            SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyRequestId);
+            supplyRequest.setStatus(Status.FINISHED);
+            supplyRequest.setDeliveryComplitionDate(LocalDate.now());
+            supplyRequestService.save(supplyRequest);
+            return true;
+        } catch (Exception e) {
+            throw new SupplyRequestUpdateException("Error in updating supply request in plat commander service.");
+        }
     }
 }
 

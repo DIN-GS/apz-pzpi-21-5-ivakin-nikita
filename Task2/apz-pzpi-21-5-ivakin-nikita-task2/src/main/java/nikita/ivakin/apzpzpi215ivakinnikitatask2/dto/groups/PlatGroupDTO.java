@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.PlatCommanderDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.CreateGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.vlidation.UpdateGroup;
 
@@ -67,5 +68,8 @@ public class PlatGroupDTO {
     private int foodCount;
     private int tankCount;
     private int apcCount;
+
+    private PlatCommanderDTO platCommanderDTO;
+
 
 }
