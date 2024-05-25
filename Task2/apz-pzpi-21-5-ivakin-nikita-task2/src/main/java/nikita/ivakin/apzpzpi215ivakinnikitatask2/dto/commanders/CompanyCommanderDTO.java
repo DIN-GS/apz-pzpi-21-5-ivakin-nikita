@@ -28,4 +28,8 @@ public class CompanyCommanderDTO {
     private Integer age;
 
     private String email;
+
+    private String passportNumber;
+
+    private Integer companyGroupId;
 }

@@ -28,4 +28,7 @@ public class BattalionCommanderDTO {
     private Integer age;
 
     private String email;
+
+    private Integer battalionGroupId;
+
 }

@@ -4,14 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
@@ -141,9 +138,15 @@ public class CompanyGroupService {
         return companyGroup;
     }
 
-    public List<CompanyGroup> findCompanyGroupsByBattalionGroupId(BattalionGroup battalionGroup) {
+    public List<CompanyGroupDTO> findCompanyGroupsByBattalionGroupId(BattalionGroup battalionGroup) {
         try {
-            return companyGroupRepository.findAllByBattalionGroup(battalionGroup);
+            List<CompanyGroup> companyGroups = companyGroupRepository.findAllByBattalionGroup(battalionGroup);
+            List<CompanyGroupDTO> companyGroupDTOS = new ArrayList<>();
+            for (CompanyGroup companyGroup : companyGroups) {
+                companyGroupDTOS.add(mapCompanyGroupToDTO(companyGroup));
+            }
+
+            return companyGroupDTOS;
         } catch (Exception e) {
             throw new MilitaryGroupNotFoundException("Error in finding company groups with battalion group id " + battalionGroup.getId());
         }

@@ -190,6 +190,19 @@ public class BattalionGroupService {
 
     }
 
+    public List<BattalionGroupDTO> findBattalionGroupsByBrigadeGroupId(BrigadeGroup brigadeGroupId) {
+        try {
+            List<BattalionGroup> battalionGroups = battalionGroupRepository.findAllByBrigadeGroup(brigadeGroupId);
+            List<BattalionGroupDTO> battalionGroupDTOS = new ArrayList<>();
+            for (BattalionGroup battalionGroup : battalionGroups) {
+                battalionGroupDTOS.add(mapBattalionGroupToDTO(battalionGroup));
+            }
+
+            return battalionGroupDTOS;
+        } catch (Exception e) {
+            throw new MilitaryGroupNotFoundException("Error in finding battalion groups with brigade group id " + brigadeGroupId.getId());
+        }
+    }
 
 
     @Transactional

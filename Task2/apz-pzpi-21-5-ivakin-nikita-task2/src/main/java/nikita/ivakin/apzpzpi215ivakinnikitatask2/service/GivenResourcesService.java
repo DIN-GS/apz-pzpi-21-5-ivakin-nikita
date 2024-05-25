@@ -61,7 +61,7 @@ public class GivenResourcesService {
     }
 
     public boolean allocateResources(ResourcesRequest resourcesRequest, MilitaryGroup givingMilitaryGroup, MilitaryGroup gettingMilitaryGroup,
-                                     Integer commanderId, Role roleOfCommander, Integer brigadeCommanderId) {
+                                     Integer commanderId, Role roleOfCommander, Integer brigadeCommanderId, Integer part) {
         GivenResources givenResources = new GivenResources();
         countResources(givingMilitaryGroup, gettingMilitaryGroup, givenResources, resourcesRequest.getAmmo762PktCount(),
                 givingMilitaryGroup::getAmmo762PktCount, givingMilitaryGroup::setAmmo762PktCount,

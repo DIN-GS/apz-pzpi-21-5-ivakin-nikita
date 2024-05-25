@@ -32,6 +32,7 @@ public class BattalionCommanderController {
 
     private final BattalionCommanderService battalionCommanderService;
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @GetMapping("/get-battalion-resources")
     public ResponseEntity<BattalionGroupDTO> getBattalionResources() {
@@ -39,13 +40,15 @@ public class BattalionCommanderController {
         return new ResponseEntity<>(battalionGroupDTO, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @GetMapping("/battalion-company-groups")
-    public ResponseEntity<List<CompanyGroup>> getBattalionCompanyGroups(){
-        List<CompanyGroup> battalionMilitaryGroups = battalionCommanderService.getBattalionCompanyGroups();
+    public ResponseEntity<List<CompanyGroupDTO>> getBattalionCompanyGroups(){
+        List<CompanyGroupDTO> battalionMilitaryGroups = battalionCommanderService.getBattalionCompanyGroups();
         return new ResponseEntity<>(battalionMilitaryGroups, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @PostMapping("/create/company")
     public ResponseEntity<Boolean> createCompany(@Validated({Default.class, CreateGroup.class}) @RequestBody CompanyGroupDTO companyGroupDTO){
@@ -53,6 +56,7 @@ public class BattalionCommanderController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @PutMapping("/assign/company-commander")
     public ResponseEntity<Boolean> assignCompanyCommander(@RequestParam Integer companyCommanderId, @RequestParam Integer companyGroupId) {
@@ -60,6 +64,7 @@ public class BattalionCommanderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @GetMapping("/get/battalion-requests")
     public ResponseEntity<List<SupplyRequest>> getBattalionRequests(){
@@ -67,6 +72,7 @@ public class BattalionCommanderController {
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @GetMapping("/get/company-requests")
     public ResponseEntity<List<SupplyRequest>> getCompaniesRequests(){
@@ -74,24 +80,35 @@ public class BattalionCommanderController {
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
-    @PostMapping("/update/battalion-resources")
+    @PutMapping("/update/battalion-resources")
     public ResponseEntity<ResourcesUpdateResponse> updateBattalionResources(@Validated({Default.class, UpdateGroup.class})@RequestBody BattalionGroupDTO battalionGroupDTO) {
         ResourcesUpdateResponse resourcesUpdateResponse = battalionCommanderService.updateBattalionResources(battalionGroupDTO);
         return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @PostMapping("/send/resources-to-company")
-    public ResponseEntity<Boolean> sendResources(@RequestBody SupplyRequest supplyRequest) {
+    public ResponseEntity<ResourcesUpdateResponse> sendResources(@RequestBody SupplyRequest supplyRequest) {
         ResourcesUpdateResponse resourcesUpdateResponse = battalionCommanderService.sendResourcesToCompany(supplyRequest);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(resourcesUpdateResponse, HttpStatus.OK);
     }
 
+    //checked
     @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
     @PostMapping("/ask/for-resources")
     public ResponseEntity<Boolean> askForResources(@Valid @RequestBody ResourcesRequestDTO resourcesRequestDTO){
         boolean result = battalionCommanderService.askForResource(resourcesRequestDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //checked
+    @PreAuthorize("hasAnyRole('BATTALION_COMMANDER', 'ADMIN')")
+    @PutMapping("/confirm/getting-of-resources")
+    public ResponseEntity<Boolean> confirmGettingOfResources(@RequestParam Integer supplyRequestId){
+        boolean result = battalionCommanderService.confirmGettingOfResources(supplyRequestId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

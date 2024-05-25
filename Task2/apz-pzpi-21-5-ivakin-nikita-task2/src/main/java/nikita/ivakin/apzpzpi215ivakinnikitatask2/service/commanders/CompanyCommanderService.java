@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.CompanyCommanderDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.PlatCommanderDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.PlatGroupDTO;
@@ -12,6 +13,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -218,7 +221,7 @@ public class CompanyCommanderService {
     public ResourcesUpdateResponse allocateResources(ResourcesRequest resourcesRequest, CompanyGroup companyGroup, CompanyCommander companyCommander, PlatGroup platGroup) {
         boolean needForSupply = givenResourcesService.allocateResources(resourcesRequest, companyGroup, platGroup,
                 platGroup.getPlatCommanderId().getId(), platGroup.getPlatCommanderId().getRole(),
-                platGroup.getPlatCommanderId().getBrigadeCommanderId());
+                platGroup.getPlatCommanderId().getBrigadeCommanderId(), 4);
         return new ResourcesUpdateResponse(true, needForSupply);
     }
 
@@ -254,12 +257,35 @@ public class CompanyCommanderService {
         try {
             SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyRequestId);
             supplyRequest.setStatus(Status.FINISHED);
-            supplyRequest.setDeliveryComplitionDate(LocalDate.now());
+            supplyRequest.setExecutionСomplitionDate(LocalDate.now());
             supplyRequestService.save(supplyRequest);
             return true;
         } catch (Exception e) {
-            throw new SupplyRequestUpdateException("Error in updating supply request in plat commander service.");
+            throw new SupplyRequestUpdateException("Error in updating supply request in company commander service.");
         }
+    }
+
+    public List<CompanyCommanderDTO> findCompanyCommanderByBattalionCommander(BattalionCommander battalionCommander) {
+        List<CompanyCommander> companyCommanders = companyCommanderRepository.findCompanyCommandersByBattalionCommander(battalionCommander);
+        List<CompanyCommanderDTO> companyCommanderDTOS = new ArrayList<>();
+        for (CompanyCommander companyCommander : companyCommanders){
+            companyCommanderDTOS.add(mapCompanyCommanderToDTO(companyCommander));
+        }
+        return companyCommanderDTOS;
+    }
+
+    private CompanyCommanderDTO mapCompanyCommanderToDTO(CompanyCommander companyCommander) {
+        return CompanyCommanderDTO.builder()
+                .id(companyCommander.getId())
+                .firstName(companyCommander.getFirstName())
+                .lastName(companyCommander.getLastName())
+                .secondName(companyCommander.getSecondName())
+                .passportNumber(companyCommander.getPassportNumber())
+                .email(companyCommander.getEmail())
+                .rank(companyCommander.getRank())
+                .role(companyCommander.getRole())
+                .companyGroupId(companyCommander.getCompanyGroup().getId())
+                .build();
     }
 }
 

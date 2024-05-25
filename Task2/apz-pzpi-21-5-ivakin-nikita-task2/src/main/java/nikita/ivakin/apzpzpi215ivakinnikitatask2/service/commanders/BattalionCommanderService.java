@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.BattalionCommanderDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.CompanyCommanderDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
@@ -11,6 +13,7 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -211,7 +215,14 @@ public class BattalionCommanderService {
             if (supplyRequest.getBrigadeCommanderId().equals(battalionCommander.getBrigadeCommander().getId()) && supplyRequest.getSeniorMilitaryGroupId().equals(battalionCommander.getBattalionGroup().getId())
                     && supplyRequest.getRoleOfCommander().equals(Role.COMPANY_COMMANDER)) {
                 CompanyGroup companyGroup = companyGroupService.findCompanyGroupById(supplyRequest.getMilitaryGroupId());
-                return allocateResources(supplyRequest.getResourcesRequestId(), battalionCommander.getBattalionGroup(), battalionCommander, companyGroup);
+                ResourcesUpdateResponse resourcesUpdateResponse = allocateResources(supplyRequest.getResourcesRequestId(), battalionCommander.getBattalionGroup(), battalionCommander, companyGroup);
+                supplyRequest.setStatus(Status.EXECUTING);
+                supplyRequest.setDateOfExecuting(LocalDate.now());
+                supplyRequest.setExecutiveCommanderId(battalionCommander.getId());
+                supplyRequest.setExecutiveGroupId(battalionCommander.getBattalionGroup().getId());
+                supplyRequest.setRoleOfExecutiveCommander(Role.BATTALION_COMMANDER);
+                supplyRequestService.save(supplyRequest);
+                return resourcesUpdateResponse;
             }
         } catch (Exception e) {
             throw new CommanderSendingResourcesException("Error in sending resources to company.");
@@ -223,18 +234,67 @@ public class BattalionCommanderService {
     public ResourcesUpdateResponse allocateResources(ResourcesRequest resourcesRequest, BattalionGroup battalionGroup, BattalionCommander battalionCommander, CompanyGroup companyGroup) {
         boolean needForSupply = givenResourcesService.allocateResources(resourcesRequest, battalionGroup, companyGroup,
                 companyGroup.getCompanyCommanderId().getId(), companyGroup.getCompanyCommanderId().getRole(),
-                companyGroup.getCompanyCommanderId().getBrigadeCommanderId());
+                companyGroup.getCompanyCommanderId().getBrigadeCommanderId(), 4);
         return new ResourcesUpdateResponse(true, needForSupply);
     }
 
-    public List<CompanyGroup> getBattalionCompanyGroups(){
+    public List<CompanyGroupDTO> getBattalionCompanyGroups(){
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
-        return companyGroupService.findCompanyGroupsByBattalionGroupId(battalionCommander.getBattalionGroup());
+        List<CompanyGroupDTO> companyGroupDTOS = companyGroupService.findCompanyGroupsByBattalionGroupId(battalionCommander.getBattalionGroup());
+        List<CompanyCommanderDTO> companyCommanderDTOS = getBattalionCompanyCommanders();
+        for (CompanyGroupDTO companyGroupDTO : companyGroupDTOS) {
+            for (CompanyCommanderDTO companyCommanderDTO : companyCommanderDTOS) {
+                if (companyCommanderDTO.getCompanyGroupId().equals(companyGroupDTO.getId())) {
+                    companyGroupDTO.setCompanyCommanderDTO(companyCommanderDTO);
+                }
+            }
+        }
+        return companyGroupDTOS;
+    }
+
+    public List<CompanyCommanderDTO> getBattalionCompanyCommanders(){
+        BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
+        List<CompanyCommanderDTO> companyCommanderDTOS = companyCommanderService.findCompanyCommanderByBattalionCommander(battalionCommander);
+        return companyCommanderDTOS;
     }
 
     public BattalionGroupDTO getBattalionGroup() {
         BattalionCommander battalionCommander = getAuthenticatedBattalionCommander();
         BattalionGroup battalionGroup = battalionGroupService.findBattalionGroupByBattalionCommander(battalionCommander);
         return battalionGroupService.mapBattalionGroupToDTO(battalionGroup);
+    }
+
+    public boolean confirmGettingOfResources(Integer supplyRequestId) {
+        try {
+            SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyRequestId);
+            supplyRequest.setStatus(Status.FINISHED);
+            supplyRequest.setExecutionСomplitionDate(LocalDate.now());
+            supplyRequestService.save(supplyRequest);
+            return true;
+        } catch (Exception e) {
+            throw new SupplyRequestUpdateException("Error in updating supply request in battalion commander service.");
+        }
+    }
+
+    public List<BattalionCommanderDTO> findBattalionCommanderByBrigadeCommander(BrigadeCommander brigadeCommander) {
+        List<BattalionCommander> battalionCommanders = battalionCommanderRepository.findBattalionCommanderByBrigadeCommander(brigadeCommander);
+        List<BattalionCommanderDTO> battalionCommanderDTOS = new ArrayList<>();
+        for (BattalionCommander battalionCommander : battalionCommanders) {
+            battalionCommanderDTOS.add(mapBattalionCommanderToDTO(battalionCommander));
+        }
+        return battalionCommanderDTOS;
+    }
+
+    private BattalionCommanderDTO mapBattalionCommanderToDTO(BattalionCommander battalionCommander) {
+        return BattalionCommanderDTO.builder()
+                .id(battalionCommander.getId())
+                .firstName(battalionCommander.getFirstName())
+                .lastName(battalionCommander.getLastName())
+                .secondName(battalionCommander.getSecondName())
+                .email(battalionCommander.getEmail())
+                .rank(battalionCommander.getRank())
+                .role(battalionCommander.getRole())
+                .battalionGroupId(battalionCommander.getBattalionGroup().getId())
+                .build();
     }
 }

@@ -99,7 +99,7 @@ public class CompanyCommanderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    //check
+    //checked
     @PreAuthorize("hasAnyRole('COMPANY_COMMANDER', 'ADMIN')")
     @PutMapping("/confirm/getting-of-resources")
     public ResponseEntity<Boolean> confirmGettingOfResources(@RequestParam Integer supplyRequestId){

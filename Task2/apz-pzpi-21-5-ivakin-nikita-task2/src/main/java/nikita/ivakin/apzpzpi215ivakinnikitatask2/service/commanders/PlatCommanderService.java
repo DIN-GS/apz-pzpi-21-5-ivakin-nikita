@@ -186,7 +186,7 @@ public class PlatCommanderService {
         try {
             SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyRequestId);
             supplyRequest.setStatus(Status.FINISHED);
-            supplyRequest.setDeliveryComplitionDate(LocalDate.now());
+            supplyRequest.setExecutionСomplitionDate(LocalDate.now());
             supplyRequestService.save(supplyRequest);
             return true;
         } catch (Exception e) {
