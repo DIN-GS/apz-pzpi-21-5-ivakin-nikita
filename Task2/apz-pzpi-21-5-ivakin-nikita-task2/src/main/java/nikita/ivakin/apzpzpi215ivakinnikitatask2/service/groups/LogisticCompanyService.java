@@ -4,14 +4,20 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.MilitaryGroupNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups.LogisticCompanyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,9 +25,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class LogisticCompanyService {
 
-    @Autowired
-    private final LogisticCompanyRepository logisticCompanyRepository;
 
+    private final LogisticCompanyRepository logisticCompanyRepository;
+    private final GivenResourcesService givenResourcesService;
 
     public boolean createLogisticCompany(LogisticCompanyDTO logisticCompanyDTO, BrigadeCommander brigadeCommander) {
         LogisticCompany logisticCompany = LogisticCompany.builder()
@@ -52,7 +58,50 @@ public class LogisticCompanyService {
             throw new MilitaryGroupCreationException("Something went wrong while creating logistic company.");
         }
 
+        return addGivenResourcesForLogisticCompany(brigadeCommander);
+    }
+
+    public boolean addGivenResourcesForLogisticCompany(BrigadeCommander brigadeCommander){
+        List<LogisticCompany> logisticCompanies = logisticCompanyRepository.findAll();
+        if (logisticCompanies.size() > 0) {
+            LogisticCompany logisticCompany = logisticCompanies.get(logisticCompanies.size()-1);
+            fillGivenResources(logisticCompany, brigadeCommander);
+        } else {
+            throw new MilitaryGroupNotFoundException("There aren't any battalions for giving resources.");
+        }
         return true;
+    }
+
+    private void fillGivenResources(LogisticCompany logisticCompany, BrigadeCommander brigadeCommander){
+        GivenResources givenResources = GivenResources.builder()
+                .militaryGroupId(logisticCompany.getId())
+                .brigadeCommanderId(brigadeCommander.getId())
+                .roleOfCommander(Role.LOGISTIC_COMMANDER)
+                .issueDate(LocalDate.now())
+                .allocationOfResources(ResourcesType.FOR_PERFORMING_A_MISSION)
+                .ammo40mmGpCount(logisticCompany.getAmmo40mmGpCount())
+                .ammo40mmRpgCount(logisticCompany.getAmmo40mmRpgCount())
+                .ammo145KpvtCount(logisticCompany.getAmmo145KpvtCount())
+                .ammo545x39AkRpkCount(logisticCompany.getAmmo545x39AkRpkCount())
+                .ammo556x45ArCount(logisticCompany.getAmmo556x45ArCount())
+                .ammo762PktCount(logisticCompany.getAmmo762PktCount())
+                .ammo762x39AkCount(logisticCompany.getAmmo762x39AkCount())
+                .offensiveGrenadesCount(logisticCompany.getOffensiveGrenadesCount())
+                .defensiveGrenadesCount(logisticCompany.getDefensiveGrenadesCount())
+                .riflesCount(logisticCompany.getRiflesCount())
+                .machineGunsCount(logisticCompany.getMachineGunsCount())
+                .bodyArmorCount(logisticCompany.getBodyArmorCount())
+                .helmetsCount(logisticCompany.getHelmetsCount())
+                .apcCount(logisticCompany.getApcCount())
+                .tankCount(logisticCompany.getTankCount())
+                .foodCount(logisticCompany.getFoodCount())
+                .dryRationsCount(logisticCompany.getDryRationsCount())
+                .build();
+        try {
+            givenResourcesService.save(givenResources);
+        } catch (Exception e) {
+            throw new GivenResourcesCreationException("Error creating given resources entity.");
+        }
     }
 
 

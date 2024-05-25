@@ -87,6 +87,13 @@ public class BrigadeCommanderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
+    @PutMapping("/assign/logistic-commander")
+    public ResponseEntity<Boolean> assignLogisticCommander(@RequestParam Integer logisticCommanderId, @RequestParam Integer logisticCompanyId) {
+        boolean result = brigadeCommanderService.assignLogisticCompanyCommander(logisticCommanderId, logisticCompanyId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     //checked
     @PreAuthorize("hasAnyRole('BRIGADE_COMMANDER', 'ADMIN')")
     @GetMapping("/get/brigade-requests")

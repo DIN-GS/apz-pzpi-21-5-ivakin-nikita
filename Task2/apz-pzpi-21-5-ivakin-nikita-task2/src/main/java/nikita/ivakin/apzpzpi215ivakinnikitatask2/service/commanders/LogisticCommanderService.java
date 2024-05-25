@@ -71,7 +71,7 @@ public class LogisticCommanderService {
         return true;
     }
 
-    public boolean confirmExecutionOfRequest(Integer id) {
+    public boolean confirmDeliveryOfRequest(Integer id) {
         LogisticCommander logisticCommander = getAuthenticatedLogisticCommander();
         SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(id);
         supplyRequest.setDeliveryComplitionDate(LocalDate.now());

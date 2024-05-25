@@ -2,16 +2,13 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.SupplyRequestDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.LogisticCommanderService;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,6 +19,7 @@ public class LogisticCommanderController {
 
     private final LogisticCommanderService logisticCommanderService;
 
+    //checked
     @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
     @GetMapping("/get/all-requests")
     public ResponseEntity<List<SupplyRequest>> getAllRequests(){
@@ -29,6 +27,7 @@ public class LogisticCommanderController {
         return new ResponseEntity<>(supplyRequests, HttpStatus.OK);
     }
 
+    //checked
     //Change status of request and sign who is going to do it and when
     @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
     @PostMapping("/take/execution-of-supply-request/{id}")
@@ -37,11 +36,11 @@ public class LogisticCommanderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
+    //checked
     @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
-    @PostMapping("/confirm/delivery-of-supply-request/{id}")
+    @PutMapping("/confirm/delivery-of-supply-request/{id}")
     public ResponseEntity<Boolean> confirmDeliveryOfRequest(@PathVariable Integer id){
-        boolean result = logisticCommanderService.confirmExecutionOfRequest(id);
+        boolean result = logisticCommanderService.confirmDeliveryOfRequest(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -129,9 +129,17 @@ public class BrigadeCommanderService {
         BrigadeCommander brigadeCommander = getAuthenticatedBrigadeCommander();
         LogisticCommander logisticCommander = logisticCommanderService.findLogisticCommanderById(logisticCommanderId);
         LogisticCompany logisticCompany = logisticCompanyService.findLogisticCompanyById(logisticCompanyId);
+        givenResourcesService.assignCommander(logisticCommanderId, logisticCompanyId, brigadeCommander.getId(), Role.LOGISTIC_COMMANDER);
         logisticCompany.setLogisticCommanderId(logisticCommander);
         logisticCommander.setLogisticCompany(logisticCompany);
         logisticCommander.setBrigadeCommander(brigadeCommander);
+        logisticCommander.setBrigadeGroup(brigadeCommander.getBrigadeGroupId());
+        try {
+            logisticCommanderService.save(logisticCommander);
+            logisticCompanyService.save(logisticCompany);
+        } catch (Exception e) {
+            throw new CommanderAssigningException("Something went wrong in assigning LogisticCommander with id" + logisticCommanderId);
+        }
         return true;
     }
 
