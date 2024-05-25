@@ -110,6 +110,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PostCreationException.class)
+    public ResponseEntity<CustomErrorResponse> handlePostCreationException(PostCreationException ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> handlePostNotFoundException(PostNotFoundException ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ResourcesRequestCreationException.class)
     public ResponseEntity<CustomErrorResponse> handleResourcesRequestCreationException(ResourcesRequestCreationException ex) {
         CustomErrorResponse error = new CustomErrorResponse();
@@ -126,6 +144,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         error.setStatus(HttpStatus.NOT_FOUND.value());
         error.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ScanningDeviceCreationException.class)
+    public ResponseEntity<CustomErrorResponse> handleScanningDeviceCreationException(ScanningDeviceCreationException ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(SupplyCarCreationException.class)
+    public ResponseEntity<CustomErrorResponse> handleSupplyCarCreationException(SupplyCarCreationException ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(SupplyRequestCreationException.class)

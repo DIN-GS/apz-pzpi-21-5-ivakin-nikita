@@ -2,6 +2,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.ScanningDeviceRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,4 +12,9 @@ import org.springframework.stereotype.Service;
 public class ScanningDeviceService {
 
     private final ScanningDeviceRepository scanningDeviceRepository;
+
+    public ScanningDevice save(ScanningDevice scanningDevice) {
+        return scanningDeviceRepository.save(scanningDevice);
+    }
 }
+

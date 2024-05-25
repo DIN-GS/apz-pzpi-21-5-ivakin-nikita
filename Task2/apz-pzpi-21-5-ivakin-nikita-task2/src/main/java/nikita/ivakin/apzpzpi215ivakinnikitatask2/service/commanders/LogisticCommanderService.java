@@ -4,11 +4,17 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.SupplyCarDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyCar;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.SupplyCarCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.LogisticCommanderRepository;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.SupplyCarService;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.groups.LogisticCompanyService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.requests.SupplyRequestService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +31,8 @@ public class LogisticCommanderService {
 
     private final LogisticCommanderRepository logisticCommanderRepository;
     private final SupplyRequestService supplyRequestService;
+    private final LogisticCompanyService logisticCompanyService;
+    private final SupplyCarService supplyCarService;
 
     public LogisticCommander getAuthenticatedLogisticCommander() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -86,5 +94,22 @@ public class LogisticCommanderService {
     }
 
 
+    public boolean createSupplyCar(SupplyCarDTO supplyCarDTO) {
+        try {
+            SupplyCar supplyCar = new SupplyCar();
+            supplyCar.setId(supplyCarDTO.getId());
+            supplyCar.setCarNumber(supplyCarDTO.getCarNumber());
 
+            SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyCarDTO.getSupplyRequestId());
+            LogisticCompany logisticCompany = logisticCompanyService.findLogisticCompanyById(supplyCarDTO.getLogisticCompanyId());
+
+            supplyCar.setSupplyRequest(supplyRequest);
+            supplyCar.setLogisticCompany(logisticCompany);
+
+            supplyCarService.save(supplyCar);
+        } catch (Exception e) {
+            throw new SupplyCarCreationException("");
+        }
+        return true;
+    }
 }

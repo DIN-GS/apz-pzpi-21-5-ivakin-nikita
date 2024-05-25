@@ -2,6 +2,8 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.SupplyCarDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyCar;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.LogisticCommanderService;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,13 @@ public class LogisticCommanderController {
     @PutMapping("/confirm/delivery-of-supply-request/{id}")
     public ResponseEntity<Boolean> confirmDeliveryOfRequest(@PathVariable Integer id){
         boolean result = logisticCommanderService.confirmDeliveryOfRequest(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
+    @PutMapping("/create/supply-car")
+    public ResponseEntity<Boolean> createSupplyCar(@RequestBody SupplyCarDTO supplyCarDTO){
+        boolean result = logisticCommanderService.createSupplyCar(supplyCarDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
