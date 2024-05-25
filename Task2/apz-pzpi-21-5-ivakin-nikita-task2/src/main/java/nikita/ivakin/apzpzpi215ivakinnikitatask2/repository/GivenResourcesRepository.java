@@ -1,6 +1,6 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.repository;
 
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -8,10 +8,10 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.BattalionCommand
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.CompanyCommanderDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.CompanyGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ResourcesUpdateResponse;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.GivenResources;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.ResourcesUpdateResponse;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;

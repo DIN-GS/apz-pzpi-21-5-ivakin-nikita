@@ -2,7 +2,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.LogisticCommanderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

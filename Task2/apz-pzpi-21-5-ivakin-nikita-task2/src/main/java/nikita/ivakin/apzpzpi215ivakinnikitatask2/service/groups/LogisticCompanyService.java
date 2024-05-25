@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.GivenResources;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;

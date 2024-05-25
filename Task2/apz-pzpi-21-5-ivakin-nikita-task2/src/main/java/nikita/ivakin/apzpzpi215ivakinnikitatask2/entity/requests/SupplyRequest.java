@@ -1,6 +1,5 @@
-package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity;
+package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;

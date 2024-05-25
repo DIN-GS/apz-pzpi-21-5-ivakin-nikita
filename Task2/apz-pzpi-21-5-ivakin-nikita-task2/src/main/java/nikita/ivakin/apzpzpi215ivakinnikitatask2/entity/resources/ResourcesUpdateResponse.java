@@ -1,4 +1,4 @@
-package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity;
+package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources;
 
 
 import lombok.AllArgsConstructor;

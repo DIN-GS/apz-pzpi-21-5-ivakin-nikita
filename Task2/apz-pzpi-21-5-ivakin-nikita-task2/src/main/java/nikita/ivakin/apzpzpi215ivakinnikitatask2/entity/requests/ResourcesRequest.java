@@ -1,43 +1,31 @@
-package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity;
+package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
+import lombok.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "given_resources", schema = "project")
+@Table(name = "resources_request", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder
 @Getter
 @Setter
-public class GivenResources {
+public class ResourcesRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "given_resources_id")
+    @Column(name = "resources_request_id")
     private Integer id;
 
     private Integer commanderId;
 
     private Integer militaryGroupId;
 
-    private Integer brigadeCommanderId;
-
     @Enumerated(EnumType.STRING)
     private Role roleOfCommander;
-
-    private LocalDate issueDate;
-
-    @Enumerated(EnumType.STRING)
-    private ResourcesType allocationOfResources;
 
     @Column(name = "ammo_556x45ar_count")
     private int ammo556x45ArCount;
@@ -57,7 +45,7 @@ public class GivenResources {
     @Column(name = "ammo_40mm_gp_count")
     private int ammo40mmGpCount;
 
-    @Column(name = "ammo_762pkt_count")
+    @Column(name = "ammo_762pkt")
     private int ammo762PktCount;
     private int defensiveGrenadesCount;
     private int offensiveGrenadesCount;
@@ -69,4 +57,8 @@ public class GivenResources {
     private int foodCount;
     private int tankCount;
     private int apcCount;
+
+    @Column(name = "exact_time")
+    private LocalDateTime exactTime;
+
 }
