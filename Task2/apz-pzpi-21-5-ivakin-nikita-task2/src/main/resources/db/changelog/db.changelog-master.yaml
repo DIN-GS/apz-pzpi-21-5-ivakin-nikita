@@ -38,3 +38,12 @@ databaseChangeLog:
   - include:
       file: 013-alter-table-supply-request.sql
       relativeToChangelogFile: true
+  - include:
+      file: 014-create-supply-car-post-scanning-device-tables.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 015-add-constraints-for-supply-car-post-device-tables.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 017-create-car-check-table.sql
+      relativeToChangelogFile: true

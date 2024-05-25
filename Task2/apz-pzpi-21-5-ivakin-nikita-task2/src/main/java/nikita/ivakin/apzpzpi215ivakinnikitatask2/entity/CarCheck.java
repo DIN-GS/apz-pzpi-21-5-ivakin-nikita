@@ -6,8 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.CarStatus;
+
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "supply_car", schema = "project")
@@ -16,22 +18,27 @@ import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
 @SuperBuilder
 @Getter
 @Setter
-public class SupplyCar {
+public class CarCheck {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String carNumber;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
-            fetch = FetchType.EAGER)
-    @JoinColumn(name = "request_id", unique = true)
-    private SupplyRequest supplyRequest;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "scanning_device_id", unique = true)
+    private ScanningDevice scanningDevice;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
-    @JoinColumn(name = "logistic_company_id", unique = true)
-    private LogisticCompany logisticCompany;
+    @JoinColumn(name = "supply_car_id", unique = true)
+    private SupplyCar supplyCar;
+
+    @Enumerated(EnumType.STRING)
+    private CarStatus carStatus;
+
+    private LocalDateTime localDateTime;
 }

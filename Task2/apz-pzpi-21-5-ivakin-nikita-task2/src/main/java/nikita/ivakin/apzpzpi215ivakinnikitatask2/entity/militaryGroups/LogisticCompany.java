@@ -4,7 +4,10 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyCar;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
+
+import java.util.List;
 
 @Entity
 @Table(name = "logistic_company", schema = "project")
@@ -28,6 +31,12 @@ public class LogisticCompany extends MilitaryGroup{
     @JoinColumn(name = "brigade_group_id", unique = true)
     private BrigadeGroup brigadeGroup;
 
+    @OneToMany(mappedBy = "logisticCompany",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private List<SupplyCar> supplyCars;
 
 }
 
