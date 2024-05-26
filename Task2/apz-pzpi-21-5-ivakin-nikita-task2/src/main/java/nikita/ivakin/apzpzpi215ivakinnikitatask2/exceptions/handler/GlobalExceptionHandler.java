@@ -20,6 +20,15 @@ import java.util.List;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
+    @ExceptionHandler(CarCheckException.class)
+    public ResponseEntity<CustomErrorResponse> handleCarCheckException(CarCheckException ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(CommanderAssigningException.class)
     public ResponseEntity<CustomErrorResponse> handleCommanderAssigningException(CommanderAssigningException ex) {
         CustomErrorResponse error = new CustomErrorResponse();
@@ -153,6 +162,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         error.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ScanningDeviceNotFound.class)
+    public ResponseEntity<CustomErrorResponse> handleScanningDeviceNotFound(ScanningDeviceNotFound ex) {
+        CustomErrorResponse error = new CustomErrorResponse();
+        error.setMessage(ex.getMessage());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(SupplyCarCreationException.class)

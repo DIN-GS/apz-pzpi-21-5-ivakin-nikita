@@ -3,8 +3,10 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.SupplyCarDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.CarCheck;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyCar;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.CarCheckService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.LogisticCommanderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.List;
 public class LogisticCommanderController {
 
     private final LogisticCommanderService logisticCommanderService;
+    private final CarCheckService carCheckService;
 
     //checked
     @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
@@ -51,5 +54,12 @@ public class LogisticCommanderController {
     public ResponseEntity<Boolean> createSupplyCar(@RequestBody SupplyCarDTO supplyCarDTO){
         boolean result = logisticCommanderService.createSupplyCar(supplyCarDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
+    @GetMapping("/get/car-checks/{id}")
+    public ResponseEntity<Boolean> getCarChecks(@PathVariable Integer id){
+        List<CarCheck> carCheckDTOs = carCheckService.findCarChecksForCar(id);
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }
