@@ -24,4 +24,6 @@ public class ScanningDevice {
              fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", unique = true)
     private Post post;
+
+    private Integer tier;
 }

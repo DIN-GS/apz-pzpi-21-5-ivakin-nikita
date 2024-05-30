@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -93,22 +94,22 @@ public class LogisticCommanderService {
         logisticCommanderRepository.save(logisticCommander);
     }
 
-
+    //add a check for executive commander
     public boolean createSupplyCar(SupplyCarDTO supplyCarDTO) {
+        LogisticCommander logisticCommander = getAuthenticatedLogisticCommander();
+        LogisticCompany logisticCompany = logisticCompanyService.findLogisticCompanyByLogisticCommander(logisticCommander);
+        SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyCarDTO.getSupplyRequestId());
         try {
+            Random rand = new Random();
             SupplyCar supplyCar = new SupplyCar();
-            supplyCar.setId(supplyCarDTO.getId());
-            supplyCar.setCarNumber(supplyCarDTO.getCarNumber());
-
-            SupplyRequest supplyRequest = supplyRequestService.getSupplyRequestById(supplyCarDTO.getSupplyRequestId());
-            LogisticCompany logisticCompany = logisticCompanyService.findLogisticCompanyById(supplyCarDTO.getLogisticCompanyId());
+            supplyCar.setTier(rand.nextInt(30 - 10 + 1) + 5);
 
             supplyCar.setSupplyRequest(supplyRequest);
             supplyCar.setLogisticCompany(logisticCompany);
 
             supplyCarService.save(supplyCar);
         } catch (Exception e) {
-            throw new SupplyCarCreationException("");
+            throw new SupplyCarCreationException("Error in creating supply car.");
         }
         return true;
     }

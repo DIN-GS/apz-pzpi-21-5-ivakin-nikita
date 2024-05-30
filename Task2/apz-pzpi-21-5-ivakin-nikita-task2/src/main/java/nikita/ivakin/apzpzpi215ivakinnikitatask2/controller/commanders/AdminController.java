@@ -2,6 +2,7 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
 import lombok.AllArgsConstructor;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.PostDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class AdminController {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/create/scanning-device/for-post/{id}")
-    public ResponseEntity<Boolean> createScanningDevice(@PathVariable Integer id) {
-        boolean result = adminService.createScanningDeviceForPost(id);
+    public ResponseEntity<Boolean> createScanningDevice(@PathVariable Integer id, @RequestBody ScanningDevice scanningDevice) {
+        boolean result = adminService.createScanningDeviceForPost(id, scanningDevice);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

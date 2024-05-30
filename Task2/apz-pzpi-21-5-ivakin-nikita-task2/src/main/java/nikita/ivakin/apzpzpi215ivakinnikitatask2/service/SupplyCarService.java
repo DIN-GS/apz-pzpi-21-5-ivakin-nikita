@@ -30,7 +30,7 @@ public class SupplyCarService {
         LogisticCompany logisticCompany = logisticCompanyService.findLogisticCompanyById(supplyCarDTO.getLogisticCompanyId());
         return SupplyCar.builder()
                 .id(supplyCarDTO.getId())
-                .carNumber(supplyCarDTO.getCarNumber())
+                .tier(supplyCarDTO.getTier())
                 .supplyRequest(supplyRequest)
                 .build();
     }

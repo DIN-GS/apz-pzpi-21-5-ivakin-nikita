@@ -1,6 +1,7 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.groups;
 
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface LogisticCompanyRepository extends JpaRepository<LogisticCompany
     Optional<LogisticCompany> findLogisticCompanyByBrigadeGroup(BrigadeGroup brigadeGroup);
 
     Optional<LogisticCompany> findLogisticCompanyById(Integer id);
+
+    Optional<LogisticCompany> findLogisticCompanyByLogisticCommanderId(LogisticCommander logisticCommanderId);
 }

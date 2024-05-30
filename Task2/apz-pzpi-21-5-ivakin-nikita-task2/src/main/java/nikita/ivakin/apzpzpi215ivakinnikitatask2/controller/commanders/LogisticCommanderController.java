@@ -50,7 +50,7 @@ public class LogisticCommanderController {
     }
 
     @PreAuthorize("hasAnyRole('LOGISTIC_COMMANDER', 'ADMIN')")
-    @PutMapping("/create/supply-car")
+    @PostMapping("/create/supply-car")
     public ResponseEntity<Boolean> createSupplyCar(@RequestBody SupplyCarDTO supplyCarDTO){
         boolean result = logisticCommanderService.createSupplyCar(supplyCarDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);

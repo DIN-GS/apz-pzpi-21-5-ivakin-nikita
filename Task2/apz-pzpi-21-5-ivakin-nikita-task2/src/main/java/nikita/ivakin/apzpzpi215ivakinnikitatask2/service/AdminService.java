@@ -29,11 +29,11 @@ public class AdminService {
 
     }
 
-    public boolean createScanningDeviceForPost(Integer id) {
+    public boolean createScanningDeviceForPost(Integer id, ScanningDevice scanningDeviceDTO) {
         Post post = postService.findPostById(id);
         try {
             ScanningDevice scanningDevice = ScanningDevice.builder()
-                    .post(post).build();
+                    .post(post).tier(scanningDeviceDTO.getTier()).build();
             scanningDevice = scanningDeviceService.save(scanningDevice);
             post.setScanningDevice(scanningDevice);
             return true;

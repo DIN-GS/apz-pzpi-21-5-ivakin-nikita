@@ -22,7 +22,7 @@ public class SupplyCar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String carNumber;
+    private Integer tier;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
             fetch = FetchType.EAGER)

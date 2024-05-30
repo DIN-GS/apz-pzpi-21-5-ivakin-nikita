@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.GivenResources;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
@@ -123,9 +124,20 @@ public class LogisticCompanyService {
         }
     }
 
+    public LogisticCompany findLogisticCompanyByLogisticCommander(LogisticCommander logisticCommander) {
+        Optional<LogisticCompany> tempLogComp = logisticCompanyRepository.findLogisticCompanyByLogisticCommanderId(logisticCommander);
+        if (tempLogComp.isPresent()) {
+            return tempLogComp.get();
+        } else {
+            throw new MilitaryGroupNotFoundException("Error logistic company with logistic commander id" + logisticCommander.getId() + " doesn't exist.");
+        }
+    }
+
 
     @Transactional
     public void save(LogisticCompany logisticCompany) {
         logisticCompanyRepository.save(logisticCompany);
     }
+
+
 }
