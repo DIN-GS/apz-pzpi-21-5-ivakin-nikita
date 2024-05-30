@@ -24,7 +24,7 @@ public class AdminController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("/create/scanning-device/for-post/{id}")
+    @PutMapping("/assign/scanning-device-for-post/{id}")
     public ResponseEntity<Boolean> createScanningDevice(@PathVariable Integer id, @RequestBody ScanningDevice scanningDevice) {
         boolean result = adminService.createScanningDeviceForPost(id, scanningDevice);
         return new ResponseEntity<>(result, HttpStatus.OK);
