@@ -61,4 +61,31 @@ public class ResourcesRequest {
     @Column(name = "exact_time")
     private LocalDateTime exactTime;
 
+    @Override
+    public String toString() {
+        return "ResourcesRequest{" +
+                "id=" + id +"\n" +
+                ", commanderId=" + commanderId +"\n" +
+                ", militaryGroupId=" + militaryGroupId +"\n" +
+                ", roleOfCommander=" + roleOfCommander +"\n" +
+                ", ammo556x45ArCount=" + ammo556x45ArCount +"\n" +
+                ", ammo545x39AkRpkCount=" + ammo545x39AkRpkCount +"\n" +
+                ", ammo762x39AkCount=" + ammo762x39AkCount +"\n" +
+                ", ammo145KpvtCount=" + ammo145KpvtCount +"\n" +
+                ", ammo40mmRpgCount=" + ammo40mmRpgCount +"\n" +
+                ", ammo40mmGpCount=" + ammo40mmGpCount +"\n" +
+                ", ammo762PktCount=" + ammo762PktCount +"\n" +
+                ", defensiveGrenadesCount=" + defensiveGrenadesCount +"\n" +
+                ", offensiveGrenadesCount=" + offensiveGrenadesCount +"\n" +
+                ", bodyArmorCount=" + bodyArmorCount +"\n" +
+                ", helmetsCount=" + helmetsCount +"\n" +
+                ", riflesCount=" + riflesCount +"\n" +
+                ", machineGunsCount=" + machineGunsCount +"\n" +
+                ", dryRationsCount=" + dryRationsCount +"\n" +
+                ", foodCount=" + foodCount +"\n" +
+                ", tankCount=" + tankCount +"\n" +
+                ", apcCount=" + apcCount +"\n" +
+                ", exactTime=" + exactTime +"\n" +
+                '}';
+    }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 
 @Entity
 @Table(name = "scanning_device", schema = "project")

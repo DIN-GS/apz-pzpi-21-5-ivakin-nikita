@@ -1,5 +1,7 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.enums;
 
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
+
 public enum RANK {
 
     MAJOR_GENERAL("Генерал майор"),
@@ -7,7 +9,8 @@ public enum RANK {
     MAJOR("Майор"),
     LIEUTENANT_COLONEL("Підполковник"),
     SENIOR_LIEUTENANT("Старший лейтенант"),
-    JUNIOR_LIEUTENANT("Молодший летенант");
+    JUNIOR_LIEUTENANT("Молодший летенант"),
+    SCANNING_DEVICE("Скануючий дивайс");
     private final String rank;
 
     RANK(String rank){

@@ -1,5 +1,6 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.PostDTO;
@@ -30,6 +31,11 @@ public class PostService {
        } else {
            throw new PostNotFoundException("There aren't any posts with id " + id);
        }
+    }
+
+    @Transactional
+    public void save(Post post) {
+        postRepository.save(post);
     }
 }
 

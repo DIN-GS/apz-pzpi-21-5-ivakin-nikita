@@ -6,11 +6,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.*;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.ScanningDeviceRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.*;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.JwtService;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.Token;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.TokenRepository;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.TokenType;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.user.User;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.user.UserRepository;
 import org.springframework.http.HttpHeaders;
@@ -161,6 +159,8 @@ public class AuthenticationService {
                 .build();
     }
 
+
+
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -210,5 +210,8 @@ public class AuthenticationService {
             }
         }
     }
+
+
+
 }
 

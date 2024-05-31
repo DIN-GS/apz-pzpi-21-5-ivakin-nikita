@@ -1,5 +1,6 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.user;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         // save the new password
+        repository.save(user);
+    }
+
+    @Transactional
+    public void save(User user) {
         repository.save(user);
     }
 }

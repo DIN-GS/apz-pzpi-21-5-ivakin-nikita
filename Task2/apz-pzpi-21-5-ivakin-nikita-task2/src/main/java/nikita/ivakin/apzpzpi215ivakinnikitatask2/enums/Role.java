@@ -19,6 +19,7 @@ public enum Role {
     COMPANY_COMMANDER(Collections.emptySet()),
     PLAT_COMMANDER(Collections.emptySet()),
     LOGISTIC_COMMANDER(Collections.emptySet()),
+    SCANNING_DEVICE(Collections.emptySet()),
     ADMIN(Collections.emptySet());
 
     @Getter

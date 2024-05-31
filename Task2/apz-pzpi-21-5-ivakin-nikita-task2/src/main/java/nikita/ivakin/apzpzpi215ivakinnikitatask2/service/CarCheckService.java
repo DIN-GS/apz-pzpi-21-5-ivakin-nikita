@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.CarCheck;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyCar;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.CarStatus;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.CarCheckException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.CarCheckRepository;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,12 @@ public class CarCheckService {
     private final CarCheckRepository carCheckRepository;
     private final SupplyCarService supplyCarService;
 
-    public void checkCar(SupplyCar supplyCar, ScanningDevice scanningDevice) {
+    public void checkCar(SupplyCar supplyCar, ScanningDevice scanningDevice, CarStatus carStatus) {
         try {
             CarCheck carCheck = CarCheck.builder()
                     .supplyCar(supplyCar)
                     .scanningDevice(scanningDevice)
+                    .carStatus(carStatus)
                     .localDateTime(LocalDateTime.now()).build();
             save(carCheck);
         } catch (Exception e) {

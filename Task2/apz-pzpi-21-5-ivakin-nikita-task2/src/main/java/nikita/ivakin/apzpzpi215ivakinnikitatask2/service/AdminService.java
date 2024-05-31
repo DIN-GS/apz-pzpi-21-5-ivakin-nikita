@@ -5,10 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.PostDTO;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Post;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.PostCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.ScanningDeviceCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.AdminRepository;
 import org.springframework.stereotype.Service;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 @Service
 @Slf4j
@@ -34,13 +39,41 @@ public class AdminService {
         try {
             ScanningDevice scanningDevice = ScanningDevice.builder()
                     .post(post).tier(scanningDeviceDTO.getTier()).build();
-            scanningDevice = scanningDeviceService.save(scanningDevice);
-            post.setScanningDevice(scanningDevice);
+            scanningDeviceService.save(scanningDevice);
+            post.setScanningDevice(scanningDeviceService.findScanningDeviceByPost(post));
+            postService.save(post);
             return true;
         } catch (Exception e) {
             throw new ScanningDeviceCreationException("Error in creation scanning device for post with id " + id);
         }
 
+    }
+
+    public boolean changeIotUrl(String url) {
+        try {
+            URL adminUrl = new URL("http://localhost:8081/update-url");
+            HttpURLConnection con = (HttpURLConnection) adminUrl.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "text/plain; utf-8");
+            con.setRequestProperty("Accept", "text/plain");
+            con.setDoOutput(true);
+
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = url.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == 200) {
+                return true;
+            } else {
+                System.err.println("Failed to update IoT URL, response code: " + responseCode);
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

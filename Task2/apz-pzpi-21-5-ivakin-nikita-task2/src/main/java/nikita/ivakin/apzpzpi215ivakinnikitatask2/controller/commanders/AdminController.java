@@ -29,4 +29,12 @@ public class AdminController {
         boolean result = adminService.createScanningDeviceForPost(id, scanningDevice);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping("/change/IoT-url")
+    public ResponseEntity<Boolean> changeIotUrl(@RequestParam String url) {
+        boolean result = adminService.changeIotUrl(url);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

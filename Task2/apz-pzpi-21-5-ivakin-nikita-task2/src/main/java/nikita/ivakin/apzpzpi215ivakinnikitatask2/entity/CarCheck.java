@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "supply_car", schema = "project")
+@Table(name = "car_check", schema = "project")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -38,6 +38,7 @@ public class CarCheck {
     private SupplyCar supplyCar;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "car_status")
     private CarStatus carStatus;
 
     private LocalDateTime localDateTime;

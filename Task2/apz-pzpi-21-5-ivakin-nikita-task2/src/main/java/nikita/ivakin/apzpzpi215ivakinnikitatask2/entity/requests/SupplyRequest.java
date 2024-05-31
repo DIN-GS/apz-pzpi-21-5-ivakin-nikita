@@ -60,5 +60,24 @@ public class SupplyRequest {
     @JoinColumn(name = "resources_request_id", unique = true)
     private ResourcesRequest resourcesRequestId;
 
-
+    @Override
+    public String toString() {
+        return "SupplyRequest{" +
+                "requestId=" + requestId +"\n" +
+                ", executiveGroupId=" + executiveGroupId +"\n" +
+                ", executiveCommanderId=" + executiveCommanderId +"\n" +
+                ", commanderId=" + commanderId +"\n" +
+                ", militaryGroupId=" + militaryGroupId +"\n" +
+                ", seniorMilitaryGroupId=" + seniorMilitaryGroupId +"\n" +
+                ", brigadeCommanderId=" + brigadeCommanderId +"\n" +
+                ", roleOfCommander=" + roleOfCommander +"\n" +
+                ", roleOfExecutiveCommander=" + roleOfExecutiveCommander +"\n" +
+                ", dateOfRequest=" + dateOfRequest +"\n" +
+                ", dateOfExecuting=" + dateOfExecuting +"\n" +
+                ", deliveryComplitionDate=" + deliveryComplitionDate +"\n" +
+                ", executionСomplitionDate=" + executionСomplitionDate +"\n" +
+                ", status=" + status +"\n" +
+                ", resourcesRequestId=" + resourcesRequestId.toString() +
+                '}';
+    }
 }
