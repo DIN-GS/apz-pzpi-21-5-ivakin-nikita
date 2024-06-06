@@ -5,27 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.auth.AuthenticationService;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.auth.RegisterRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Post;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.SupplyCar;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.ResourcesRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.CarStatus;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.CarCheckDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.ScanningDeviceDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.CarCheck;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.Post;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.ScanningDevice;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.SupplyCar;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.requests.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.CarStatus;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.RANK;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.ScanningDeviceCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.ScanningDeviceNotFound;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.ScanningDeviceRepository;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.user.User;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.user.UserService;
-import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +34,7 @@ public class ScanningDeviceService {
     private final SupplyCarService supplyCarService;
     private final CarCheckService carCheckService;
     private final AuthenticationService authenticationService;
+    private final PostService postService;
 
 
     public ScanningDevice findScanningDeviceByPost(Post post) {
@@ -101,8 +99,24 @@ public class ScanningDeviceService {
         return null;
     }
 
+    public ScanningDeviceDTO mpaScanningDeviceToDto(ScanningDevice scanningDevice) {
+        ScanningDeviceDTO scanningDeviceDTO = ScanningDeviceDTO.builder()
+                .id(scanningDevice.getId())
+                .postDTO(postService.mapPostToDto(scanningDevice.getPost()))
+                .tier(scanningDevice.getTier()).build();
+        return scanningDeviceDTO;
+    }
+
     private static final String IOT_SERVER_URL = "http://localhost:8081/get-info";
 
 
+    public List<CarCheckDTO> findCarChecksForCar(Integer id) {
+        List<CarCheck> carChecks = carCheckService.findCarChecksForCar(id);
+        List<CarCheckDTO> carCheckDTOS = new ArrayList<>();
+        for (CarCheck carCheck : carChecks) {
+            carCheckDTOS.add(carCheckService.mapCarCheckToDto(carCheck, mpaScanningDeviceToDto(carCheck.getScanningDevice())));
+        }
+        return carCheckDTOS;
+    }
 }
 

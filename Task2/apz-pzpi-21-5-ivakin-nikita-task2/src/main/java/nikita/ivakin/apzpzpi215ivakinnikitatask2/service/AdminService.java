@@ -2,10 +2,9 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.PostDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Post;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.PostDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.Post;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.ScanningDevice;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.PostCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.ScanningDeviceCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.AdminRepository;

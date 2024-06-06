@@ -3,13 +3,13 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.GivenResources;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.ResourcesRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.CompanyGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.MilitaryGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.PlatGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.resources.GivenResources;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.requests.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.militaryGroups.CompanyGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.militaryGroups.MilitaryGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.militaryGroups.PlatGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.ResourcesType;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.Role;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesCreationException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.GivenResourcesNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.GivenResourcesRepository;
@@ -148,6 +148,10 @@ public class GivenResourcesService {
         setPlatCount.accept(getPlatCount.get() + allocatedAmount);
         setCompanyCount.accept(companyCount - allocatedAmount);
         setGivenResourcesCount.accept(allocatedAmount);
+    }
+
+    public void checkAmountOfResources(){
+
     }
 
     @Transactional

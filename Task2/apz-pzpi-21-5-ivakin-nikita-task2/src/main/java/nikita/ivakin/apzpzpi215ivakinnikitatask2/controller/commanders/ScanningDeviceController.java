@@ -2,14 +2,12 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.ScanRequest;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.ScanningDeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -21,8 +19,8 @@ public class ScanningDeviceController {
 
     @PreAuthorize("hasAnyRole('SCANNING_DEVICE')")
     @PostMapping("/scan-car")
-    public ResponseEntity<String> scanCar(@RequestParam Integer supplyCarId, @RequestParam Integer scanningDeviceId){
-        String result = scanningDeviceService.scanCar(supplyCarId, scanningDeviceId);
+    public ResponseEntity<String> scanCar(@RequestBody ScanRequest scanRequest){
+        String result = scanningDeviceService.scanCar(scanRequest.getSupplyCarId(), scanRequest.getScanningDeviceId());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

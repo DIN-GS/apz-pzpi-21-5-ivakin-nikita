@@ -1,0 +1,245 @@
+РОЗРОБКА IOT ЧАСТИНИ ПРОГРАМНОЇ СИСТЕМИ
+
+Мета роботи:
+Покращити навички проектування програмних систем. Розробити smart device частину програмної системи та описати її з допомогою демонстраційного відеоролику, UML Use Case Diagram, Interaction Overview Diagram, Activity Diagram та Package Diagram.
+
+Хід роботи:
+Демо ролик проєкту доступний за посиланням (https://youtu.be/9xAHIFMj1Ik?si=bAmA1iMT-mrRJX2n ).
+Посилання на репозиторій програмної системи: https://github.com/NureIvakinNikita/apz-pzpi-21-5-ivakin-nikita .
+
+1 АРХІТЕКТУРА ТА ІНЖЕНЕРНІ РІШЕННЯ
+
+Програмне забезпечення для IoT девайсу представляє собою трьох шарову архітектуру для девайса сканування, яка включає в себе такі шари як: ui, що надає можливість користувачу взаємодіяти з системою та надавати дані, у вигляді консольного застосунку, шар бізнес логіки для обробки відповідей, що надходять від серверу або формулювання інформацію для відправки на сервер, виконання читання даних про девайс та запис їх  у конфігураційний файл, та шаром для відправки запитів для з’єднання з API  для автентифікації та відправки даних.
+
+1.1 ШАР ОСНОВНОЇ ФУНКЦІОНАЛЬНОСТІ
+
+Даний шар включає в себе реалізацію функціоналу для сканування машин постачання, отримання даних про неї та запису результатів сканування до таблиці «Перевірка машин» на API, а також присутній функціонал  для автентифікації девайсу для подальшого функціонування. Конфігурація відбувається за рахунок Dependency Injection.
+
+1.2	ШАР З’ЄДНАННЯ З API
+
+Цей шар, реалізує функціонал звертання до API, а саме відправки запитів  на запис про сканування машини постачання, автентифікацію та отримання даних про машину постачання. В даному шарі використовуються пакет «java.net», для створення і керування HTTP-з'єднаннями. Він дозволяє здійснювати HTTP-запити (наприклад, GET, POST, PUT, DELETE) до веб-серверів і отримувати відповіді від них.
+
+1.3	ШАР UI
+
+Шар, що містить реалізації команд, які можуть бути зв’язані з елементами керування пристрою (в даній реалізації для спрощення тестування використовувався консольний додаток). Шар містить такі команди як: активація пристрою, автентифікація, сканування ID автомобіля постачання, відправка даних сканування на сервер, завершення роботи, конфігурування з’єднання з API, конфігурування параметрів пристрою. Також в цьому шарі знаходиться файл запуску, який містить реєстрацію сервісів в контейнер.
+
+1.4	ШАР БІЗНЕС ЛОГІКИ
+
+Шар, що містить функціонал команд, який обробляє відповіді, що надходять від серверу або формує інформацію для відправки на сервер, виконує читання даних про девайс та запис їх  у конфігураційний файл формату .json. В ньому використовується наступні бібліотеки як Jackson, яка використовується для перетворення між Java об'єктами та JSON, та JSON.org для конфігурації JSON об’єктів.
+
+1.5	КОНФІГУРАЦІ
+
+Для конфігурації IoT девайсу використовується консольний застосунок для адміністратора, який забезпечує налаштування пристрою. Процес конфігурації складається з наступних етапів:
+-	Запуск конфігураційного застосунку: Адміністратор запускає консольний застосунок, який здійснює налаштування девайсу. Цей застосунок дозволяє ввести дані про девайс, включаючи його ID, логін, та URL для відправки даних та автентифікації.
+-	Передача конфігураційних даних: Дані передаються з конфігураційного застосунку на девайс за допомогою багатоканальної передачі даних (multicast).
+
+1.6	ЗАГАЛЬНА ІНФОРМАЦІЯ
+
+Програмне забезпечення для IoT девайсу побудоване на основі сучасних архітектурних принципів, що забезпечує його модульність, структурованість і легкість у підтримці та масштабуванні. Система розділена на окремі шари, кожен з яких відповідає за певну функціональність. Використання паттернів проектування, таких як Dependency Injection, знижує зв'язність між компонентами та полегшує тестування.
+Конфігурація девайсу здійснюється через адміністративний консольний інструмент, що надає гнучкість у налаштуванні. Для роботи з JSON даними використовуються сучасні бібліотеки Jackson та JSON.org, що забезпечує надійність та ефективність обробки даних. Безпека системи забезпечується механізмами автентифікації перед відправкою даних на сервер, що захищає від несанкціонованого доступу.
+Архітектура дозволяє легко додавати нові функції без значних змін у існуючому коді, а консольний інтерфейс користувача робить взаємодію з системою простою та інтуїтивно зрозумілою. Програмне забезпечення призначене для ефективного управління IoT девайсами, забезпечуючи надійну та безпечну передачу даних, зручність конфігурації та високу продуктивність.
+
+2 ДІАГРАМА ДІЯЛЬНОСТИ
+
+Було сформовано діаграму діяльності (додаток А), що показує можливі варіанти взаємодії з приладом.
+
+3 ДІАГРАМА ПРЕЦЕДЕНТІВ
+
+Для розуміння ситуацій використання програмної системи була сформована діаграма прецедентів (рис. 1).
+
+Система включає двох користувачів Адміна, що конфігурує девайс та машину постачання, що користується ним.
+
+4	ДІАГРАМА ПАКЕТІВ
+
+Була створена діаграма пакетів IoT частини проєкту (рис. 2). Дані пакети містять функціональнітсь ІоТ девайсу. Їх взаємодія зображена на рисунку 2
+
+ВИСНОВКИ
+
+Під час виконання лабораторної роботи, я покращив навички проектування програмних систем. Розробив smart device частину програмної системи та описав її з допомогою демонстраційного відеоролику, UML Use Case Diagram, Activity Diagram та Package Diagram.
+
+ДОДАТОК А
+
+Діаграма діяльності
+
+ДОДАТОК Б
+
+Приклад команди
+
+IoTService.java
+
+1	package org.example.service;
+2
+3	import com.fasterxml.jackson.databind.ObjectMapper;
+4	import org.example.enums.RequestType;
+5	import org.example.model.AuthResponse;
+6	import org.example.model.DeviceInfo;
+7	import org.json.JSONObject;
+8
+9	import java.io.BufferedReader;
+10	import java.io.File;
+11	import java.io.FileReader;
+12	import java.io.IOException;
+13	import java.nio.file.Paths;
+14
+15	public class IoTService {
+16
+17	    private RequestService requestService;
+18
+19	    public String sendScanData(int carId){
+20	        try {
+21	            DeviceInfo deviceInfo = getDeviceInformation();
+22	            String jsonInputString = new JSONObject()
+23	                    .put("supplyCarId", carId)
+24	                    .put("scanningDeviceId", deviceInfo.getId())
+25	                    .toString();
+26	            return requestService.makePostRequest(RequestType.SEND_DATA, jsonInputString, deviceInfo.getToken());
+27	        } catch (Exception e) {
+28	            return e.getMessage();
+29	        }
+30	    }
+31
+32	    public String authenticate(String password) {
+33	        try {
+34	            DeviceInfo deviceInfo = getDeviceInformation();
+35	            String jsonInputString = new JSONObject()
+36	                    .put("email", deviceInfo.getLogin())
+37	                    .put("password", password)
+38	                    .toString();
+39	            String jsonResponse = requestService.makePostRequest(RequestType.AUTH, jsonInputString, "");
+40	            if (!jsonResponse.isEmpty()) {
+41	                ObjectMapper objectMapper = new ObjectMapper();
+42	                AuthResponse authResponse = objectMapper.readValue(jsonResponse, AuthResponse.class);
+43	                saveToken(authResponse);
+44	                return authResponse.getAccessToken();
+45	            }
+46	        } catch (Exception e){
+47	            throw new RuntimeException(e.getMessage());
+48	        }
+49	        return "";
+50
+51	    }
+52
+53	    private void saveToken(AuthResponse authResponse) throws IOException{
+54	        DeviceInfo deviceInfo = getDeviceInformation();
+55	        deviceInfo.setToken(authResponse.getAccessToken());
+56	        saveDeviceInfo(deviceInfo);
+57	    }
+58
+59	    public DeviceInfo getDeviceInformation() throws IOException {
+60
+61	        String filePath = "E:\\University\\ThirdCourse\\APZ\\LabsAfterLight\\Task3\\apz-pzpi-21-5-ivakin-nikita-task3\\Iot\\src\\main\\java\\org\\example\\configFiles\\device-info.json";
+62	        ObjectMapper objectMapper = new ObjectMapper();
+63
+64	        try {
+65	            DeviceInfo authInfo = objectMapper.readValue(new File(filePath), DeviceInfo.class);
+66	            return authInfo;
+67	        } catch (IOException e) {
+68	            throw new IOException("File with device data not found, call support team.");
+69	        }
+70
+71	    }
+72
+73	    public boolean isDeviceConfigured() {
+74	        try (BufferedReader reader = new BufferedReader(new FileReader(Paths.get("src", "config.txt").toString()))){
+75	            reader.readLine();
+76	            reader.readLine();
+77	            int id = 0;
+78	            id = Integer.parseInt(reader.readLine());
+79	            String email = "";
+80	            email = reader.readLine();
+81	            if (id !=0 && !email.equals("")) {
+82	                return true;
+83	            }
+84	            else return false;
+85	        } catch (IOException e) {
+86	            System.out.println("File with url config doesn't exist update IoT! For this call tech support.");
+87	            return false;
+88	        }
+89	    }
+90
+91
+92	    public String saveDeviceInfo(DeviceInfo deviceInfo){
+93	        String filePath = "E:\\University\\ThirdCourse\\APZ\\LabsAfterLight\\Task3\\apz-pzpi-21-5-ivakin-nikita-task3\\Iot\\src\\main\\java\\org\\example\\configFiles\\device-info.json";
+94	        ObjectMapper objectMapper = new ObjectMapper();
+95	        try {
+96	            objectMapper.writeValue(new File(filePath), deviceInfo);
+97	            return "Data has been successfully written.";
+98	        } catch (IOException e) {
+99	            System.out.println(e.getMessage());
+100	            throw new RuntimeException("An error occurred while writing to the JSON file. Please contact the tech support team.");
+101	        }
+102	    }
+103
+104	    public IoTService(RequestService requestService) {
+105	        this.requestService = requestService;
+106	    }
+107	}
+
+RequestService.java
+
+1	import org.example.enums.RequestType;
+2	import org.json.JSONObject;
+3
+4	import java.io.*;
+5	import java.net.HttpURLConnection;
+6	import java.net.URL;
+7	import java.nio.file.Paths;
+8	import java.util.ArrayList;
+9	import java.util.List;
+10
+11	public class RequestService {
+12
+13
+14	    public String makePostRequest(RequestType requestType, String data, String token) throws Exception{
+15	        String urlString = readUrl(requestType);
+16	        URL url = new URL(urlString);
+17	        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+18	        con.setRequestMethod("POST");
+19	        con.setRequestProperty("Content-Type", "application/json; utf-8");
+20	        con.setRequestProperty("Accept", "application/json");
+21	        if (requestType.equals(RequestType.SEND_DATA) && token != null && !token.isEmpty()) {
+22	            con.setRequestProperty("Authorization", "Bearer " + token);
+23	        }
+24	        con.setDoOutput(true);
+25	        putDataToRequest(con, data);
+26	        return getDataFromRequest(con);
+27	    }
+28
+29	    public String getDataFromRequest(HttpURLConnection con) throws Exception{
+30
+31	        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
+32	            StringBuilder response = new StringBuilder();
+33	            String responseLine;
+34	            while ((responseLine = in.readLine()) != null) {
+35	                response.append(responseLine.trim());
+36	            }
+37	            String responseString = response.toString();
+38	            if (con.getResponseCode() == 200) return responseString;
+39	            else throw new RuntimeException(response.toString());
+40	        }
+41	    }
+42
+43	    public String readUrl(RequestType requestType){
+44	        List<String> urls = new ArrayList<>();
+45	        try (BufferedReader reader = new BufferedReader(new FileReader(Paths.get("src", "config.txt").toString()))) {
+46	            urls.add(reader.readLine());
+47	            urls.add(reader.readLine());
+48	        } catch (IOException e) {
+49	            return "Something went wrong in reading config file, call tech support team.";
+50	        }
+51	        if (requestType.equals(RequestType.AUTH)) {
+52	            return urls.get(1);
+53	        } else {
+54	            return urls.get(0);
+55	        }
+56	    }
+57
+58	    public void putDataToRequest(HttpURLConnection con ,String data) {
+59	        try (OutputStream os = con.getOutputStream()) {
+60	            byte[] input = data.getBytes("utf-8");
+61	            os.write(input, 0, input.length);
+62	        } catch (Exception e) {
+63	            throw new RuntimeException("Something went wrong in putting data in request.");
+64	        }
+65	    }
+66	}

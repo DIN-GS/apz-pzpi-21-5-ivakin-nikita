@@ -4,24 +4,24 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.ResourcesRequestDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.commanders.BattalionCommanderDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BattalionGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.BrigadeGroupDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.groups.LogisticCompanyDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.GivenResources;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.ResourcesRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.resources.ResourcesUpdateResponse;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.SupplyRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BattalionCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.BrigadeCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.LogisticCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BattalionGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.BrigadeGroup;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.militaryGroups.LogisticCompany;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.ResourcesType;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Status;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.ResourcesRequestDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.commanders.BattalionCommanderDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.groups.BattalionGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.groups.BrigadeGroupDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.groups.LogisticCompanyDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.resources.GivenResources;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.requests.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.resources.ResourcesUpdateResponse;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.requests.SupplyRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.commanders.BattalionCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.commanders.BrigadeCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.commanders.LogisticCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.militaryGroups.BattalionGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.militaryGroups.BrigadeGroup;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.militaryGroups.LogisticCompany;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.ResourcesType;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.Status;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders.BrigadeCommanderRepository;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.GivenResourcesService;
@@ -271,15 +271,16 @@ public class BrigadeCommanderService {
     }
 
     public ResourcesUpdateResponse allocateResources(ResourcesRequest resourcesRequest, BrigadeGroup brigadeGroup, BrigadeCommander brigadeCommander, BattalionGroup battalionGroup) {
-        boolean needForSupply = false;
+        boolean allocated = false;
         try {
-            givenResourcesService.allocateResources(resourcesRequest, brigadeGroup, battalionGroup,
+            allocated = givenResourcesService.allocateResources(resourcesRequest, brigadeGroup, battalionGroup,
                     battalionGroup.getBattalionCommanderId().getId(), battalionGroup.getBattalionCommanderId().getRole(), battalionGroup.getBattalionCommanderId().getBrigadeCommander().getId(), 4);
+
         } catch (Exception e) {
             throw new GivenResourcesCreationException("Something went wrong in allocation resources for battalion group");
         }
 
-        return new ResourcesUpdateResponse(true, needForSupply);
+        return new ResourcesUpdateResponse(allocated, !validateResources(brigadeGroupService.mapBrigadeGroupToDTO(brigadeGroup)));
     }
 
     public List<BattalionGroupDTO> getBrigadeBattalionGroups() {

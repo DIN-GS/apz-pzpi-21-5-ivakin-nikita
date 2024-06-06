@@ -1,7 +1,7 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.requests;
 
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.requests.ResourcesRequest;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.requests.ResourcesRequest;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

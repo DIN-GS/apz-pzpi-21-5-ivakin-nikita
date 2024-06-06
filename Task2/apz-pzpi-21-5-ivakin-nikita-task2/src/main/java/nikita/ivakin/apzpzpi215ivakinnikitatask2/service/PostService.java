@@ -3,8 +3,8 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.PostDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.Post;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.PostDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.Post;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.PostNotFoundException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.PostRepository;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,14 @@ public class PostService {
        } else {
            throw new PostNotFoundException("There aren't any posts with id " + id);
        }
+    }
+
+    public PostDTO mapPostToDto(Post post){
+        PostDTO postDTO = PostDTO.builder()
+                .id(post.getId())
+                .location(post.getLocation())
+                .scanningDeviceId(post.getScanningDevice().getId()).build();
+        return postDTO;
     }
 
     @Transactional

@@ -1,7 +1,7 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.repository.commanders;
 
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.CompanyCommander;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.commanders.PlatCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.commanders.CompanyCommander;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.commanders.PlatCommander;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

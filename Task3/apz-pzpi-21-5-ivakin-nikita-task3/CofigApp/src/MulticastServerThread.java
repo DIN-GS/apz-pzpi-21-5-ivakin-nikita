@@ -23,6 +23,10 @@ public class MulticastServerThread extends Thread {
             while (k == 0) {
                 System.out.print("Enter of the device and login ex (ID:12 LOGIN:scan.dev): ");
                 String message = scanner.nextLine();
+                message=message+"@gmail.com";
+
+
+
                 if (message.split(" ").length < 2 || message.split(" ")[1].split(":").length < 2 || message.split(" ")[0].split(":").length < 2 ){
                     System.out.println("Wrong statement!!!");
                     continue;

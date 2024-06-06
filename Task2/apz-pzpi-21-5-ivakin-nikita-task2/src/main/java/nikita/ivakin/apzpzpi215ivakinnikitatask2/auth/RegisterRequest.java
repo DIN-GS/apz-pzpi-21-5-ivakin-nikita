@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.POST;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.RANK;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.enums.Role;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.POST;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.RANK;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.enums.Role;
 
 @Data
 @Builder

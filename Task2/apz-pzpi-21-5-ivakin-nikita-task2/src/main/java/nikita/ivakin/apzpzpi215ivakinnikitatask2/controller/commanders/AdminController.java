@@ -1,8 +1,8 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.controller.commanders;
 
 import lombok.AllArgsConstructor;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.dto.PostDTO;
-import nikita.ivakin.apzpzpi215ivakinnikitatask2.entity.ScanningDevice;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.dto.PostDTO;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.ScanningDevice;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
