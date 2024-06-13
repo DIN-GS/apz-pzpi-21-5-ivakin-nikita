@@ -1,5 +1,17 @@
 package nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.errorResponse;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Set;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+
 public class CustomErrorResponse {
 
     private int status;
@@ -8,14 +20,8 @@ public class CustomErrorResponse {
 
     private long timeStamp;
 
-    public CustomErrorResponse() {
-    }
+    private List<String> validationErrors;
 
-    public CustomErrorResponse(int status, String message, long timeStamp) {
-        this.status = status;
-        this.message = message;
-        this.timeStamp = timeStamp;
-    }
 
     public String getMessage() {
         return message;
@@ -29,6 +35,10 @@ public class CustomErrorResponse {
         return timeStamp;
     }
 
+    public List<String> getValidationErrors() {
+        return validationErrors;
+    }
+
     public void setMessage(String message) {
         this.message = message;
     }
@@ -39,5 +49,19 @@ public class CustomErrorResponse {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public void setValidationErrors(List<String> validationErrors) {
+        this.validationErrors = validationErrors;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomErrorResponse{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", validationErrors=" + validationErrors +
+                '}';
     }
 }

@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler  {
 
 
     @ExceptionHandler(CarCheckException.class)
@@ -210,7 +213,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @Override
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp) {
+        List<String> errors = new ArrayList<>();
+        exp.getBindingResult().getFieldErrors().forEach(error -> {
+            var errorMessage = error.getDefaultMessage();
+            errors.add(errorMessage);
+        });
+
+        CustomErrorResponse errorResponse = CustomErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message("Validation failed")
+                .timeStamp(System.currentTimeMillis())
+                .validationErrors(errors)
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    /*@Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                @NotNull HttpHeaders headers,
                                                                @NotNull HttpStatusCode status,
@@ -220,7 +243,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .toList();
         var exceptionBody = new ValidationExceptionResponse("validation_exceptions", errors.toString());
         return handleExceptionInternal(ex, exceptionBody, new HttpHeaders(), status, webRequest);
-    }
 
+    }*/
 
 }
