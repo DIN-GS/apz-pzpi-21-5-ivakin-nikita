@@ -5,5 +5,5 @@ export { BrigadeCommanderControllerService } from './services/brigade-commander-
 export { BattalionCommanderControllerService } from './services/battalion-commander-controller.service';
 export { AdminControllerService } from './services/admin-controller.service';
 export { ScanningDeviceControllerService } from './services/scanning-device-controller.service';
-export { AuthenticationControllerService } from './services/authentication-controller.service';
+export { AuthenticationService } from './services/authentication-controller.service';
 export { UserControllerService } from './services/user-controller.service';

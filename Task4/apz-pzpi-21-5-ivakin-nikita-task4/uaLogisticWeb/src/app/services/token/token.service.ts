@@ -12,4 +12,17 @@ export class TokenService {
   get token() {
     return localStorage.getItem('token') as string;
   }
+
+  logout() {
+    localStorage.removeItem('token');
+  }
+
+  getRoleFromToken(): string {
+    const token = this.token; 
+    if (token?.length > 0) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.role;
+    }
+    throw new Error('User isn\'t authenticated');
+  }
 }
