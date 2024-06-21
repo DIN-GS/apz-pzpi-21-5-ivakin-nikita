@@ -3,10 +3,12 @@ package nikita.ivakin.apzpzpi215ivakinnikitatask2.user;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +36,15 @@ public class UserService {
 
         // save the new password
         repository.save(user);
+    }
+
+    public User findUserByEmail(String email) {
+        Optional<User> tempUser = repository.findByEmail(email);
+        if (tempUser.isPresent()) {
+            return tempUser.get();
+        } else {
+            throw new UsernameNotFoundException("User doesn't exist");
+        }
     }
 
     @Transactional

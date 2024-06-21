@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nikita.ivakin.apzpzpi215ivakinnikitatask2.exceptions.UserAlreadyExistsException;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.model.entity.commanders.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.service.commanders.*;
 import nikita.ivakin.apzpzpi215ivakinnikitatask2.token.*;
@@ -34,6 +35,9 @@ public class AuthenticationService {
     private final LogisticCommanderService logisticCommanderService;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User with such email already exists.");
+        }
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())

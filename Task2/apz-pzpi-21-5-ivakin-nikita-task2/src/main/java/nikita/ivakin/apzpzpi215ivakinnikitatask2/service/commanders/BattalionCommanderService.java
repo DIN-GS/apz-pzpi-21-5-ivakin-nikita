@@ -248,7 +248,7 @@ public class BattalionCommanderService {
         for (CompanyGroupDTO companyGroupDTO : companyGroupDTOS) {
             for (CompanyCommanderDTO companyCommanderDTO : companyCommanderDTOS) {
                 if (companyCommanderDTO.getCompanyGroupId().equals(companyGroupDTO.getId())) {
-                    companyGroupDTO.setCompanyCommanderDTO(companyCommanderDTO);
+                    companyGroupDTO.setCommander(companyCommanderDTO);
                 }
             }
         }
@@ -297,6 +297,7 @@ public class BattalionCommanderService {
                 .email(battalionCommander.getEmail())
                 .rank(battalionCommander.getRank())
                 .role(battalionCommander.getRole())
+                .passportNumber(battalionCommander.getPassportNumber())
                 .battalionGroupId(battalionCommander.getBattalionGroup().getId())
                 .build();
     }

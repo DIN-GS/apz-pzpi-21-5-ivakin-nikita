@@ -29,6 +29,8 @@ public class BattalionCommanderDTO {
 
     private String email;
 
+    private String passportNumber;
+
     private Integer battalionGroupId;
 
 }
